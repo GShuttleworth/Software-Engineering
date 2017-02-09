@@ -35,6 +35,8 @@ def netcat(host, port):
 	while (_running):
 		data = s.recv(4096);
 		if(len(data)>0):
+			#todo
+			#each line begins with b' and ends with '
 			print(data)
 
 
