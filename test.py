@@ -6,7 +6,7 @@ import socket
 _running = 0
 
 #connect to data stream
-def connect_server():
+def connect_stream():
 	host = "cs261.dcs.warwick.ac.uk"
 	host_port = 80
 	global _running 
@@ -14,7 +14,7 @@ def connect_server():
 	netcat(host, host_port)
 
 #disconnects from data stream
-def disconnect_server():
+def disconnect_stream():
 	global _running 
 	_running = 0
 
@@ -43,4 +43,4 @@ def netcat(host, port):
 #
 
 #main
-connect_server()
+connect_stream()
