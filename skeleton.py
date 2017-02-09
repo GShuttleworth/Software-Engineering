@@ -6,8 +6,6 @@ import socket
 import signal
 import sys
 
-from flask import Flask
-
 #global declarations and variables
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
@@ -125,7 +123,6 @@ handler.start()
 _threads.append(handler)
 _threadID += 1
 
-app = Flask(__name__)
-@app.route('/')
-def hello_world():
-	return 'Hello, World!'
+#run web server on main thread
+from app import app
+app.run()
