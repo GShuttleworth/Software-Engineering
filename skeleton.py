@@ -53,7 +53,7 @@ def netcat(host, port):
 				_qlock.acquire()
 				_q.put(data)
 				_qlock.release()
-
+	s.close()
 
 #threading
 class streamThread (threading.Thread):
@@ -61,7 +61,7 @@ class streamThread (threading.Thread):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 	def run(self):
-		print("Starting thread")
+		print("Starting stream thread")
 		init_stream()
 
 class handlerThread (threading.Thread):
@@ -69,16 +69,17 @@ class handlerThread (threading.Thread):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 	def run(self):
-		print("Starting thread")
+		print("Starting event listener thread")
 		eventListener()
 
 def eventListener():
 	global _running
+	global _qlock
 	while(_running):
 		#detects inputs
 		try:
 			#TODO actually link up mechanism to connect/disconnect
-			var = input("")
+			var = input()
 			if(var=='disconnect'):
 				disconnect_stream()
 				_qlock.acquire()
@@ -86,10 +87,26 @@ def eventListener():
 				_qlock.release()
 			if(var=='connect'):
 				connect_stream()
-		except KeyboardInterrupt:
-			signal_handler()
-			print("Exiting")
+		except:
+			break
 
+class processorThread (threading.Thread):
+	def __init__(self, threadID):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+	def run(self):
+		print("Starting processing thread")
+		processing()
+
+def processing():
+	global _qlock
+	global _running
+	while(_running):
+		_qlock.acquire()
+		if(_q.qsize()>0):
+			data = _q.get()
+		_qlock.release()
+		#todo processing here
 
 #signal handling to terminate/quit
 def signal_handler(signal, frame):
@@ -101,27 +118,36 @@ def signal_handler(signal, frame):
 	_running=0
 	#rejoin threads
 	for t in _threads:
+		#print(t.isAlive())
 		t.join()
+		#print(t.isAlive())
 	sys.exit()
 
 #############################
 #			main			#
 #############################
 _running = 1
-#signal handler
-signal.signal(signal.SIGINT, signal_handler)
 
 #create threads
 thread1 = streamThread(_threadID)
-#start threads
+processor = processorThread(_threadID)
+handler = handlerThread(_threadID)
+handler.daemon = True
+
 thread1.start()
 _threads.append(thread1)
 _threadID += 1
 
-handler = handlerThread(_threadID)
+processor.start()
+_threads.append(processor)
+_threadID += 1
+
 handler.start()
 _threads.append(handler)
 _threadID += 1
+
+#signal handler
+signal.signal(signal.SIGINT, signal_handler)
 
 #run web server on main thread
 from app import app
