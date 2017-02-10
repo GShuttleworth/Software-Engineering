@@ -6,6 +6,8 @@ import socket
 import signal
 import sys
 
+from app import app
+
 #global declarations and variables
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
@@ -101,12 +103,18 @@ class processorThread (threading.Thread):
 def processing():
 	global _qlock
 	global _running
-	while(_running):
+	#todo remove not
+	while(not _running):
 		_qlock.acquire()
 		if(_q.qsize()>0):
 			data = _q.get()
 		_qlock.release()
 		#todo processing here
+
+def getdata():
+	global _q
+	data = _q.get()
+	return data
 
 #signal handling to terminate/quit
 def signal_handler(signal, frame):
@@ -126,29 +134,32 @@ def signal_handler(signal, frame):
 #############################
 #			main			#
 #############################
-_running = 1
-
-#create threads
-thread1 = streamThread(_threadID)
-processor = processorThread(_threadID)
-handler = handlerThread(_threadID)
-handler.daemon = True
-
-thread1.start()
-_threads.append(thread1)
-_threadID += 1
-
-processor.start()
-_threads.append(processor)
-_threadID += 1
-
-handler.start()
-_threads.append(handler)
-_threadID += 1
-
-#signal handler
-signal.signal(signal.SIGINT, signal_handler)
+@app.route('/refresh', methods=['POST'])
+def refresh():
+	return getdata()
 
 #run web server on main thread
-from app import app
-app.run()
+if __name__ == '__main__':
+	_running = 1
+
+	#create threads
+	thread1 = streamThread(_threadID)
+	processor = processorThread(_threadID)
+	handler = handlerThread(_threadID)
+	handler.daemon = True
+
+	thread1.start()
+	_threads.append(thread1)
+	_threadID += 1
+
+	processor.start()
+	_threads.append(processor)
+	_threadID += 1
+
+	handler.start()
+	_threads.append(handler)
+	_threadID += 1
+
+	#signal handler
+	signal.signal(signal.SIGINT, signal_handler)
+	app.run()
