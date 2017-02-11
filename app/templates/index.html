@@ -1,8 +1,33 @@
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>Home Page</title>
+		<title>{{ pagename }}</title>
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script>
+			function refresh() {
+				$.ajax({
+					   type : 'POST',
+					   url : "/refresh",
+					   success: function(data) {
+					   // do something with the return value here if you like
+						   console.log(data);
+					   }
+				   });
+					   setTimeout(refresh, 5000); // you could choose not to continue on failure...
+			}
+		
+			$(document).ready(function() {
+					  // run the first time; all subsequent calls will take care of themselves
+				  setTimeout(refresh, 5000);
+			});
+		</script>
 	</head>
 	<body>
 		<h1>hi</h1>
+		<form action="." method="POST">
+			Test <input type="text" name="text">
+			<input type="submit" name="my-form" value="Send">
+		</form>
 	</body>
 </html>
