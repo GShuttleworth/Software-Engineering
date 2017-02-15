@@ -16,6 +16,7 @@ nano ~/.bashrc
 bash
 python3
 *******make sure it says python3.6, CTRL+D TO EXIT********
+rm -rf ~/build/Python-3.6.0
 
 
 
