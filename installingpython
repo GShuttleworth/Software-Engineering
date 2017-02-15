@@ -15,3 +15,14 @@ nano ~/.bashrc
 ***********CTRL+X, Y, ENTER to confirm changes ************
 bash
 python3
+*******make sure it says python3.6, CTRL+D TO EXIT********
+
+
+
+
+Installing flask
+pip3 install flask
+
+
+Installing numpy
+lol screw you
