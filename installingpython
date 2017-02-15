@@ -26,3 +26,7 @@ pip3 install flask
 
 Installing numpy
 lol screw you
+ok if you really want
+download numpy.zip from github
+extract and move to same directory as python script
+cba to mess with python export path
