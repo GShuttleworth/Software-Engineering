@@ -11,6 +11,6 @@ make install
 
 nano ~/.bashrc
 *******ADD NEXT LINE TO END OF BASHRC without ASTERISKS**********
-********export PATH="~/usr/bin/:$PATH"************
+********export PATH="~/usr/local/bin/:$PATH"************
 bash
 python3
