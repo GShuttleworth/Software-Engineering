@@ -1,0 +1,16 @@
+Installing python 3.6 on dcs guide
+download python3.6 https://www.python.org/downloads/release/python-360/
+
+mkdir ~/build
+*******EXTRACT PYTHON HERE, TO THIS DIRECTORY******
+mkdir ~/usr
+cd ~/build/Python-3.6.0
+./configure --prefix=$HOME/usr/local exec-prefix=$HOME/usr/local
+make
+make install
+
+nano ~/.bashrc
+*******ADD NEXT LINE TO END OF BASHRC without ASTERISKS**********
+********export PATH="~/usr/bin/:$PATH"************
+bash
+python3
