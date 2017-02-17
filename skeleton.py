@@ -113,13 +113,16 @@ class ProcessorThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting processing thread")
-		processing()
+		processing(1) #currently doing live data
 
-def processing():
+def processing(state):
+	#state is processing static/live
 	global _qlock
 	global _running
 	#not running yet
+	db = Database()
 	while(_running):
+		#connect to db
 		_qlock.acquire()
 		data = ""
 		if(_q.qsize()>0):
@@ -135,11 +138,10 @@ def processing():
 				#TODO processing here HI JAKUB
 				
 				#dump to db when done
-				
+				db.addTransaction(trade)
 			time.sleep(2) #REMOVE AFTER TESTING
-
-
-
+	
+	db.close()
 
 
 def getdata():
