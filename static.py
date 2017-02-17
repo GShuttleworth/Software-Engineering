@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#queue_fifo.py
 
 import csv
 import Queue
