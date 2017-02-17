@@ -2,11 +2,15 @@
 import threading
 import queue
 import socket
-
 import signal
 import sys
+import time #for testing, may need for timed reconnection
 
 from app import app
+
+#modules by us
+from trade import *
+from database import *
 
 #global declarations and variables
 _running = 0 #overall program status
@@ -53,7 +57,7 @@ def netcat(host, port):
 	s.connect((host, int(port)))
 	print("Stream connected")
 
-global _running
+	global _running
 	global _connected
 	global _q
 	#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
@@ -65,11 +69,11 @@ global _running
 			_qlock.acquire()
 			_q.put(data)
 			_qlock.release()
-s.close()
+	s.close()
 	print("Stream disconnected")
 
 #threading
-class streamThread (threading.Thread):
+class StreamThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -77,7 +81,7 @@ class streamThread (threading.Thread):
 		print("Starting stream thread")
 		manage_stream()
 
-class handlerThread (threading.Thread):
+class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -103,7 +107,7 @@ def eventListener():
 		except:
 			break
 
-class processorThread (threading.Thread):
+class ProcessorThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -115,18 +119,28 @@ def processing():
 	global _qlock
 	global _running
 	#not running yet
-	while(not _running):
+	while(_running):
 		_qlock.acquire()
 		data = ""
 		if(_q.qsize()>0):
-			data = str(_q.get())
+			data = _q.get()
 		_qlock.release()
-		if(len(data)>0):
-			#todo
-			f = open('workfile', 'a+')
-			f.write(data)
-			f.close()
-#todo processing here
+		if(len(data)>0): #TODO do a better check
+			#converts byte to string
+			data = str(data.decode("utf-8"))
+			data = data[:-2] #removes \r\n at the end
+			data = data.split('\n') #gets a list where each element is a new trade
+			for x in data:
+				trade = parse(x)
+				#TODO processing here HI JAKUB
+				
+				#dump to db when done
+				
+			time.sleep(2) #REMOVE AFTER TESTING
+
+
+
+
 
 def getdata():
 	global _q
@@ -160,9 +174,9 @@ def init_threads():
 	#create threads
 	global _threads
 	global _threadID
-	tstream = streamThread(_threadID)
-	tprocessor = processorThread(_threadID)
-	thandler = handlerThread(_threadID)
+	tstream = StreamThread(_threadID)
+	tprocessor = ProcessorThread(_threadID)
+	thandler = HandlerThread(_threadID)
 	thandler.daemon = True
 	
 	tstream.start()
