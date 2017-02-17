@@ -3,19 +3,7 @@
 
 import csv
 import Queue
-
-class TradeData:
-	def __init__(self, time, buy, sell, p, s, currency, symbol, sector, bidP, askP):
-		self.time = time
-		self.buyer = buy
-		self.seller = sell
-		self.price = p
-		self.size = s
-		self.currency = currency
-		self.symbol = symbol
-		self.sector = sector
-		self.bidPrice = bidP
-		self.askPrice = askP	
+import TradeData
 
 classqueue = Queue.Queue()
 
