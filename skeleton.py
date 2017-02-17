@@ -24,13 +24,23 @@ def init_stream():
 	netcat(host, host_port)
 
 def connect_stream():
-	global _connected 
+	global _connected
 	_connected = 1
 
 #disconnects from data stream
 def disconnect_stream():
-	global _connected 
+	global _connected
 	_connected = 0
+
+def manage_stream():
+	global _running
+	global _connected
+	init_stream() #stream is a blocking method
+	
+	#reconnects if commanded
+	while(_running):
+		if(_connected):
+			init_stream()
 
 #connects to host, port
 def netcat(host, port):
@@ -39,23 +49,24 @@ def netcat(host, port):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	except socket.error:
 		print("Failed to create socket")
-
-	s.connect((host, int(port)))
-	#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
 	
-	global _running
+	s.connect((host, int(port)))
+	print("Stream connected")
+
+global _running
 	global _connected
 	global _q
-	while(_running):
-		while (_connected):
-			data = s.recv(4096); #TODO: rework numbers
-			if(len(data)>0):
-				#puts new line of data into queue
-				#print(data)
-				_qlock.acquire()
-				_q.put(data)
-				_qlock.release()
-	s.close()
+	#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
+	while (_connected):
+		data = s.recv(4096); #TODO: rework numbers
+		if(len(data)>0):
+			#puts new line of data into queue
+			#print(data)
+			_qlock.acquire()
+			_q.put(data)
+			_qlock.release()
+s.close()
+	print("Stream disconnected")
 
 #threading
 class streamThread (threading.Thread):
@@ -64,7 +75,7 @@ class streamThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting stream thread")
-		init_stream()
+		manage_stream()
 
 class handlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -103,17 +114,24 @@ class processorThread (threading.Thread):
 def processing():
 	global _qlock
 	global _running
-	#todo remove not
+	#not running yet
 	while(not _running):
 		_qlock.acquire()
+		data = ""
 		if(_q.qsize()>0):
-			data = _q.get()
+			data = str(_q.get())
 		_qlock.release()
-		#todo processing here
+		if(len(data)>0):
+			#todo
+			f = open('workfile', 'a+')
+			f.write(data)
+			f.close()
+#todo processing here
 
 def getdata():
 	global _q
-	data = _q.get()
+	#data = _q.get()
+	data = "lol"
 	return data
 
 #signal handling to terminate/quit
@@ -128,7 +146,7 @@ def signal_handler(signal, frame):
 	for t in _threads:
 		#print(t.isAlive())
 		t.join()
-		#print(t.isAlive())
+	#print(t.isAlive())
 	sys.exit()
 
 #############################
@@ -138,28 +156,32 @@ def signal_handler(signal, frame):
 def refresh():
 	return getdata()
 
+def init_threads():
+	#create threads
+	global _threads
+	global _threadID
+	tstream = streamThread(_threadID)
+	tprocessor = processorThread(_threadID)
+	thandler = handlerThread(_threadID)
+	thandler.daemon = True
+	
+	tstream.start()
+	_threads.append(tstream)
+	_threadID += 1
+	
+	tprocessor.start()
+	_threads.append(tprocessor)
+	_threadID += 1
+	
+	thandler.start()
+	_threads.append(thandler)
+	_threadID += 1
+
 #run web server on main thread
 if __name__ == '__main__':
 	_running = 1
-
-	#create threads
-	thread1 = streamThread(_threadID)
-	processor = processorThread(_threadID)
-	handler = handlerThread(_threadID)
-	handler.daemon = True
-
-	thread1.start()
-	_threads.append(thread1)
-	_threadID += 1
-
-	processor.start()
-	_threads.append(processor)
-	_threadID += 1
-
-	handler.start()
-	_threads.append(handler)
-	_threadID += 1
-
+	init_threads()
+	
 	#signal handler
 	signal.signal(signal.SIGINT, signal_handler)
 	app.run()
