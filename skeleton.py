@@ -116,37 +116,43 @@ class ProcessorThread (threading.Thread):
 		print("Starting processing thread")
 		processing(1) #currently doing live data
 
-def processing(state):
-	#state is processing static/live
+def dequeue():
 	global _qlock
 	global _running
-	#not running yet
+	trades=[]
+	data = ""
+	_qlock.acquire()
+	if(_q.qsize()>0):
+		data = _q.get()
+	_qlock.release()
+	if(len(data)>0): #TODO do a better check
+		#converts byte to string
+		data = str(data.decode("utf-8"))
+		data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
+		data = data.split('\n') #gets a list where each element is a new trade
+		for x in data:
+			trade = parse(x)
+			trades.append(trade)
+	return trades
+
+def processing(state):
+	#state is processing static/live
+	#connect to db
 	db = Database()
 	while(_running):
-		#connect to db
-		_qlock.acquire()
-		data = ""
-		if(_q.qsize()>0):
-			data = _q.get()
-		_qlock.release()
-		if(len(data)>0): #TODO do a better check
-			#converts byte to string
-			data = str(data.decode("utf-8"))
-			data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
-			data = data.split('\n') #gets a list where each element is a new trade
-			for x in data:
-				trade = parse(x)
-				#TODO processing here HI JAKUB
-				
-				#dump to db when done
-				db.addTransaction(trade)
+		trades=dequeue()
+		for trade in trades:
+			#TODO processing here HI JAKUB
+		
+			#dump to db when done
+			db.addTransaction(trade)
 
-			time.sleep(2) #REMOVE AFTER TESTING
-	
+		time.sleep(2) #REMOVE AFTER TESTING
 	db.close()
 
 
 def getdata():
+	#this is for the flask application, gets data for front end
 	global _q
 	#data = _q.get()
 	data = "lol"
