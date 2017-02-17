@@ -61,8 +61,9 @@ def netcat(host, port):
 	global _connected
 	global _q
 	#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
+	data = s.recv(4096)
 	while (_connected):
-		data = s.recv(4096); #TODO: rework numbers
+		data = s.recv(4096) #TODO: rework numbers
 		if(len(data)>0):
 			#puts new line of data into queue
 			#print(data)
@@ -131,7 +132,7 @@ def processing(state):
 		if(len(data)>0): #TODO do a better check
 			#converts byte to string
 			data = str(data.decode("utf-8"))
-			data = data[:-2] #removes \r\n at the end
+			data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
 			data = data.split('\n') #gets a list where each element is a new trade
 			for x in data:
 				trade = parse(x)
@@ -139,6 +140,7 @@ def processing(state):
 				
 				#dump to db when done
 				db.addTransaction(trade)
+
 			time.sleep(2) #REMOVE AFTER TESTING
 	
 	db.close()
