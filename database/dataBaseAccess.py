@@ -29,10 +29,10 @@ class Database:
 		if(isinstance(data, TradeData.TradeData)):
 			if(self.state == "1"):
 				query = "insert into trans_live values (NULL, " + data.time + "," + data.buyer + "," + data.seller + "," + data.price + "," + data.size + "," + data.currency + "," + data.symbol + "," + data.sector + "," + bidPrice + "," + askPrice + ");"
-				self.query(query)
+				self.action(query)
 			else:
 				query = "insert into trans_static values (NULL, " + data.time + "," + data.buyer + "," + data.seller + "," + data.price + "," + data.size + "," + data.currency + "," + data.symbol + "," + data.sector + "," + bidPrice + "," + askPrice + ");"
-				self.query(query)
+				self.action(query)
 
 	def getTransactions(self, q):
 		data = self.query(q)
