@@ -42,5 +42,3 @@ create table avg_static (
 	symbol varchar(10),
 	averagePrice float
 );
-
-
