@@ -1,10 +1,10 @@
-import sqlite3, TradeData.py
+import sqlite3, TradeData
 
 class Database:
-	def __init__(self, state):
+	def __init__(self, state=1):
 		self.conn = sqlite3.connect("dataBase.db")
-		self.c = conn.cursor()
-		self.state = state
+		self.c = self.conn.cursor()
+		self.state = state # Default is 1 (live)
 
 	# General purpose functions
 	def query(self, query):
@@ -18,7 +18,8 @@ class Database:
 
 	def changeState(self, state):
 		# Change between live and static
-		self.state = state
+		if(state == 1 or state == 0):
+			self.state = state
 
 	def close(self):
 		# Close the connection to the database
@@ -26,7 +27,7 @@ class Database:
 
 	def addTransaction(self, data):
 		if(isinstance(data, TradeData.TradeData)):
-			if(self.state = "live"):
+			if(self.state == "1"):
 				query = "insert into trans_live values (NULL, " + data.time + "," + data.buyer + "," + data.seller + "," + data.price + "," + data.size + "," + data.currency + "," + data.symbol + "," + data.sector + "," + bidPrice + "," + askPrice + ");"
 				self.query(query)
 			else:
