@@ -11,14 +11,13 @@ class TradeData:
 		self.bidPrice = bidP
 		self.askPrice = askP
 
-#parse
+#parse from whole string
 def parse(string):
 	#will assume that it's already parsed so string = 1 string
 	s = string.split(",") #splits string with , as delimiter, returns list
-	#returns object
 	return to_TradeData(s)
 
-#convert to trade
+#input trade in list form
 def to_TradeData(s):
 	#s is a list
 	return TradeData(s[0],s[1],s[2],s[3],s[4],s[5], s[6],s[7],s[8],s[9])
