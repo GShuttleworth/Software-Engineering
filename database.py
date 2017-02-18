@@ -16,7 +16,8 @@ class Database:
 		# for update, insert, etc
 		self.c.execute(query, params)
 		self.conn.commit()
-
+		return self.c.rowcount
+	
 	def changeState(self, state):
 		# Change between live and static
 		if(state == 1 or state == 0):
@@ -44,10 +45,34 @@ class Database:
 
 		return transactions
 
-	
-	
+	def getAverage(self, sym):
+		avg = -1 #sanity check!
+		table = "avg_live"
+		if(self.state != 1):
+			table = "avg_static"
+		
+		query = "SELECT averagePrice FROM " + table + " WHERE symbol=?"
+		params = [sym]
+		data = self.query(query,params)
+		#should only return 1 row right, if it exists
+		avg_exists = data.fetchone()
+		if(avg_exists):
+			avg=avg_exists
+		return avg
 
-				
-		
-		
+	def updateAverage(self, sym, val):
+		#attempts to update
+		table = "avg_live"
+		if(self.state != 1):
+			table = "avg_static"
+		query = "UPDATE " + table + " SET averagePrice=? WHERE symbol=?"
+		params = [val,sym]
+		updated = self.action(query,params)
+		#print("Total number of rows updated :", updated)
+		if(updated==0): #check to see if it was updated
+			#add row
+			query = "INSERT INTO " + table + " VALUES (NULL,?,?)"
+			params = [sym,val]
+			updated = self.action(query,params)
+			#print("Number of INSERTED rows: ", updated)
 		

@@ -143,11 +143,18 @@ def processing(state):
 		trades=dequeue()
 		for trade in trades:
 			#TODO processing here HI JAKUB
-		
+			#trade is in TradeData format (see trade.py)
+			#use db.getAverage()
+			#print(db.getAverage(trade.symbol))
+			
+			
+			
 			#dump to db when done
 			db.addTransaction(trade)
+			#TODO: update average with actual average instead of 'trade.price'
+			db.updateAverage(trade.symbol, trade.price)
 
-		time.sleep(2) #REMOVE AFTER TESTING
+		time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 	db.close()
 
 
