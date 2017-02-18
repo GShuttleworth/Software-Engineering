@@ -71,7 +71,7 @@ def netcat(host, port):
 			_q.put(data)
 			_qlock.release()
 	s.close()
-	print("Stream disconnected")
+	print("\nStream disconnected")
 
 #threading
 class StreamThread (threading.Thread):
