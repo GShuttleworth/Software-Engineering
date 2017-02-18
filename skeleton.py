@@ -5,6 +5,9 @@ import socket
 import signal
 import sys
 import time #for testing, may need for timed reconnection
+from datetime import datetime
+
+import numpy as np
 
 from app import app
 
@@ -71,7 +74,7 @@ def netcat(host, port):
 			_q.put(data)
 			_qlock.release()
 	s.close()
-	print("\nStream disconnected")
+	print("Stream disconnected")
 
 #threading
 class StreamThread (threading.Thread):
@@ -114,6 +117,11 @@ class ProcessorThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting processing thread")
+
+
+		setupCompanyData() #setup comapny data, one-off at the beginning
+
+
 		processing(1) #currently doing live data
 
 def dequeue():
@@ -135,6 +143,43 @@ def dequeue():
 			trades.append(trade)
 	return trades
 
+
+#Jakub here, this might be expanded/changed/moved out later
+class StockData:
+	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
+	def __init__(self, symbol, coeffList, rangeVal):
+		self.symbol = symbol
+		self.coeffList = coeffList
+		self.range = rangeVal
+		self.currCnt = 0
+		self.xVals = np.empty(2)
+		self.yVals = np.empty(2)
+	
+	#compare actual vs predicted value
+	def detectError(x, y):
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or 
+				y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal))	
+
+	def updateCoeffs():
+		self.coeffList = np.polyfit(listX, listY, 1)
+
+def setupCompanyData():	
+
+	#to chagne in the future
+	global blndl
+
+
+	#create just for one company for now
+	tempCoeffs = [0, 0]
+	rangeVal = 0.2
+	blndl = StockData("BLND.L", tempCoeffs, rangeVal)
+	print("blndl setup")
+
+
+def timeToInt(time):
+	return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+
+
 def processing(state):
 	#state is processing static/live
 	#connect to db
@@ -147,12 +192,28 @@ def processing(state):
 			#use db.getAverage()
 			#print(db.getAverage(trade.symbol))
 			
-			
-			
+			#done for one company for now
+			print ("dequeuing")
+			if (trade.symbol != "BLND.L"):
+				break
+
+			print(timeToInt(trade.time), trade.price)
+			print("found")
+			blndl.xVals[blndl.currCnt]=timeToInt(trade.time)
+			blndl.yVals[blndl.currCnt]=trade.price
+
+
+			blndl.currCnt += 1
+			if (blndl.currCnt == 2):
+				blndl.updateCoeffs
+				print (blndl.coeffList)
+				blndl.currCnt = 0
+
+
 			#dump to db when done
-			db.addTransaction(trade)
+			#db.addTransaction(trade) 
 			#TODO: update average with actual average instead of 'trade.price'
-			db.updateAverage(trade.symbol, trade.price)
+			#db.updateAverage(trade.symbol, trade.price)
 
 		time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 	db.close()
