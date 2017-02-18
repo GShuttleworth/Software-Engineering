@@ -88,25 +88,25 @@ class HandlerThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting event listener thread")
-		eventListener()
-
-def eventListener():
-	global _running
-	global _qlock
-	while(_running):
-		#detects inputs
-		try:
-			#TODO actually link up mechanism to connect/disconnect
-			var = input()
-			if(var=='disconnect'):
-				disconnect_stream()
-				_qlock.acquire()
-				print("Current queue size: " + str(_q.qsize()))
-				_qlock.release()
-			if(var=='connect'):
-				connect_stream()
-		except:
-			break
+		self.eventListener()
+	
+	def eventListener(self):
+		global _running
+		global _qlock
+		while(_running):
+			#detects inputs
+			try:
+				#TODO actually link up mechanism to connect/disconnect
+				var = input()
+				if(var=='disconnect'):
+					disconnect_stream()
+					_qlock.acquire()
+					print("Current queue size: " + str(_q.qsize()))
+					_qlock.release()
+				if(var=='connect'):
+					connect_stream()
+			except:
+				break
 
 class ProcessorThread (threading.Thread):
 	def __init__(self, threadID):
@@ -114,48 +114,49 @@ class ProcessorThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting processing thread")
-		processing(1) #currently doing live data
-
-def dequeue():
-	global _qlock
-	global _running
-	trades=[]
-	data = ""
-	_qlock.acquire()
-	if(_q.qsize()>0):
-		data = _q.get()
-	_qlock.release()
-	if(len(data)>0): #TODO do a better check
-		#converts byte to string
-		data = str(data.decode("utf-8"))
-		data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
-		data = data.split('\n') #gets a list where each element is a new trade
-		for x in data:
-			trade = parse(x)
-			trades.append(trade)
-	return trades
-
-def processing(state):
-	#state is processing static/live
-	#connect to db
-	db = Database()
-	while(_running):
-		trades=dequeue()
-		for trade in trades:
-			#TODO processing here HI JAKUB
-			#trade is in TradeData format (see trade.py)
-			#use db.getAverage()
-			#print(db.getAverage(trade.symbol))
+		self.processing(1) #currently doing live data
+	
+	def processing(self,state):
+		#state is processing static/live
+		global _qlock
+		global _running
+		global _q
+		#connect to db
+		db = Database()
+		while(_running):
+			trades=self.dequeue(_q,_qlock)
+			for trade in trades:
+				#TODO processing here HI JAKUB
+				#trade is in TradeData format (see trade.py)
+				#use db.getAverage()
+				#print(db.getAverage(trade.symbol))
+				
+				
+				
+				#dump to db when done
+				db.addTransaction(trade)
+				#TODO: update average with actual average instead of 'trade.price'
+				db.updateAverage(trade.symbol, trade.price)
 			
-			
-			
-			#dump to db when done
-			db.addTransaction(trade)
-			#TODO: update average with actual average instead of 'trade.price'
-			db.updateAverage(trade.symbol, trade.price)
-
-		time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
-	db.close()
+			time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
+		db.close()
+		
+	def dequeue(self,q,qlock):
+		trades=[]
+		data = ""
+		qlock.acquire()
+		if(q.qsize()>0):
+			data = q.get()
+		qlock.release()
+		if(len(data)>0): #TODO do a better check
+			#converts byte to string
+			data = str(data.decode("utf-8"))
+			data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
+			data = data.split('\n') #gets a list where each element is a new trade
+			for x in data:
+				trade = parse(x)
+				trades.append(trade)
+		return trades
 
 
 def getdata():
