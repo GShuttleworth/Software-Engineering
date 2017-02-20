@@ -118,8 +118,9 @@ class ProcessorThread (threading.Thread):
 	def run(self):
 		print("Starting processing thread")
 
-
-		setupCompanyData() #setup comapny data, one-off at the beginning
+ 		#setup comapny data, one-off at the beginning
+		global companyList
+		companyList = {}
 
 
 		processing(1) #currently doing live data
@@ -145,6 +146,10 @@ def dequeue():
 
 
 #Jakub here, this might be expanded/changed/moved out later
+
+global _numberOfRegressors
+_numberOfRegressors = 3
+
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
 	def __init__(self, symbol, coeffList, rangeVal):
@@ -152,28 +157,25 @@ class StockData:
 		self.coeffList = coeffList
 		self.range = rangeVal
 		self.currCnt = 0
-		self.xVals = np.empty(2)
-		self.yVals = np.empty(2)
+		self.xVals = np.empty(_numberOfRegressors)
+		self.yVals = np.empty(_numberOfRegressors)
 	
 	#compare actual vs predicted value
 	def detectError(x, y):
 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or 
 				y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal))	
 
-	def updateCoeffs():
-		self.coeffList = np.polyfit(listX, listY, 1)
-
-def setupCompanyData():	
-
-	#to chagne in the future
-	global blndl
+	def updateCoeffs(self):
+		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
 
+
+def setupCompanyData(trade):
 	#create just for one company for now
-	tempCoeffs = [0, 0]
+	tempCoeffs = [0.0, 0.0]
 	rangeVal = 0.2
-	blndl = StockData("BLND.L", tempCoeffs, rangeVal)
-	print("blndl setup")
+	companyList[trade.symbol] = StockData("BLND.L", tempCoeffs, rangeVal)
+	print(trade.symbol, " setup")
 
 
 def timeToInt(time):
@@ -193,21 +195,30 @@ def processing(state):
 			#print(db.getAverage(trade.symbol))
 			
 			#done for one company for now
-			print ("dequeuing")
-			if (trade.symbol != "BLND.L"):
-				break
 
-			print(timeToInt(trade.time), trade.price)
-			print("found")
-			blndl.xVals[blndl.currCnt]=timeToInt(trade.time)
-			blndl.yVals[blndl.currCnt]=trade.price
+			# print ("dequeuing") #debugging
+
+			symb = trade.symbol 
+
+			#create a StockData objecty for every coimap0ny
+			if (symb not in companyList):
+				setupCompanyData(trade)
+
+			# print(symb, timeToInt(trade.time), trade.price) #debugging
+
+			#update keep a buffer of _num_of_regressors recent avlues for regressipn
+			companyList[symb].xVals[companyList[symb].currCnt]=timeToInt(trade.time)
+			companyList[symb].yVals[companyList[symb].currCnt]=trade.price
 
 
-			blndl.currCnt += 1
-			if (blndl.currCnt == 2):
-				blndl.updateCoeffs
-				print (blndl.coeffList)
-				blndl.currCnt = 0
+			companyList[symb].currCnt += 1
+			# print(companyList[symb].currCnt) #debugging
+
+			#every sewveral bvvalues, the line fit is updated (prevents consttant updates)
+			if (companyList[symb].currCnt == _numberOfRegressors):
+				companyList[symb].updateCoeffs()
+				# print (companyList[symb].coeffList) #debugging
+				companyList[symb].currCnt = 0
 
 
 			#dump to db when done
@@ -215,7 +226,7 @@ def processing(state):
 			#TODO: update average with actual average instead of 'trade.price'
 			#db.updateAverage(trade.symbol, trade.price)
 
-		time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
+		time.sleep(1) #REMOVE AFTER TESTING, to slow down processing
 	db.close()
 
 
