@@ -20,13 +20,6 @@ _qlock = threading.Lock() #mutex lock for queue
 _threads = []
 _threadID = 1
 
-#connect to data stream
-def init_stream():
-	host = "cs261.dcs.warwick.ac.uk"
-	host_port = 80
-	connect_stream()
-	netcat(host, host_port)
-
 def connect_stream():
 	global _connected
 	_connected = 1
@@ -36,43 +29,6 @@ def disconnect_stream():
 	global _connected
 	_connected = 0
 
-def manage_stream():
-	global _running
-	global _connected
-	init_stream() #stream is a blocking method
-	
-	#reconnects if commanded
-	while(_running):
-		if(_connected):
-			init_stream()
-
-#connects to host, port
-def netcat(host, port):
-	try:
-		#initialises socket
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	except socket.error:
-		print("Failed to create socket")
-	
-	s.connect((host, int(port)))
-	print("Stream connected")
-
-	global _running
-	global _connected
-	global _q
-	#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
-	data = s.recv(4096)
-	while (_connected):
-		data = s.recv(4096) #TODO: rework numbers
-		if(len(data)>0):
-			#puts new line of data into queue
-			#print(data)
-			_qlock.acquire()
-			_q.put(data)
-			_qlock.release()
-	s.close()
-	print("\nStream disconnected")
-
 #threading
 class StreamThread (threading.Thread):
 	def __init__(self, threadID):
@@ -80,7 +36,51 @@ class StreamThread (threading.Thread):
 		self.threadID = threadID
 	def run(self):
 		print("Starting stream thread")
-		manage_stream()
+		self.manage_stream()
+	
+	#connect to data stream
+	def init_stream(self):
+		host = "cs261.dcs.warwick.ac.uk"
+		host_port = 80
+		connect_stream()
+		self.netcat(host, host_port)
+	
+	def manage_stream(self):
+		global _running
+		global _connected
+		self.init_stream() #stream is a blocking method
+		
+		#reconnects if commanded
+		while(_running):
+			if(_connected):
+				self.init_stream()
+
+	#connects to host, port
+	def netcat(self, host, port):
+		try:
+			#initialises socket
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error:
+			print("Failed to create socket")
+		
+		s.connect((host, int(port)))
+		print("Stream connected")
+
+		global _running
+		global _connected
+		global _q
+		#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
+		data = s.recv(4096)
+		while (_connected):
+			data = s.recv(4096) #TODO: rework numbers
+			if(len(data)>0):
+				#puts new line of data into queue
+				#print(data)
+				_qlock.acquire()
+				_q.put(data)
+				_qlock.release()
+		s.close()
+		print("\nStream disconnected")
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
