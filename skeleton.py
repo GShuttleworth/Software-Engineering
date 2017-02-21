@@ -136,7 +136,7 @@ class ProcessorThread (threading.Thread):
 				#dump to db when done
 				db.addTransaction(trade)
 				#TODO: update average with actual average instead of 'trade.price'
-				db.updateAveragePrice(trade.symbol, trade.price)
+				#db.updateAveragePrice(trade.symbol, trade.price)
 			
 			time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		db.close()
