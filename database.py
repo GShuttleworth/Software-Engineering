@@ -71,56 +71,55 @@ class Database:
 		#print("Total number of rows updated :", updated)
 		if(updated==0): #check to see if it was updated
 			#add row
-			query = "INSERT INTO " + table + " VALUES (NULL,?,?)"
+			query = "INSERT INTO " + table + " VALUES (?,?)"
 			params = [sym,val]
 			updated = self.action(query,params)
-			#print("Number of INSERTED rows: ", updated)
+		
+	def updateDaily(self, date, sym, avg, table):
+		query = "INSERT INTO " + table + " VALUES(?,?,?)"
+		params = [sym,avg,date]
+		self.action(query, params)
+
+	def getDaily(self, date, sym, table):
+		# Assumes average is set at 00:00 and not changed again
+		avg = -1
+		query = "SELECT * FROM " + table + " WHERE(dateRecorded=? AND symbol=?)"
+		params = [date, sym]
+		data = self.query(query, params)
+		# Should only be one record per day
+		avg_exists = data.fetchone()
+		if(avg_exists):
+			avg = avg_exists
+		return avg
+
+	def updatePriceDaily(self, date, sym, avg):
+		if(self.state == 1):
+			self.updateDaily(date, sym, avg, "daily_price_avg_live")
+		else:
+			self.updateDaily(date, sym, avg, "daily_price_avg_static")
+
+	def updateVolumeDaily(self, date, sym, avg):
+		if(self.state == 1):
+			self.updateDaily(date, sym, avg, "daily_volume_avg_live")
+		else:
+			self.updateDaily(date, sym, avg, "daily_volume_avg_static")
+
+	def getPriceDaily(self, date, sym):
+		if(self.state == 1):
+			return self.getDaily(date, sym, "daily_price_avg_live")
+		else:
+			return self.getDaily(date, sym, "daily_price_avg_static")
+
+	def getVolumeDaily(self, date, sym):
+		if(self.state == 1):
+			return self.updateDaily(date, sym, "daily_volume_avg_live")
+		else:
+			return self.updateDaily(date, sym, "daily_volume_avg_static")
 	
-        def updateDaily(self, date, sym, avg, table):
-            query = "INSERT INTO " + table + " VALUES(?,?,?)"
-            params = [sym,avg,date]
-            self.action(query, params)
-
-        def getDaily(self, date, sym, table):
-            # Assumes average is set at 00:00 and not changed again
-            avg = -1
-            query = "SELECT * FROM " + table + " WHERE(dateRecorded=? AND symbol=?)"
-            params = [date, sym]
-            data = self.query(query, params)
-            # Should only be one record per day
-            avg_exists = data.fetchone()
-            if(avg_exists):
-                avg = avg_exists
-            return avg
-
-        def updatePriceDaily(self, date, sym, avg):
-            if(self.state == 1):
-                self.updateDaily(date, sym, avg, "daily_price_avg_live")
-            else:
-                self.updateDaily(date, sym, avg, "daily_price_avg_static")
-
-        def updateVolumeDaily(self, date, sym, avg):
-            if(self.state == 1):
-                self.updateDaily(date, sym, avg, "daily_volume_avg_live")
-            else:
-                self.updateDaily(date, sym, avg, "daily_volume_avg_static")
-
-        def getPriceDaily(self, date, sym):
-            if(self.state == 1):
-                return self.getDaily(date, sym, "daily_price_avg_live")
-            else:
-                return self.getDaily(date, sym, "daily_price_avg_static")
-
-        def getVolumeDaily(self, date, sym):
-            if(self.state == 1):
-                return self.updateDaily(date, sym, "daily_volume_avg_live")
-            else:
-                return self.updateDaily(date, sym, "daily_volume_avg_static")
-        
 
 
 
 
 
 
-            
+		
