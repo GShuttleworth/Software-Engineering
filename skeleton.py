@@ -22,6 +22,13 @@ _qlock = threading.Lock() #mutex lock for queue
 _threads = []
 _threadID = 1
 
+_anomalyq = queue.Queue()
+_anomalyqlock = threading.Lock()
+_anomalycounter = 0
+_tradecounter = 0
+_tradecounterlock = threading.Lock()
+_tradevalue = 0
+
 def connect_stream():
 	global _connected
 	_connected = 1
@@ -187,7 +194,14 @@ class ProcessorThread (threading.Thread):
 		while(_running):
 			trades=self.dequeue(_q,_qlock)
 			for trade in trades:
-				#TODO processing here HI JAKUB
+				#update counts
+				global _tradecounter
+				global _tradecounterlock
+				global _anomalycounter
+				global _tradevalue
+				
+				_tradecounter+=1
+				_tradevalue+=trade.price+trade.size
 				#trade is in TradeData format (see trade.py)
 				#use db.getAverage()
 				#print(db.getAverage(trade.symbol))
@@ -269,15 +283,20 @@ def refresh():
 def getdata():
 	#this is for the flask application, gets data for front end
 	global _connected
+	global _anomalycounter
+	global _tradecounter
+	global _tradevalue
+	
 	connected = False
 	if(_connected==1):
 		connected = True
 
 	#puts into json format
-	data = []
-	live = {}
-	live["live"] = connected
-	data.append(live)
+	data = {}
+	data["live"] = connected
+	data["anomaly"] = _anomalycounter
+	data["trades"] = _tradecounter
+	data["tradevalue"] = _tradevalue
 	return json.dumps(data)
 
 def init_threads():
