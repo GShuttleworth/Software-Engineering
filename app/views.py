@@ -11,7 +11,7 @@ def index():
 	numberOfAnomalies = "Loading..."
 	numberOfTrades = "Loading..."
 	totalTradeValue = "Loading..."
-	#what is this???
+	#what is this??? A: The ID assigned to each anomaly, increment by 1 for eachndetected
 	anomalyID = 1
 	anomalyDate = "Timestamp"
 	anomalyType = "Pump and Dump"
