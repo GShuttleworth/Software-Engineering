@@ -13,6 +13,7 @@ import numpy as np
 #front end imports
 import json
 from app import app
+import logging
 
 #modules by us
 from trade import *
@@ -329,8 +330,16 @@ def init_threads():
 
 #run web server on main thread
 if __name__ == '__main__':
+	#only show errors in console, needs logging import
+	log = logging.getLogger('werkzeug')
+	log.setLevel(logging.ERROR)
+	
 	_running = 1
 	init_threads()
+	
+	#help
+	print("\t\t\t****Use CTRL+C then Enter key to exit****")
+	print("\t\t\t\tFlask logging mode off\n")
 	
 	#signal handler
 	signal.signal(signal.SIGINT, signal_handler)
