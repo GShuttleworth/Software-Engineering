@@ -184,7 +184,7 @@ class ProcessorThread (threading.Thread):
 	def timeToInt(self,time):
 		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 
-	#global _numberOfRegressors
+	global _numberOfRegressors
 	_numberOfRegressors = 3
 	
 	def processing(self,state):
