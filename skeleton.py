@@ -178,7 +178,7 @@ class ProcessorThread (threading.Thread):
 		tempCoeffs = [0.0, 0.0]
 		rangeVal = 0.2
 		companyList[trade.symbol] = StockData("BLND.L", tempCoeffs, rangeVal)
-		print(trade.symbol, " setup")
+		#print(trade.symbol, " setup") #debugging
 
 
 	def timeToInt(self,time):
@@ -241,7 +241,7 @@ class ProcessorThread (threading.Thread):
 				#TODO: update average with actual average instead of 'trade.price'
 				#db.updateAverage(trade.symbol, trade.price)
 			
-			time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
+			#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		db.close()
 		
 	def dequeue(self,q,qlock):

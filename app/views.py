@@ -7,7 +7,7 @@ from flask import request
 @app.route('/index')
 def index():
 	pagename = "Dashboard"
-	live = true
+	live = True
 	numberOfAnomalies = 0
 	numberOfTrades = 0
 	totalTradeValue = 0
