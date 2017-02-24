@@ -237,7 +237,7 @@ class ProcessorThread (threading.Thread):
 
 
 				#dump to db when done
-				#db.addTransaction(trade) 
+				db.addTransaction(trade)
 				#TODO: update average with actual average instead of 'trade.price'
 				#db.updateAverage(trade.symbol, trade.price)
 			

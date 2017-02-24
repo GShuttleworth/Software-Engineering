@@ -7,10 +7,17 @@ from flask import request
 @app.route('/index')
 def index():
 	pagename = "Dashboard"
+<<<<<<< Updated upstream
 	livedata = True
 	numberOfAnomalies = 0
 	numberOfTrades = 0
 	totalTradeValue = 0
+=======
+	live = True
+	numberOfAnomalies = "Loading"
+	numberOfTrades = "Loading"
+	totalTradeValue = "Loading"
+>>>>>>> Stashed changes
 	#what is this???
 	anomalyID = 1
 	anomalyDate = "Timestamp"
