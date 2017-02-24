@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import threading
 import queue
-import socket
+import socket, errno
 import signal
 import sys
 import time #for testing, may need for timed reconnection
@@ -63,24 +63,29 @@ class StreamThread (threading.Thread):
 		except socket.error:
 			print("Failed to create socket")
 		
-		s.connect((host, int(port)))
-		print("Stream connected")
+		try:
+			s.connect((host, int(port)))
+			print("Stream connected")
 
-		global _running
-		global _connected
-		global _q
-		#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
-		data = s.recv(4096)
-		while (_connected):
-			data = s.recv(4096) #TODO: rework numbers
-			if(len(data)>0):
-				#puts new line of data into queue
-				#print(data)
-				_qlock.acquire()
-				_q.put(data)
-				_qlock.release()
-		s.close()
-		print("\nStream disconnected")
+			global _running
+			global _connected
+			global _q
+			#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
+			data = s.recv(4096)
+			while (_connected):
+				data = s.recv(4096) #TODO: rework numbers
+				if(len(data)>0):
+					#puts new line of data into queue
+					#print(data)
+					_qlock.acquire()
+					_q.put(data)
+					_qlock.release()
+			s.close()
+			print("\nStream disconnected")
+		except socket.error as e:
+			if e.errno == errno.ECONNREFUSED:
+				print("Stream down, aborting. Please manually reconnect")
+				disconnect_stream()
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
