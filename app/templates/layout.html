@@ -50,8 +50,9 @@
 
       <ul class="nav navbar-top-links navbar-right">
         <li class="">
-          {% if live %}
-          {% else %}<h3><span class="label label-danger" id="live">Live Data</span></h3>
+          {% if livedata %}
+          <h3><span class="label label-danger" id="live">Live Data</span></h3>
+          {% else %}
           <h3><span class="label label-warning">Historical Data</span></h3>
           {% endif %}
         </li>
