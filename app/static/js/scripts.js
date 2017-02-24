@@ -17,9 +17,9 @@ function refresh() {
 
 function live(status) {
 	if(status==true){
-		$('#live').html('Live');
+		$('#live').html('Live Data');
 	}else{
-		$('#live').html('Not live');
+		$('#live').html('Historical Data');
 	}
 }
 
@@ -27,7 +27,7 @@ function updatedash(anomalycount,tradecount,tradevalue) {
 	$('#trades').html(tradecount);
 	$('#anomalies').html(anomalycount);
 	$('#tradevalue').html('&pound;'+tradevalue);
-	
+
 }
 
 $(document).ready(function() {
