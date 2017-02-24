@@ -6,6 +6,8 @@ import signal
 import sys
 import time #for testing, may need for timed reconnection
 
+#front end imports
+import json
 from app import app
 
 #modules by us
@@ -34,6 +36,7 @@ class StreamThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
+		self.name = "Data stream"
 	def run(self):
 		print("Starting stream thread")
 		self.manage_stream()
@@ -72,16 +75,26 @@ class StreamThread (threading.Thread):
 			global _q
 			#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
 			data = s.recv(4096)
+			counter=0 #a counter to see how many iterations of no data
 			while (_connected):
-				data = s.recv(4096) #TODO: rework numbers
-				if(len(data)>0):
-					#puts new line of data into queue
-					#print(data)
-					_qlock.acquire()
-					_q.put(data)
-					_qlock.release()
+				s.settimeout(2) #if no data comes in, s.recv becomes blocking
+				try:
+					data = s.recv(4096) #TODO: rework numbers
+				except socket.timeout as e:
+					if(counter>60):
+						print("No data received in the past 2 minutes. Disconnecting stream")
+						disconnect_stream()
+					counter+=1
+				else:
+					if(len(data)>0):
+						#puts new line of data into queue
+						_qlock.acquire()
+						_q.put(data)
+						_qlock.release()
+					counter=0
 			s.close()
 			print("\nStream disconnected")
+			
 		except socket.error as e:
 			if e.errno == errno.ECONNREFUSED:
 				print("Stream down, aborting. Please manually reconnect")
@@ -91,6 +104,7 @@ class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
+		self.name = "Handler"
 	def run(self):
 		print("Starting event listener thread")
 		self.eventListener()
@@ -132,11 +146,11 @@ class StockData:
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
 
-
 class ProcessorThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
+		self.name = "Data processor"
 	def run(self):
 		print("Starting processing thread")
 
@@ -230,14 +244,6 @@ class ProcessorThread (threading.Thread):
 				trades.append(trade)
 		return trades
 
-
-def getdata():
-	#this is for the flask application, gets data for front end
-	global _q
-	#data = _q.get()
-	data = "lol"
-	return data
-
 #signal handling to terminate/quit
 def signal_handler(signal, frame):
 	global _running
@@ -248,9 +254,9 @@ def signal_handler(signal, frame):
 	_running=0
 	#rejoin threads
 	for t in _threads:
-		#print(t.isAlive())
+		#print("Thread " + t.name + " is alive: " + str(t.isAlive()))
 		t.join()
-	#print(t.isAlive())
+		#print(t.isAlive())
 	sys.exit()
 
 #############################
@@ -259,6 +265,20 @@ def signal_handler(signal, frame):
 @app.route('/refresh', methods=['POST'])
 def refresh():
 	return getdata()
+
+def getdata():
+	#this is for the flask application, gets data for front end
+	global _connected
+	connected = False
+	if(_connected==1):
+		connected = True
+
+	#puts into json format
+	data = []
+	live = {}
+	live["live"] = connected
+	data.append(live)
+	return json.dumps(data)
 
 def init_threads():
 	#create threads
