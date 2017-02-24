@@ -44,7 +44,12 @@ class Database:
 			transactions.append(TradeData(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]))
 
 		return transactions
-
+	
+	def reset(self):
+		# Deletes all enteries to reset db
+		#TODO
+		return 0
+	
 	def getAveragePrice(self, sym):
 		avg = -1 #sanity check!
 		table = "running_price_avg_live"
