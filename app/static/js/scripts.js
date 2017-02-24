@@ -7,6 +7,9 @@ function refresh() {
 			var data = JSON.parse(d);
 			live(data.live);
 			updatedash(data.anomaly,data.trades,data.tradevalue);
+		},
+		error: function(d) {
+			console.log("server down");
 		}
 	});
 	setTimeout(refresh, 2000); // you could choose not to continue on failure...

@@ -6,6 +6,10 @@ import signal
 import sys
 import time #for testing, may need for timed reconnection
 
+#processing
+from datetime import datetime
+import numpy as np
+
 #front end imports
 import json
 from app import app
@@ -169,7 +173,7 @@ class ProcessorThread (threading.Thread):
 
 	#Jakub here, this might be expanded/changed/moved out later
 
-	def setupCompanyData(trade):
+	def setupCompanyData(self,trade):
 		#create just for one company for now
 		tempCoeffs = [0.0, 0.0]
 		rangeVal = 0.2
@@ -177,7 +181,7 @@ class ProcessorThread (threading.Thread):
 		print(trade.symbol, " setup")
 
 
-	def timeToInt(time):
+	def timeToInt(self,time):
 		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 
 
@@ -201,7 +205,7 @@ class ProcessorThread (threading.Thread):
 				global _tradevalue
 				
 				_tradecounter+=1
-				_tradevalue+=trade.price+trade.size
+				_tradevalue+=float(trade.price)+float(trade.size)
 				#trade is in TradeData format (see trade.py)
 				#use db.getAverage()
 				#print(db.getAverage(trade.symbol))
@@ -214,12 +218,12 @@ class ProcessorThread (threading.Thread):
 
 				#create a StockData objecty for every coimap0ny
 				if (symb not in companyList):
-					setupCompanyData(trade)
+					self.setupCompanyData(trade)
 
 				# print(symb, timeToInt(trade.time), trade.price) #debugging
 
 				#update keep a buffer of _num_of_regressors recent avlues for regressipn
-				companyList[symb].xVals[companyList[symb].currCnt]=timeToInt(trade.time)
+				companyList[symb].xVals[companyList[symb].currCnt]=self.timeToInt(trade.time)
 				companyList[symb].yVals[companyList[symb].currCnt]=trade.price
 
 
@@ -297,6 +301,10 @@ def getdata():
 	data["anomaly"] = _anomalycounter
 	data["trades"] = _tradecounter
 	data["tradevalue"] = _tradevalue
+
+	#empty anomaly queue
+	anomalies=[]
+	data["anomalies"] = anomalies
 	return json.dumps(data)
 
 def init_threads():
