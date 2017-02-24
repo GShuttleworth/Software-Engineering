@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+  <div class="col-lg-4 col-md-4">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-3">
+            <i class="fa fa-comments fa-5x"></i>
+          </div>
+          <div class="col-xs-9 text-right">
+            <div class="huge">{{ numberOfAnomalies }}</div>
+            <div>Anomalies Detected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-3">
+            <i class="fa fa-tasks fa-5x"></i>
+          </div>
+          <div class="col-xs-9 text-right">
+            <div class="huge">{{ numberOfTrades }}</div>
+            <div>Trades Analysed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-3">
+            <i class="fa fa-shopping-cart fa-5x"></i>
+          </div>
+          <div class="col-xs-9 text-right">
+            <div class="huge">${{ totalTradeValue }}</div>
+            <div>Trade Value</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i> Anomaly Detected
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Anomalie Type</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ anomalyId }}</td>
+                    <td>{{ anomalyDate}}</td>
+                    <td>{{ anomalyTime}}</td>
+                    <td>{{ anomalyType}}</td>
+                    <td><a href="{{ url_for('anomaly')}}"><button type="button" class="btn btn-primary">Action</button></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
