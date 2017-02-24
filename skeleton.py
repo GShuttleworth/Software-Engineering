@@ -184,8 +184,7 @@ class ProcessorThread (threading.Thread):
 	def timeToInt(self,time):
 		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 
-
-	global _numberOfRegressors
+	#global _numberOfRegressors
 	_numberOfRegressors = 3
 	
 	def processing(self,state):
@@ -300,7 +299,7 @@ def getdata():
 	data["live"] = connected
 	data["anomaly"] = _anomalycounter
 	data["trades"] = _tradecounter
-	data["tradevalue"] = _tradevalue
+	data["tradevalue"] = format(_tradevalue, '.2f')
 
 	#empty anomaly queue
 	anomalies=[]
