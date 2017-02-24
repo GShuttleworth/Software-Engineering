@@ -108,13 +108,55 @@ class HandlerThread (threading.Thread):
 			except:
 				break
 
+class StockData:
+	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
+	def __init__(self, symbol, coeffList, rangeVal):
+		self.symbol = symbol
+		self.coeffList = coeffList
+		self.range = rangeVal
+		self.currCnt = 0
+		self.xVals = np.empty(_numberOfRegressors)
+		self.yVals = np.empty(_numberOfRegressors)
+
+	#compare actual vs predicted value
+	def detectError(x, y):
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or 
+			y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal)) 
+
+	def updateCoeffs(self):
+		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
+
+
+
 class ProcessorThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 	def run(self):
 		print("Starting processing thread")
+
+		#setup comapny data, one-off at the beginning
+		global companyList
+		companyList = {}
+
 		self.processing(1) #currently doing live data
+
+	#Jakub here, this might be expanded/changed/moved out later
+
+	def setupCompanyData(trade):
+		#create just for one company for now
+		tempCoeffs = [0.0, 0.0]
+		rangeVal = 0.2
+		companyList[trade.symbol] = StockData("BLND.L", tempCoeffs, rangeVal)
+		print(trade.symbol, " setup")
+
+
+	def timeToInt(time):
+		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+
+
+	global _numberOfRegressors
+	_numberOfRegressors = 3
 	
 	def processing(self,state):
 		#state is processing static/live
@@ -131,12 +173,37 @@ class ProcessorThread (threading.Thread):
 				#use db.getAverage()
 				#print(db.getAverage(trade.symbol))
 				
-				
-				
+				#done for one company for now
+
+				# print ("dequeuing") #debugging
+
+				symb = trade.symbol 
+
+				#create a StockData objecty for every coimap0ny
+				if (symb not in companyList):
+					setupCompanyData(trade)
+
+				# print(symb, timeToInt(trade.time), trade.price) #debugging
+
+				#update keep a buffer of _num_of_regressors recent avlues for regressipn
+				companyList[symb].xVals[companyList[symb].currCnt]=timeToInt(trade.time)
+				companyList[symb].yVals[companyList[symb].currCnt]=trade.price
+
+
+				companyList[symb].currCnt += 1
+				# print(companyList[symb].currCnt) #debugging
+
+				#every sewveral bvvalues, the line fit is updated (prevents consttant updates)
+				if (companyList[symb].currCnt == _numberOfRegressors):
+					companyList[symb].updateCoeffs()
+					# print (companyList[symb].coeffList) #debugging
+					companyList[symb].currCnt = 0
+
+
 				#dump to db when done
-				db.addTransaction(trade)
+				#db.addTransaction(trade) 
 				#TODO: update average with actual average instead of 'trade.price'
-				#db.updateAveragePrice(trade.symbol, trade.price)
+				#db.updateAverage(trade.symbol, trade.price)
 			
 			time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		db.close()
