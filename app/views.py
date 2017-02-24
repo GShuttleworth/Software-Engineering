@@ -7,13 +7,14 @@ from flask import request
 @app.route('/index')
 def index():
 	pagename = "Dashboard"
+	live = true
 	numberOfAnomalies = 500
 	numberOfTrades = 138282
 	totalTradeValue = 1500
 	anomalyID = 1
 	anomalyDate = "Timestamp"
 	anomalyType = "Pump and Dump"
-	return render_template('dashboard.html',pagename=pagename, numberOfAnomalies=numberOfAnomalies, numberOfTrades=numberOfTrades)
+	return render_template('dashboard.html',pagename=pagename, numberOfAnomalies=numberOfAnomalies, numberOfTrades=numberOfTrades, live=live)
 
 @app.route('/anomaly')
 def anomaly():

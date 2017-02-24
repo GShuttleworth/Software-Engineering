@@ -50,8 +50,10 @@
 
       <ul class="nav navbar-top-links navbar-right">
         <li class="">
-          <h3><span class="label label-danger" id="live">Live</span></h3>
-          <!-- <h3><span class="label label-warning">Historical</span></h3> -->
+          {% if live %}
+          {% else %}<h3><span class="label label-danger" id="live">Live Data</span></h3>
+          <h3><span class="label label-warning">Historical Data</span></h3>
+          {% endif %}
         </li>
 
       </ul>
@@ -104,7 +106,7 @@
 
   <!-- Custom Theme JavaScript -->
   <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
-  
+
   <!-- Front end scripts -->
   <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 
