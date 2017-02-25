@@ -6,6 +6,7 @@ function refresh() {
 		url : "/refresh",
 		success: function(d) {
 			var data = JSON.parse(d);
+			mode(data.mode);
 			live(data.live);
 			updatedash(data.anomaly,data.trades,data.tradevalue);
 		},
@@ -20,6 +21,13 @@ function refresh() {
 
 function live(status) {
 	if(status==true){
+		
+	}else{
+		
+	}
+}
+function mode(status) {
+	if(status==1){
 		$('#live').html('Live Data');
 	}else{
 		$('#live').html('Historical Data');

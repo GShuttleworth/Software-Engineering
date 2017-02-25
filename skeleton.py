@@ -21,6 +21,7 @@ from trade import *
 from database import *
 
 #global declarations and variables
+_mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
 _q = queue.Queue() #queue for data stream
@@ -301,14 +302,17 @@ def refresh():
 #toggling between live and static
 @app.route('/toggle', methods=['POST'])
 def toggle():
-	mode = int(request.json['mode'])
+	m = int(request.json['mode'])
+	global _mode
 	global _connected
-	if(mode==0):
+	if(m==0):
 		if(_connected==1):
 			disconnect_stream()
+		mode=0
 	if(mode==1):
 		if(_connected!=1):
 			connect_stream()
+		mode=1
 	
 	return "1"
 
@@ -340,6 +344,7 @@ def getdata():
 	global _anomalycounter
 	global _tradecounter
 	global _tradevalue
+	global _mode
 	
 	connected = False
 	if(_connected==1):
@@ -347,6 +352,7 @@ def getdata():
 
 	#puts into json format
 	data = {}
+	data["mode"] = _mode
 	data["live"] = connected
 	data["anomaly"] = _anomalycounter
 	data["trades"] = _tradecounter
