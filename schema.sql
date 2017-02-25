@@ -5,15 +5,10 @@ This is because although the same attributes are in some tables, they are quite 
 */
 drop table trans_live;
 drop table trans_static;
-drop table running_price_avg_live;
-drop table running_price_avg_static;
-drop table daily_price_avg_live;
-drop table daily_price_avg_static;
-drop table running_volume_avg_live;
-drop table running_volume_avg_static;
-drop table daily_volume_avg_live;
-drop table daily_volume_avg_static;
+drop table averages_live;
+drop table averages_static;
 drop table anomalies_live;
+drop table anomalies_static;
 
 create table trans_live (
 	id integer primary key,
@@ -50,52 +45,26 @@ create table anomalies_live (
 	actiontaken integer DEFAULT 0, /* whether the anomaly has been dealt with */
 	FOREIGN KEY(tradeid) REFERENCES trans_live(id) ON DELETE CASCADE
 );
-
--- Tables for prices
-create table running_price_avg_live (
-	symbol varchar(10),
-	averagePrice float
+-- I know you said in file we don't need this, but by having it it solves and possible problems
+create table anomalies_static (
+	id integer primary key,
+	tradeid integer UNIQUE,
+	category integer,
+	actiontaken integer DEFAULT 0, /* whether the anomaly has been dealt with */
+	FOREIGN KEY(tradeid) REFERENCES trans_live(id) ON DELETE CASCADE
 );
 
-create table running_price_avg_static (
-	symbol varchar(10),
-	averagePrice float
-);
-
-create table daily_price_avg_live (
+-- Tables for averages
+create table averages_live (
 	symbol varchar(10),
 	averagePrice float,
-	dateRecorded varchar(30)
+	averageVolume float,
+	numTrades integer
 );
 
-create table daily_price_avg_static (
+create table averages_static (
 	symbol varchar(10),
 	averagePrice float,
-	dateRecorded varchar(30)
-);
-
--- Tables for volume
-create table running_volume_avg_live (
-	symbol varchar(10),
-	averageVolume float
-);
-
-create table running_volume_avg_static (
-	symbol varchar(10),
-	averageVolume float
-);
-
-create table daily_volume_avg_live (
-	symbol varchar(10),
 	averageVolume float,
-	dateRecorded varchar(30)
+	numTrades integer
 );
-
-create table daily_volume_avg_static (
-	symbol varchar(10),
-	averageVolume float,
-	dateRecorded varchar(30)
-);
-
-
-

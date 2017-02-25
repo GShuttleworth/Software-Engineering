@@ -27,6 +27,33 @@ class Database:
 		# Close the connection to the database
 		self.conn.close()
 
+        def getAverage(self, sym): # Returns list, avgPrice at 1 and avgVol at 2
+                table = "averages_live"
+                if(self.state != 1):
+                        table = "averages_static"
+		query = "SELECT * FROM " + table + " WHERE symbol=?"
+		params = [sym]
+		data = self.query(query,params)
+		#should only return 1 row right, if it exists
+		avg_exists = data.fetchone()
+		if(avg_exists != None):
+			return avg_exists
+                return -1
+
+        def updateAverage(self, sym, price, vol, num):
+                table = "averages_live"
+                if(self.state != 1):
+                        table = "averages_static"
+		query = "UPDATE " + table + " SET averagePrice=?, averageVolume=?, numTrades=? WHERE symbol=?"
+		params = [price,vol,num,sym]
+		updated = self.action(query,params)
+		#print("Total number of rows updated :", updated)
+		if(updated==0): #check to see if it was updated
+			#add row
+			query = "INSERT INTO " + table + " VALUES (?,?,?,?)"
+			params = [sym,price,vol,0]
+			updated = self.action(query,params)
+
 	def addTransaction(self, data):
 		if(isinstance(data, TradeData)):
 			query = ""
@@ -36,7 +63,26 @@ class Database:
 				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			params = (data.time, data.buyer, data.seller, data.price, data.size, data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
 			self.action(query,params)
+                        # Update the averages tables
+                        avgData = self.getAverage(data.symbol)
+                        if(avgData == -1):
+                                # No averages present
+                                self.updateAverage(data.symbol, data.price, data.size, 0)
+                                return
 
+                        avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
+                        # Recalculate the averages
+                        avgPrice *= numTrades
+                        avgVolume *= numTrades
+                        avgPrice += data.price
+                        avgVolume += data.size
+                        numTrades += 1
+                        avgPrice /= numTrades
+                        avgVolume /= numTrades
+                        self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades) 
+                        return 0
+                else:
+                        return -1
 	def getTransactions(self, q):
 		data = self.query(q)
 		transactions = []
@@ -47,7 +93,13 @@ class Database:
 	
 	def clear(self,date):
 		#delete all entries with the same date
-		#TODO
+                table = "trans_live"
+                if(self.state == 1):
+                        table = "trans_static"
+
+	        query = "DELETE FROM " + table + " WHERE time=?"
+                params = [date]
+                self.action(query, params)
 		return 0
 	
 	#gets all the anomalies for the table, returns a list of anomaly objects
@@ -76,117 +128,19 @@ class Database:
 		return anomalies
 		
 	def addAnomaly(self,anomaly):
-		#TODO
+                if(isinstance(anomaly, Anomaly)):
+                        table = "anomalies_live"
+                        if(self.state != 1):
+                                table = "anomalies_static"
+
+                        query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
+                        params = [anomaly.id, anomaly.category]
+                        self.action(query, params)
+                        return 1
 		return -1
 
-	def getAveragePrice(self, sym):
-		avg = -1 #sanity check!
-		table = "running_price_avg_live"
-		if(self.state != 1):
-			table = "running_price_avg_static"
-		
-		query = "SELECT averagePrice FROM " + table + " WHERE symbol=?"
-		params = [sym]
-		data = self.query(query,params)
-		#should only return 1 row right, if it exists
-		avg_exists = data.fetchone()
-		if(avg_exists):
-			avg=avg_exists
-		return avg
+        def getAveragePrice(self, sym):
+                return self.getAverage(sym)[1]
 
-	def updateAveragePrice(self, sym, val):
-		#attempts to update
-		table = "running_price_avg_live"
-		if(self.state != 1):
-			table = "runnning_price_avg_static"
-		query = "UPDATE " + table + " SET averagePrice=? WHERE symbol=?"
-		params = [val,sym]
-		updated = self.action(query,params)
-		#print("Total number of rows updated :", updated)
-		if(updated==0): #check to see if it was updated
-			#add row
-			query = "INSERT INTO " + table + " VALUES (?,?)"
-			params = [sym,val]
-			updated = self.action(query,params)
-		
-	def updateDaily(self, date, sym, avg, table):
-		query = "INSERT INTO " + table + " VALUES(?,?,?)"
-		params = [sym,avg,date]
-		self.action(query, params)
-
-	def getDaily(self, date, sym, table):
-		# Assumes average is set at 00:00 and not changed again
-		avg = -1
-		query = "SELECT * FROM " + table + " WHERE(dateRecorded=? AND symbol=?)"
-		params = [date, sym]
-		data = self.query(query, params)
-		# Should only be one record per day
-		avg_exists = data.fetchone()
-		if(avg_exists):
-			avg = avg_exists
-		return avg
-
-	def updatePriceDaily(self, date, sym, avg):
-		if(self.state == 1):
-			self.updateDaily(date, sym, avg, "daily_price_avg_live")
-		else:
-			self.updateDaily(date, sym, avg, "daily_price_avg_static")
-
-	def updateVolumeDaily(self, date, sym, avg):
-		if(self.state == 1):
-			self.updateDaily(date, sym, avg, "daily_volume_avg_live")
-		else:
-			self.updateDaily(date, sym, avg, "daily_volume_avg_static")
-
-	def getPriceDaily(self, date, sym):
-		if(self.state == 1):
-			return self.getDaily(date, sym, "daily_price_avg_live")
-		else:
-			return self.getDaily(date, sym, "daily_price_avg_static")
-
-	def getVolumeDaily(self, date, sym):
-		if(self.state == 1):
-			return self.updateDaily(date, sym, "daily_volume_avg_live")
-		else:
-			return self.updateDaily(date, sym, "daily_volume_avg_static")
-
-	def updateDaily(self, date, sym, avg, table):
-		query = "INSERT INTO " + table + " VALUES(?,?,?)"
-		params = [sym,avg,date]
-		self.action(query, params)
-
-	def getDaily(self, date, sym, table):
-		# Assumes average is set at 00:00 and not changed again
-		avg = -1
-		query = "SELECT * FROM " + table + " WHERE(dateRecorded=? AND symbol=?)"
-		params = [date, sym]
-		data = self.query(query, params)
-		# Should only be one record per day
-		avg_exists = data.fetchone()
-		if(avg_exists):
-			avg = avg_exists
-		return avg
-
-	def updatePriceDaily(self, date, sym, avg):
-		if(self.state == 1):
-			self.updateDaily(date, sym, avg, "daily_price_avg_live")
-		else:
-			self.updateDaily(date, sym, avg, "daily_price_avg_static")
-
-	def updateVolumeDaily(self, date, sym, avg):
-		if(self.state == 1):
-			self.updateDaily(date, sym, avg, "daily_volume_avg_live")
-		else:
-			self.updateDaily(date, sym, avg, "daily_volume_avg_static")
-
-	def getPriceDaily(self, date, sym):
-		if(self.state == 1):
-			return self.getDaily(date, sym, "daily_price_avg_live")
-		else:
-			return self.getDaily(date, sym, "daily_price_avg_static")
-
-	def getVolumeDaily(self, date, sym):
-		if(self.state == 1):
-			return self.updateDaily(date, sym, "daily_volume_avg_live")
-		else:
-			return self.updateDaily(date, sym, "daily_volume_avg_static")
+        def getAverageVolume(self, sym):
+                return self.getAverage(sym)[2]
