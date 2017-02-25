@@ -55,40 +55,40 @@ class Database:
             # add row
             query = "INSERT INTO " + table + " VALUES (?,?,?,?)"
             params = [sym, price, vol, 0]
-			updated = self.action(query, params)
+            updated = self.action(query, params)
 
-	def addTransaction(self, data):
-		if(isinstance(data, TradeData)):
-			query = ""
-			if(self.state == 1):
-				query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-			else:
-				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-			params = (data.time, data.buyer, data.seller, data.price, data.size,
-			data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
-			self.action(query, params)
-			
-			print(self.c.lastrowid)
-			# Update the averages tables
-			avgData = self.getAverage(data.symbol)
-			if(avgData == -1):
-				# No averages present
-				self.updateAverage(data.symbol, data.price, data.size, 0)
-			return
+        def addTransaction(self, data):
+            if(isinstance(data, TradeData)):
+                query = ""
+                if(self.state == 1):
+                    query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                else:
+                    query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                params = (data.time, data.buyer, data.seller, data.price, data.size,
+                          data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
+                self.action(query, params)
 
-			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
-			# Recalculate the averages
-			avgPrice *= numTrades
-			avgVolume *= numTrades
-			avgPrice += float(data.price)
-			avgVolume += int(data.size)
-			numTrades += 1
-			avgPrice /= numTrades
-			avgVolume /= numTrades
-			self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
-			return 0
-		else:
-			return -1
+                print(self.c.lastrowid)
+                # Update the averages tables
+                avgData = self.getAverage(data.symbol)
+                if(avgData == -1):
+                    # No averages present
+                    self.updateAverage(data.symbol, data.price, data.size, 0)
+                return
+
+                avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
+                # Recalculate the averages
+                avgPrice *= numTrades
+                avgVolume *= numTrades
+                avgPrice += float(data.price)
+                avgVolume += int(data.size)
+                numTrades += 1
+                avgPrice /= numTrades
+                avgVolume /= numTrades
+                self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
+                return 0
+            else:
+                return -1
 
     def getTransactions(self, q):
         data = self.query(q)
