@@ -14,6 +14,7 @@ import numpy as np
 import json
 from app import app
 import logging
+from flask import request
 
 #modules by us
 from trade import *
@@ -293,6 +294,20 @@ def signal_handler(signal, frame):
 @app.route('/refresh', methods=['POST'])
 def refresh():
 	return getdata()
+
+#toggling between live and static
+@app.route('/toggle', methods=['POST'])
+def toggle():
+	mode = int(request.json['mode'])
+	global _connected
+	if(mode==0):
+		if(_connected==1):
+			disconnect_stream()
+	if(mode==1):
+		if(_connected!=1):
+			connect_stream()
+	
+	return "1"
 
 @app.route('/getanomalies', methods=['POST'])
 def init_data():

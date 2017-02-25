@@ -90,6 +90,23 @@ function convert_type(t){
 	}
 	return type;
 }
+
+function togglemode(mode){
+	var data = {"mode":mode};
+	$.ajax({
+		type : 'POST',
+		url : "/toggle",
+		data : JSON.stringify(data),
+		contentType: 'application/json;charset=UTF-8',
+		success: function(d) {
+			
+		},
+		error: function(d) {
+			console.log("unable to switch");
+			//error bar here
+		}
+	});
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
 	refresh();
@@ -97,8 +114,15 @@ $(document).ready(function() {
 	loadanomalies();
 	
 	//event listeners
-	$("btn-live").click(function(e){
+	$("#btn-live").click(function(e){
 		e.preventDefault();
-		alert("hi");
+		//alert("hi");
+		togglemode(1);
 	});
+	$("#btn-historical").click(function(e){
+	   e.preventDefault();
+	   //alert("hi");
+	   togglemode(0);
+	   //import file
+   });
 });
