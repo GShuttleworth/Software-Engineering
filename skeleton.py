@@ -36,6 +36,8 @@ _tradecounter = 0
 _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
+_sessions = []
+
 def connect_stream():
 	global _connected
 	_connected = 1
