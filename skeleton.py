@@ -159,7 +159,7 @@ class PriceRegression:
 	#compare actual vs predicted value
 	def detectError(self, x, y):
 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or 
-			y<=(x*self.coeffList[0]+self.priceCoeffList[1])*(1-self.rangeVal)) 
+			y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal)) 
 
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
@@ -225,7 +225,7 @@ class ProcessorThread (threading.Thread):
 
 				#update keep a buffer of _num_of_regressors recent values for regression
 				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = self.timeToInt(trade.time)
-				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = trade.price
+				companyList[symb].priceRegression.yVals[companyList[symb].priceRegression.currCnt] = trade.price
 
 
 				companyList[symb].priceRegression.currCnt += 1
