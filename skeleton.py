@@ -169,7 +169,8 @@ class ProcessorThread (threading.Thread):
 		#setup comapny data, one-off at the beginning
 		global companyList
 		companyList = {}
-
+		#some process to load data from db
+		
 		self.processing(1) #currently doing live data
 
 	#Jakub here, this might be expanded/changed/moved out later
@@ -178,7 +179,7 @@ class ProcessorThread (threading.Thread):
 		#create just for one company for now
 		tempCoeffs = [0.0, 0.0]
 		rangeVal = 0.2
-		companyList[trade.symbol] = StockData("BLND.L", tempCoeffs, rangeVal)
+		companyList[trade.symbol] = StockData(trade.symbol, tempCoeffs, rangeVal)
 		#print(trade.symbol, " setup") #debugging
 
 
@@ -204,16 +205,13 @@ class ProcessorThread (threading.Thread):
 				global _anomalycounter
 				global _tradevalue
 				
-				_tradecounter+=1
+				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(trade.price)+float(trade.size)
 				#trade is in TradeData format (see trade.py)
 				#use db.getAverage()
 				#print(db.getAverage(trade.symbol))
 				
-				#done for one company for now
-
 				# print ("dequeuing") #debugging
-
 				symb = trade.symbol 
 
 				#create a StockData objecty for every coimap0ny
@@ -280,9 +278,21 @@ def signal_handler(signal, frame):
 #############################
 #			main			#
 #############################
+##########AJAX ROUTING requests###########
 @app.route('/refresh', methods=['POST'])
 def refresh():
 	return getdata()
+
+@app.route('/getanomalies', methods=['POST'])
+def init_data():
+	#get data in db
+	db = Database()
+	anomalies = db.getAnomalies(0)
+	db.close()
+	data = {}
+	#TODO
+	#make into json
+	return json.dumps(data)
 
 def getdata():
 	#this is for the flask application, gets data for front end
@@ -307,6 +317,7 @@ def getdata():
 	data["anomalies"] = anomalies
 	return json.dumps(data)
 
+############################## MAIN
 def init_threads():
 	#create threads
 	global _threads

@@ -10,6 +10,7 @@ function refresh() {
 		},
 		error: function(d) {
 			console.log("server down");
+			//error bar here
 		}
 	});
 	setTimeout(refresh, 2000); // you could choose not to continue on failure...
@@ -30,7 +31,24 @@ function updatedash(anomalycount,tradecount,tradevalue) {
 
 }
 
+
+function loadanomalies(){
+	$.ajax({
+		type : 'POST',
+		url : "/getanomalies",
+		success: function(d) {
+		// do something with the return value here if you like
+		   alert("Hi");
+		},
+		error: function(d) {
+		   console.log("unable to get anomalies");
+		   //error bar here
+		}
+	});
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
 	setTimeout(refresh, 2000);
+	//load anomalies
+	loadanomalies();
 });

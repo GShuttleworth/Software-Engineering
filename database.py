@@ -45,11 +45,40 @@ class Database:
 
 		return transactions
 	
-	def reset(self):
-		# Deletes all enteries to reset db
+	def clear(self,date):
+		#delete all entries with the same date
 		#TODO
 		return 0
 	
+	#gets all the anomalies for the table, returns a list of anomaly objects
+	def getAnomalies(self,done):
+		table = "anomalies_live"
+		if(self.state != 1):
+			table = "anomalies_static" #shouldn't exist but for the sake of it
+		query = "SELECT id,tradeid,actiontaken FROM " + table + " WHERE actiontaken=?"
+		params = [done]
+		data = self.query(query,params)
+		rows = data.fetchall()
+		anomalies = []
+		for row in rows:
+			#gonna get complicated
+			#each row needs to do another sql query to get trade and turn into TradeData
+			table = "trans_live"
+			if(self.state != 1):
+				table = "trans_static"
+			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table + " WHERE id=?"
+			params = [row[1]]
+			data = self.query(query,params)
+			t = data.fetchone()
+			trade = to_TradeData(t)
+			a = Anomaly(row[0],trade,row[2])
+			anomalies.append(a)
+		return anomalies
+		
+	def addAnomaly(self,anomaly):
+		#TODO
+		return -1
+
 	def getAveragePrice(self, sym):
 		avg = -1 #sanity check!
 		table = "running_price_avg_live"

@@ -13,6 +13,7 @@ drop table running_volume_avg_live;
 drop table running_volume_avg_static;
 drop table daily_volume_avg_live;
 drop table daily_volume_avg_static;
+drop table anomalies_live;
 
 create table trans_live (
 	id integer primary key,
@@ -40,6 +41,14 @@ create table trans_static (
 	sector varchar(30),
 	bidPrice float,
 	askPrice float
+);
+
+create table anomalies_live (
+	id integer primary key,
+	tradeid integer UNIQUE,
+	category integer,
+	actiontaken integer DEFAULT 0, /* whether the anomaly has been dealt with */
+	FOREIGN KEY(tradeid) REFERENCES trans_live(id) ON DELETE CASCADE
 );
 
 -- Tables for prices
