@@ -223,6 +223,17 @@ class ProcessorThread (threading.Thread):
 				#update keep a buffer of _num_of_regressors recent avlues for regressipn
 				companyList[symb].xVals[companyList[symb].currCnt]=self.timeToInt(trade.time)
 				companyList[symb].yVals[companyList[symb].currCnt]=trade.price
+				
+				
+				if(np.all(companyList[symb].coeffList != [0.0, 0.0])):
+					# print(companyList[symb].coeffList) #debugging
+					if(companyList[symb].detectError(self.timeToInt(trade.time), float(trade.price))):
+						print("error") #debugging
+						# newAnomaly = Anomaly(1, trade, "price per company")
+						#doSomething with the anomaly
+
+					else:
+						print("not error") #debugging
 
 
 				companyList[symb].currCnt += 1
