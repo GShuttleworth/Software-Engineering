@@ -33,7 +33,6 @@ function updatedash(anomalycount,tradecount,tradevalue) {
 
 }
 
-
 function loadanomalies(){
 	$.ajax({
 		type : 'POST',
@@ -74,7 +73,7 @@ function anomalyHTML(id,date,time,type,action){
 	//convert type int to something appropriate
 	
 	cell_type.innerHTML = convert_type(type);
-	cell_action.innerHTML = '<a href="/stock/'+action+'"><button type="button" class="btn btn-primary">Action</button></a>';
+	cell_action.innerHTML = '<a href="/stock/'+action+'/anomaly/'+id+'"><button type="button" class="btn btn-primary">Action</button></a>';
 }
 
 function convert_type(t){
@@ -91,9 +90,39 @@ function convert_type(t){
 	}
 	return type;
 }
+
+function togglemode(mode){
+	var data = {"mode":mode};
+	$.ajax({
+		type : 'POST',
+		url : "/toggle",
+		data : JSON.stringify(data),
+		contentType: 'application/json;charset=UTF-8',
+		success: function(d) {
+			
+		},
+		error: function(d) {
+			console.log("unable to switch");
+			//error bar here
+		}
+	});
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
 	refresh();
 	//load anomalies
 	loadanomalies();
+	
+	//event listeners
+	$("#btn-live").click(function(e){
+		e.preventDefault();
+		//alert("hi");
+		togglemode(1);
+	});
+	$("#btn-historical").click(function(e){
+	   e.preventDefault();
+	   //alert("hi");
+	   togglemode(0);
+	   //import file
+   });
 });

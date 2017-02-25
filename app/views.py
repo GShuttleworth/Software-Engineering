@@ -18,8 +18,8 @@ def index():
 	return render_template('dashboard.html',pagename=pagename, numberOfAnomalies=numberOfAnomalies, numberOfTrades=numberOfTrades,totalTradeValue=totalTradeValue, livedata=livedata)
 
 @app.route('/stock',methods=['GET','POST'])
-@app.route('/stock/<symbol>',methods=['GET','POST'])
-def anomaly(symbol):
+@app.route('/stock/<symbol>/anomaly/<id>',methods=['GET','POST'])
+def anomaly(symbol,id):
 	pagename = "Anomaly Information for " + symbol
 	anomalyType = "Pump and Dump"
 	anomalyStartTimestamp = "timestamp"
