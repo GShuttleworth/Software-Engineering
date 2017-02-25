@@ -235,13 +235,13 @@ class ProcessorThread (threading.Thread):
 				if(np.all(companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
 					# print(companyList[symb].priceCoeffList) #debugging
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(trade.time), float(trade.price))):
-						print("error") #debugging
+						#print("anomoly detected") #debugging
 						# newAnomaly = Anomaly(1, trade, "price per company")
 						#doSomething with the anomaly
+						_anomalycounter+=1
 
 					# else:
 						# print("not error") #debugging
-
 
 				#every several values, the line fit is updated (prevents constant updates)
 				if(companyList[symb].priceRegression.currCnt == companyList[symb].priceRegression.numOfRegressors):
@@ -249,13 +249,8 @@ class ProcessorThread (threading.Thread):
 					# print (companyList[symb].priceCoeffList) #debugging
 					companyList[symb].priceRegression.currCnt = 0
 
-
-
 				#dump to db when done
 				db.addTransaction(trade)
-				#TODO: update average with actual average instead of 'trade.price'
-				#db.updateAverage(trade.symbol, trade.price)
-			
 			#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		db.close()
 		
@@ -302,17 +297,17 @@ def refresh():
 #toggling between live and static
 @app.route('/toggle', methods=['POST'])
 def toggle():
-	m = int(request.json['mode'])
+	mode = int(request.json['mode'])
 	global _mode
 	global _connected
-	if(m==0):
+	if(mode==0):
 		if(_connected==1):
 			disconnect_stream()
-		mode=0
+		_mode=0
 	if(mode==1):
 		if(_connected!=1):
 			connect_stream()
-		mode=1
+		_mode=1
 	
 	return "1"
 
