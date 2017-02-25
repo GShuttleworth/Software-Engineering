@@ -287,11 +287,22 @@ def refresh():
 def init_data():
 	#get data in db
 	db = Database()
-	anomalies = db.getAnomalies(0)
+	a = db.getAnomalies(0)
 	db.close()
 	data = {}
 	#TODO
+	anomalies = []
+	for x in a:
+		temp = x.trade.time.split()
+		anomaly = {}
+		anomaly['id'] = x.id
+		anomaly['type'] = x.category
+		anomaly['date'] = temp[0]
+		anomaly['time'] = temp[1]
+		anomaly['action'] = x.trade.symbol
+		anomalies.append(anomaly)
 	#make into json
+	data["anomalies"] = anomalies
 	return json.dumps(data)
 
 def getdata():

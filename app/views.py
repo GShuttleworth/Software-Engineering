@@ -17,9 +17,10 @@ def index():
 	anomalyType = "Pump and Dump"
 	return render_template('dashboard.html',pagename=pagename, numberOfAnomalies=numberOfAnomalies, numberOfTrades=numberOfTrades,totalTradeValue=totalTradeValue, livedata=livedata)
 
-@app.route('/anomaly')
-def anomaly():
-	pagename = "Anomaly Information"
+@app.route('/stock',methods=['GET','POST'])
+@app.route('/stock/<symbol>',methods=['GET','POST'])
+def anomaly(symbol):
+	pagename = "Anomaly Information for " + symbol
 	anomalyType = "Pump and Dump"
 	anomalyStartTimestamp = "timestamp"
 	anomalyEndTimestamp = "timestamp"

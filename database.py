@@ -55,7 +55,7 @@ class Database:
 		table = "anomalies_live"
 		if(self.state != 1):
 			table = "anomalies_static" #shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,actiontaken FROM " + table + " WHERE actiontaken=?"
+		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken=?"
 		params = [done]
 		data = self.query(query,params)
 		rows = data.fetchall()
