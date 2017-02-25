@@ -142,18 +142,24 @@ class HandlerThread (threading.Thread):
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
-	def __init__(self, symbol, coeffList, rangeVal):
+	def __init__(self, symbol):
 		self.symbol = symbol
-		self.coeffList = coeffList
-		self.range = rangeVal
+		self.priceRegression = PriceRegression(_numberOfRegressors)
+
+#Should make it more expandable/less messy
+class PriceRegression:
+	def __init__(self, numOfRegressors):
+		self.numOfRegressors = numOfRegressors
+		self.xVals = np.empty(numOfRegressors)
+		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.xVals = np.empty(_numberOfRegressors)
-		self.yVals = np.empty(_numberOfRegressors)
+		self.rangeVal = 0.1 #to be adjusted
+		self.coeffList = [0.0, 0.0]
 
 	#compare actual vs predicted value
-	def detectError(x, y):
+	def detectError(self, x, y):
 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or 
-			y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal)) 
+			y<=(x*self.coeffList[0]+self.priceCoeffList[1])*(1-self.rangeVal)) 
 
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
@@ -174,13 +180,9 @@ class ProcessorThread (threading.Thread):
 		
 		self.processing(1) #currently doing live data
 
-	#Jakub here, this might be expanded/changed/moved out later
 
 	def setupCompanyData(self,trade):
-		#create just for one company for now
-		tempCoeffs = [0.0, 0.0]
-		rangeVal = 0.2
-		companyList[trade.symbol] = StockData(trade.symbol, tempCoeffs, rangeVal)
+		companyList[trade.symbol] = StockData(trade.symbol)
 		#print(trade.symbol, " setup") #debugging
 
 
@@ -188,7 +190,7 @@ class ProcessorThread (threading.Thread):
 		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 
 	global _numberOfRegressors
-	_numberOfRegressors = 3
+	_numberOfRegressors = 10
 	
 	def processing(self,state):
 		#state is processing static/live
@@ -221,30 +223,31 @@ class ProcessorThread (threading.Thread):
 
 				# print(symb, timeToInt(trade.time), trade.price) #debugging
 
-				#update keep a buffer of _num_of_regressors recent avlues for regressipn
-				companyList[symb].xVals[companyList[symb].currCnt]=self.timeToInt(trade.time)
-				companyList[symb].yVals[companyList[symb].currCnt]=trade.price
-				
-				
-				if(np.all(companyList[symb].coeffList != [0.0, 0.0])):
-					# print(companyList[symb].coeffList) #debugging
-					if(companyList[symb].detectError(self.timeToInt(trade.time), float(trade.price))):
+				#update keep a buffer of _num_of_regressors recent values for regression
+				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = self.timeToInt(trade.time)
+				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = trade.price
+
+
+				companyList[symb].priceRegression.currCnt += 1
+				# print(companyList[symb].currCnt) #debugging
+
+				if(np.all(companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
+					# print(companyList[symb].priceCoeffList) #debugging
+					if(companyList[symb].priceRegression.detectError(self.timeToInt(trade.time), float(trade.price))):
 						print("error") #debugging
 						# newAnomaly = Anomaly(1, trade, "price per company")
 						#doSomething with the anomaly
 
-					else:
-						print("not error") #debugging
+					# else:
+						# print("not error") #debugging
 
 
-				companyList[symb].currCnt += 1
-				# print(companyList[symb].currCnt) #debugging
+				#every several values, the line fit is updated (prevents constant updates)
+				if(companyList[symb].priceRegression.currCnt == companyList[symb].priceRegression.numOfRegressors):
+					companyList[symb].priceRegression.updateCoeffs()
+					# print (companyList[symb].priceCoeffList) #debugging
+					companyList[symb].priceRegression.currCnt = 0
 
-				#every sewveral bvvalues, the line fit is updated (prevents consttant updates)
-				if (companyList[symb].currCnt == _numberOfRegressors):
-					companyList[symb].updateCoeffs()
-					# print (companyList[symb].coeffList) #debugging
-					companyList[symb].currCnt = 0
 
 
 				#dump to db when done
