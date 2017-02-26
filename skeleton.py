@@ -37,7 +37,7 @@ _tradecounter = 0
 _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
-_sessions = {} #associative array/dictionary
+_sessions = {} #associative array/dictionary to store all the instances of ui
 
 def connect_stream():
 	global _connected
@@ -146,7 +146,9 @@ class HandlerThread (threading.Thread):
 				except:
 					break
 			#detect timers
+			#TODO loop through sessions
 
+			#TODO disconnect stream and reconnect
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
@@ -225,7 +227,7 @@ class ProcessorThread (threading.Thread):
 				tradeid = db.addTransaction(trade)
 				if(tradeid==-1):
 					#error has occurred TODO insert better handler
-					print("Error adding")
+					print("Error adding trade")
 				
 				#create a StockData objecty for every coimap0ny
 				if (symb not in companyList):
@@ -246,7 +248,7 @@ class ProcessorThread (threading.Thread):
 						#print("anomoly detected") #debugging
 						#add anomaly to db
 						anomalyid = -1
-						anomalyid = db.addAnomaly(3, tradeid)
+						anomalyid = db.addAnomaly(tradeid, 3)
 						newAnomaly = Anomaly(anomalyid, trade, 3) #todo change 3
 						#doSomething with the anomaly
 						_anomalycounter+=1
@@ -303,10 +305,13 @@ class SessionData():
 		self.release()
 		return data
 	def empty(self):
+		self.updateaccess()
 		self.lock()
 		empty = self.queue.empty()
 		self.release()
 		return empty
+	def updateaccess(self):
+		self.lastAccess = datetime.now()
 
 #signal handling to terminate/quit
 def signal_handler(signal, frame):
