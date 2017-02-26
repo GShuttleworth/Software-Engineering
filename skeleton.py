@@ -12,7 +12,7 @@ import numpy as np
 
 #front end imports
 import json
-from app import app
+from app import *
 import logging
 from flask import request, session
 import uuid #generating random session ids
@@ -129,8 +129,9 @@ class HandlerThread (threading.Thread):
 	def eventListener(self):
 		global _running
 		global _qlock
+		global _sessions
 		while(_running):
-			#detects inputs
+			#detects inputs, remove when complete
 			debug=0
 			if(debug==1):
 				try:
@@ -146,10 +147,25 @@ class HandlerThread (threading.Thread):
 				except:
 					break
 			#detect timers
-			#TODO loop through sessions
-
 			#TODO disconnect stream and reconnect
-
+			
+			#TODO loop through sessions
+			for key in _sessions:
+			#see when it was last accessed, if it hasn't been accessed in the past 6 mins, delete it
+				session_time = str(_sessions[key].lastAccess)
+				now = str(datetime.now())
+				FMT = "%Y-%m-%d %H:%M:%S.%f"
+				difference = datetime.strptime(now, FMT).timestamp() - datetime.strptime(session_time, FMT).timestamp()
+				#print(difference)
+				if(difference>=360):
+					#delete session
+					del _session[key]
+			
+			for i in range(30):
+				if(_running):
+					time.sleep(1) #wait 30 secs, no point doing every second
+				else:
+					break
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
 	def __init__(self, symbol):
@@ -264,6 +280,7 @@ class ProcessorThread (threading.Thread):
 					companyList[symb].priceRegression.currCnt = 0
 
 			#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
+			time.sleep(0.1) #good for cpu
 		db.close()
 		
 	def dequeue(self,q,qlock):
@@ -371,6 +388,13 @@ def init_session():
 	_sessions[id] = sessiondata
 	return "ok"
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['the_file']
+		f.save('trades.csv')
+	return "ok"
+
 @app.route('/getanomalies', methods=['POST'])
 def init_data():
 	#get data in db
@@ -460,6 +484,13 @@ def init_threads():
 	_threads.append(thandler)
 	_threadID += 1
 
+#flask configuration
+#for sessions, generate a key instead
+	app.secret_key = str(uuid.uuid4())
+
+def init_app():
+	app = Flask(__name__)
+
 #run web server on main thread
 if __name__ == '__main__':
 	#only show errors in console, needs logging import
@@ -475,7 +506,5 @@ if __name__ == '__main__':
 	
 	#signal handler
 	signal.signal(signal.SIGINT, signal_handler)
-	
-	#for sessions, generate a key instead
-	app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
+
 	app.run()

@@ -104,9 +104,9 @@
   <!-- Custom Theme JavaScript -->
   <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
 
-  <!-- Front end scripts -->
+  <!-- Front end scripts import page scripts then shared scripts -->
   {% block scripts %}{% endblock %}
-
+  <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
 </body>
 
 </html>

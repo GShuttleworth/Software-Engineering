@@ -1,5 +1,4 @@
 //global?
-var refreshrate = 2000;
 function refresh() {
 	$.ajax({
 		type : 'POST',
@@ -24,21 +23,6 @@ function refresh() {
 	});
 	//for testing, stop this fucking refreshing
 	setTimeout(refresh, refreshrate); // you could choose not to continue on failure...
-}
-
-function live(status) {
-	if(status==true){
-		
-	}else{
-		
-	}
-}
-function mode(status) {
-	if(status==1){
-		$('#live').html('Live Data');
-	}else{
-		$('#live').html('Historical Data');
-	}
 }
 
 function updatedash(anomalycount,tradecount,tradevalue) {
@@ -68,10 +52,6 @@ function loadanomalies(){
 	});
 }
 
-function changerefresh(rate){
-	refreshrate=rate;
-	alert("refresh rate changed to: "+rate);
-}
 function anomalyHTML(id,date,time,type,action){
 	//generates html for anomaly specified (just adds to html table)
 	var table = document.getElementById("table-anomaly");
@@ -106,28 +86,12 @@ function convert_type(t){
 	return type;
 }
 
-function togglemode(mode){
-	var data = {"mode":mode};
-	$.ajax({
-		type : 'POST',
-		url : "/toggle",
-		data : JSON.stringify(data),
-		contentType: 'application/json;charset=UTF-8',
-		success: function(d) {
-			
-		},
-		error: function(d) {
-			console.log("unable to switch");
-			//error bar here
-		}
-	});
-}
 function init_session(){
 	$.ajax({
 	   type : 'POST',
 	   url : "/session",
 	   success: function(d) {
-		
+			refresh();
 	   },
 	   error: function(d) {
 		   console.log("session cannot initialise");
@@ -140,22 +104,6 @@ function beep() {
 }
 
 $(document).ready(function() {
-	// run the first time; all subsequent calls will take care of themselves
-	init_session();
-	refresh();
 	//load anomalies
 	loadanomalies();
-	
-	//event listeners
-	$("#btn-live").click(function(e){
-		e.preventDefault();
-		//alert("hi");
-		togglemode(1);
-	});
-	$("#btn-historical").click(function(e){
-	   e.preventDefault();
-	   //alert("hi");
-	   togglemode(0);
-	   //import file
-   });
 });
