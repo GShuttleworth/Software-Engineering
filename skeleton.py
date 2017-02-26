@@ -12,7 +12,7 @@ import numpy as np
 
 #front end imports
 import json
-from app import *
+from app import app
 import logging
 from flask import request, session
 import uuid #generating random session ids
@@ -484,19 +484,11 @@ def init_threads():
 	_threads.append(thandler)
 	_threadID += 1
 
-#flask configuration
-#for sessions, generate a key instead
-	app.secret_key = str(uuid.uuid4())
-
-def init_app():
-	app = Flask(__name__)
-
 #run web server on main thread
 if __name__ == '__main__':
 	#only show errors in console, needs logging import
 	log = logging.getLogger('werkzeug')
 	log.setLevel(logging.ERROR)
-	
 	_running = 1
 	init_threads()
 	
