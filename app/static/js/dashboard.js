@@ -5,6 +5,7 @@ function refresh() {
 		url : "/refresh",
 		success: function(d) {
 			var data = JSON.parse(d);
+			//console.log(data);
 			mode(data.mode);
 			live(data.live);
 			updatedash(data.anomaly,data.trades,data.tradevalue);
