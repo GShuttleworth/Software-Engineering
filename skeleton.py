@@ -14,7 +14,8 @@ import numpy as np
 import json
 from app import app
 import logging
-from flask import request
+from flask import request, session
+import uuid #generating random session ids
 
 #modules by us
 from trade import *
@@ -36,7 +37,7 @@ _tradecounter = 0
 _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
-_sessions = []
+_sessions = {} #associative array/dictionary
 
 def connect_stream():
 	global _connected
@@ -130,18 +131,22 @@ class HandlerThread (threading.Thread):
 		global _qlock
 		while(_running):
 			#detects inputs
-			try:
-				#TODO actually link up mechanism to connect/disconnect
-				var = input()
-				if(var=='disconnect'):
-					disconnect_stream()
-					_qlock.acquire()
-					print("Current queue size: " + str(_q.qsize()))
-					_qlock.release()
-				if(var=='connect'):
-					connect_stream()
-			except:
-				break
+			debug=0
+			if(debug==1):
+				try:
+					#TODO actually link up mechanism to connect/disconnect
+					var = input()
+					if(var=='disconnect'):
+						disconnect_stream()
+						_qlock.acquire()
+						print("Current queue size: " + str(_q.qsize()))
+						_qlock.release()
+					if(var=='connect'):
+						connect_stream()
+				except:
+					break
+			#detect timers
+
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
@@ -214,12 +219,14 @@ class ProcessorThread (threading.Thread):
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(trade.price)+float(trade.size)
 				#trade is in TradeData format (see trade.py)
-				#use db.getAverage()
-				#print(db.getAverage(trade.symbol))
-				
-				# print ("dequeuing") #debugging
-				symb = trade.symbol 
 
+				symb = trade.symbol 
+				#dump to db
+				tradeid = db.addTransaction(trade)
+				if(tradeid==-1):
+					#error has occurred TODO insert better handler
+					print("Error adding")
+				
 				#create a StockData objecty for every coimap0ny
 				if (symb not in companyList):
 					self.setupCompanyData(trade)
@@ -230,7 +237,6 @@ class ProcessorThread (threading.Thread):
 				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = self.timeToInt(trade.time)
 				companyList[symb].priceRegression.yVals[companyList[symb].priceRegression.currCnt] = trade.price
 
-
 				companyList[symb].priceRegression.currCnt += 1
 				# print(companyList[symb].currCnt) #debugging
 
@@ -238,12 +244,16 @@ class ProcessorThread (threading.Thread):
 					# print(companyList[symb].priceCoeffList) #debugging
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(trade.time), float(trade.price))):
 						#print("anomoly detected") #debugging
-						# newAnomaly = Anomaly(1, trade, "price per company")
+						#add anomaly to db
+						anomalyid = -1
+						anomalyid = db.addAnomaly(3, tradeid)
+						newAnomaly = Anomaly(anomalyid, trade, 3) #todo change 3
 						#doSomething with the anomaly
 						_anomalycounter+=1
+						#for each key in session, add this anomaly
+						for key in _sessions:
+							_sessions[key].put(newAnomaly)
 
-					# else:
-						# print("not error") #debugging
 
 				#every several values, the line fit is updated (prevents constant updates)
 				if(companyList[symb].priceRegression.currCnt == companyList[symb].priceRegression.numOfRegressors):
@@ -251,8 +261,6 @@ class ProcessorThread (threading.Thread):
 					# print (companyList[symb].priceCoeffList) #debugging
 					companyList[symb].priceRegression.currCnt = 0
 
-				#dump to db when done
-				db.addTransaction(trade)
 			#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		db.close()
 		
@@ -272,6 +280,33 @@ class ProcessorThread (threading.Thread):
 				trade = parse(x)
 				trades.append(trade)
 		return trades
+
+#session stuff
+class SessionData():
+	def __init__(self,id):
+		self.id = id
+		self.queue = queue.Queue() #queue for anomalies
+		self.qlock = threading.Lock()
+		self.lastAccess = datetime.now()
+
+	def lock(self):
+		self.qlock.acquire()
+	def release(self):
+		self.qlock.release()
+	def put(self,data):
+		self.lock()
+		self.queue.put(data)
+		self.release()
+	def get(self):
+		self.lock()
+		data = self.queue.get()
+		self.release()
+		return data
+	def empty(self):
+		self.lock()
+		empty = self.queue.empty()
+		self.release()
+		return empty
 
 #signal handling to terminate/quit
 def signal_handler(signal, frame):
@@ -312,6 +347,15 @@ def toggle():
 		_mode=1
 	
 	return "1"
+
+@app.route('/session', methods=['POST'])
+def init_session():
+	#check to see if a session has already been established
+	id = uuid.uuid4()
+	session['id'] = id
+	sessiondata = SessionData(id)
+	_sessions[id] = sessiondata
+	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
 def init_data():
@@ -357,6 +401,26 @@ def getdata():
 
 	#empty anomaly queue
 	anomalies=[]
+	if(session.get('id') is not None):
+		#print(session['id']) #debugging
+		try:
+			sessiondata = _sessions[session['id']]
+			while not sessiondata.empty():
+				x = sessiondata.get()
+				#TODO
+				temp = x.trade.time.split()
+				anomaly = {}
+				anomaly['id'] = x.id
+				anomaly['type'] = x.category
+				anomaly['date'] = temp[0]
+				anomaly['time'] = temp[1]
+				anomaly['action'] = x.trade.symbol
+				anomalies.append(anomaly)
+		except KeyError:
+			# Key is not present, no sessions for user
+			#TODO insert better handler, tell user to refresh?
+			pass
+
 	data["anomalies"] = anomalies
 	return json.dumps(data)
 
@@ -397,4 +461,7 @@ if __name__ == '__main__':
 	
 	#signal handler
 	signal.signal(signal.SIGINT, signal_handler)
+	
+	#for sessions, generate a key instead
+	app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
 	app.run()

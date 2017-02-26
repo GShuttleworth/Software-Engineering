@@ -9,6 +9,12 @@ function refresh() {
 			mode(data.mode);
 			live(data.live);
 			updatedash(data.anomaly,data.trades,data.tradevalue);
+			//update anomalies
+			for(var i in data.anomalies){
+				var anomaly = data.anomalies[i];
+				//create htmls for each
+				anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
+			}
 		},
 		error: function(d) {
 			console.log("server down");
@@ -115,8 +121,21 @@ function togglemode(mode){
 		}
 	});
 }
+function init_session(){
+	$.ajax({
+	   type : 'POST',
+	   url : "/session",
+	   success: function(d) {
+		
+	   },
+	   error: function(d) {
+		   console.log("session cannot initialise");
+	   }
+   });
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
+	init_session();
 	refresh();
 	//load anomalies
 	loadanomalies();

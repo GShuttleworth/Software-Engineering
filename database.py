@@ -64,29 +64,30 @@ class Database:
 				query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			else:
 				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-				params = (data.time, data.buyer, data.seller, data.price, data.size,
-				data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
-				self.action(query, params)
+			tradeid=-1
+			params = (data.time, data.buyer, data.seller, data.price, data.size,
+			data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
+			self.action(query, params)
 
-				print(self.c.lastrowid)
-				# Update the averages tables
-				avgData = self.getAverage(data.symbol)
-				if(avgData == -1):
-					# No averages present
-					self.updateAverage(data.symbol, data.price, data.size, 0)
-					return
+			tradeid=self.c.lastrowid
+			# Update the averages tables
+			avgData = self.getAverage(data.symbol)
+			if(avgData == -1):
+				# No averages present
+				self.updateAverage(data.symbol, data.price, data.size, 0)
+				return
 
-				avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
-				# Recalculate the averages
-				avgPrice *= numTrades
-				avgVolume *= numTrades
-				avgPrice += float(data.price)
-				avgVolume += int(data.size)
-				numTrades += 1
-				avgPrice /= numTrades
-				avgVolume /= numTrades
-				self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
-				return 0
+			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
+			# Recalculate the averages
+			avgPrice *= numTrades
+			avgVolume *= numTrades
+			avgPrice += float(data.price)
+			avgVolume += int(data.size)
+			numTrades += 1
+			avgPrice /= numTrades
+			avgVolume /= numTrades
+			self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
+			return tradeid
 		else:
 			return -1
 
@@ -137,17 +138,17 @@ class Database:
 			anomalies.append(a)
 		return anomalies
 
-	def addAnomaly(self, anomaly,tradeid):
-		if(isinstance(anomaly, Anomaly)):
-			table = "anomalies_live"
-			if(self.state != 1):
-				table = "anomalies_static"
+	def addAnomaly(self,tradeid, category):
+		anomalyid = -1
+		table = "anomalies_live"
+		if(self.state != 1):
+			table = "anomalies_static"
 
-			query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
-			params = [tradeid, anomaly.category]
-			self.action(query, params)
-			return 1
-		return -1
+		query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
+		params = [tradeid, category]
+		self.action(query, params)
+		anomalyid=self.c.lastrowid
+		return anomalyid
 
 	def getAveragePrice(self, sym):
 		return self.getAverage(sym)[1]
