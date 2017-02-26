@@ -561,7 +561,11 @@ def toggle():
 		_mode=1
 	
 	return "1"
-
+@app.route('/reset', methods['POST'])
+def resetstats():
+	#for resetting current stats and db?
+	return "ok"
+	
 @app.route('/session', methods=['POST'])
 def init_session():
 	#check to see if a session has already been established
