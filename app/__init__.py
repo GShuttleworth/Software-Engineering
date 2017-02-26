@@ -223,9 +223,10 @@ class HandlerThread (threading.Thread):
 					break
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
-	def __init__(self, symbol):
+	def __init__(self, symbol, stepNumOfStepsPairs):
 		self.symbol = symbol
 		self.priceRegression = PriceRegression(_numberOfRegressors)
+		self.volumeRegression = VolumeRegression(0, stepNumOfStepsPairs[0][1])
 
 #Should make it more expandable/less messy
 class PriceRegression:
@@ -234,7 +235,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 0.1 #to be adjusted
+		self.rangeVal = 0.2 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	#compare actual vs predicted value
@@ -245,8 +246,30 @@ class PriceRegression:
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
+#Should make it more expandable/less messy
+class VolumeRegression:
+	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
+		self.stepNumOfStepsPairsIndex = stepNumOfStepsPairsIndex
+		self.xVals = np.zeros(numOfSteps)
+		self.yVals = np.zeros(numOfSteps)
+		self.tempXVals = []
+		self.rangeVal = 0.3
+		self.coeffList = [0.0, 0.0]
+	
+	# compare actual vs predicted value
+	def detectError(self, x, y):
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*(1+self.rangeVal) or
+				y<=(x*self.coeffList[0]+self.coeffList[1])*(1-self.rangeVal))
+	
+	def updateCoeffs(self):
+		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
+
 
 class ProcessorThread (threading.Thread):
+
+	stepNumOfStepsPairs = [[20, 6]]
+	tickTimeCntPairs = [[0,0]]
+
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -254,16 +277,22 @@ class ProcessorThread (threading.Thread):
 	def run(self):
 		print("Starting processing thread")
 		
-		#setup comapny data, one-off at the beginning
+		#setup company data, one-off at the beginning
 		global companyList
 		companyList = {}
 		#some process to load data from db
+		global _numOfStepVariants
+		_numOfStepVariants = len(self.stepNumOfStepsPairs)
+
 		
 		self.processing(1) #currently doing live data
 	
 	
 	def setupCompanyData(self,t):
-		companyList[t.symbol] = StockData(t.symbol)
+		companyList[t.symbol] = StockData(t.symbol, self.stepNumOfStepsPairs)
+		for x in range(_numOfStepVariants):
+			self.tickTimeCntPairs[x][0] = (int(self.timeToInt(t.time)/self.stepNumOfStepsPairs[x][0]))*self.stepNumOfStepsPairs[x][0] #rounds down to to the nearest step
+
 	#print(trade.symbol, " setup") #debugging
 	
 	
@@ -305,18 +334,33 @@ class ProcessorThread (threading.Thread):
 					self.setupCompanyData(t)
 				
 				# print(symb, timeToInt(trade.time), trade.price) #debugging
-				
+
+
+				#
+				#	PRICE REGRESSION
+				#
+
 				#update keep a buffer of _num_of_regressors recent values for regression
 				companyList[symb].priceRegression.xVals[companyList[symb].priceRegression.currCnt] = self.timeToInt(t.time)
 				companyList[symb].priceRegression.yVals[companyList[symb].priceRegression.currCnt] = t.price
 				
 				companyList[symb].priceRegression.currCnt += 1
-				# print(companyList[symb].currCnt) #debugging
-				
+				# print(companyList[symb].currCnt) #debugging			
+			
+				#every several values, the line fit is updated (prevents constant updates)
+				if(companyList[symb].priceRegression.currCnt == companyList[symb].priceRegression.numOfRegressors):
+					companyList[symb].priceRegression.updateCoeffs()
+					# print (companyList[symb].priceCoeffList) #debugging
+					companyList[symb].priceRegression.currCnt = 0
+
+
+				# PRICE ANOMALY DETECTION
+
+
 				if(np.all(companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
 					# print(companyList[symb].priceCoeffList) #debugging
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(t.time), float(t.price))):
-						#print("anomoly detected") #debugging
+						print("price anomaly") #debugging
 						#add anomaly to db
 						anomalyid = -1
 						anomalyid = db.addAnomaly(tradeid, 3)
@@ -326,16 +370,54 @@ class ProcessorThread (threading.Thread):
 						#for each key in session, add this anomaly
 						for key in _sessions:
 							_sessions[key].put(newAnomaly)
-			
-			
-				#every several values, the line fit is updated (prevents constant updates)
-				if(companyList[symb].priceRegression.currCnt == companyList[symb].priceRegression.numOfRegressors):
-					companyList[symb].priceRegression.updateCoeffs()
-					# print (companyList[symb].priceCoeffList) #debugging
-					companyList[symb].priceRegression.currCnt = 0
+
+				#
+				#	VOLUME REGRESSION
+				#
+
+
+				for x in range(len(self.stepNumOfStepsPairs)): #for every possible tick length/beginning time
+					if(self.timeToInt(t.time) >= self.stepNumOfStepsPairs[x][0]+self.tickTimeCntPairs[x][0]): #if the tick has finished
+						if(self.tickTimeCntPairs[x][1] >= self.stepNumOfStepsPairs[x][1]):	#if the number of ticks exceeded maximum (i.e. it's time to upadte the line fit)
+							self.tickTimeCntPairs[x][1] = 0
+							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+								if (company.volumeRegression.detectError(sum(company.volumeRegression.tempXVals), self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
+									print("volume error")
+
+								if(np.all(company.volumeRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
+									company.volumeRegression.updateCoeffs()
+								else:
+									company.volumeRegression.coeffList = [-1.0, -1.0]	#mark the beginning of a first complete pass
+
+
+								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals)
+								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+
+						else:							
+							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+								# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
+								if (company.volumeRegression.detectError(sum(company.volumeRegression.tempXVals), self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
+									print("volume error")
+
+								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
+								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+								# print(self.tickTimeCntPairs[x][1])
+								# print(self.tickTimeCntPairs[x][0])
+
+							self.tickTimeCntPairs[x][1] += 1
+							print(self.tickTimeCntPairs[x][1])
+							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+
+
+
+				companyList[symb].volumeRegression.tempXVals.append(float(t.size))
+
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
-		time.sleep(0.1) #good for cpu
+		# time.sleep(0.1) #good for cpu
 		db.close()
 
 	def dequeue(self,q,qlock):
