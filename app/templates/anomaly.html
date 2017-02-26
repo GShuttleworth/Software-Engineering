@@ -209,3 +209,8 @@ function drawChart() {
 </script>
 
 {% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/anomaly.js') }}"></script>
+{% endblock %}

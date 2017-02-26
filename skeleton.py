@@ -336,6 +336,13 @@ def signal_handler(signal, frame):
 def refresh():
 	return getdata()
 
+@app.route('/refresh_anomaly', methods=['POST'])
+def refresh_anomaly():
+	data = {}
+	data["mode"] = _mode
+	data["live"] = connected
+	return json.dumps(data)
+
 #toggling between live and static
 @app.route('/toggle', methods=['POST'])
 def toggle():
