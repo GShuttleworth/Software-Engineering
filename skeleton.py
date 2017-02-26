@@ -338,9 +338,11 @@ def refresh():
 
 @app.route('/refresh_anomaly', methods=['POST'])
 def refresh_anomaly():
+	global _mode
+	global _connected
 	data = {}
 	data["mode"] = _mode
-	data["live"] = connected
+	data["live"] = _connected
 	return json.dumps(data)
 
 #toggling between live and static
