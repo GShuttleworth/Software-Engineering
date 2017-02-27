@@ -33,8 +33,6 @@ _qlock = threading.Lock() #mutex lock for queue
 _threads = []
 _threadID = 1
 
-_anomalyq = queue.Queue()
-_anomalyqlock = threading.Lock()
 _anomalycounter = 0
 _tradecounter = 0
 _tradecounterlock = threading.Lock()
@@ -278,7 +276,6 @@ class VolumeRegression(AvgOverTimeRegression):
 		super().__init__(stepNumOfStepsPairsIndex, numOfSteps)
 		self.tempXVals = []
 
-
 class ProcessorThread (threading.Thread):
 
 	stepNumOfStepsPairs = [[20, 6]]
@@ -299,7 +296,7 @@ class ProcessorThread (threading.Thread):
 		_numOfStepVariants = len(self.stepNumOfStepsPairs)
 
 		
-		self.processing(1) #currently doing live data
+		self.processing() #currently doing live data
 	
 	
 	def setupCompanyData(self,t):
@@ -316,7 +313,7 @@ class ProcessorThread (threading.Thread):
 	global _numberOfRegressors
 	_numberOfRegressors = 10
 	
-	def processing(self,state):
+	def processing(self):
 		#state is processing static/live
 		global _qlock
 		global _running
