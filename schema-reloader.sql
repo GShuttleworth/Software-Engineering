@@ -3,6 +3,13 @@ Schema for database
 May notice lack of relations, foreign keys, etc
 This is because although the same attributes are in some tables, they are quite dynamix and connecting them would hinder progress more than anything
 */
+drop table trans_live;
+drop table trans_static;
+drop table averages_live;
+drop table averages_static;
+drop table anomalies_live;
+drop table anomalies_static;
+
 create table trans_live (
 	id integer primary key,
 	time varchar(30),

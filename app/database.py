@@ -1,12 +1,23 @@
 import sqlite3
 from app import mtrade
-
+from os.path import isfile, getsize
+import os
 
 class Database:
 
 	def __init__(self, state=1):
-		self.conn = sqlite3.connect("database.db")
-		self.c = self.conn.cursor()
+		#check to see if db exists
+		#if it doesn't then create it using schema
+		filename = "database.db"
+		if(not isfile(filename) or getsize(filename) < 100):
+			#creating database
+			self.conn = sqlite3.connect(filename)
+			self.c = self.conn.cursor()
+			with open('schema.sql') as fp:
+				self.c.executescript(fp.read())  # or con.executescript
+		else:
+			self.conn = sqlite3.connect(filename)
+			self.c = self.conn.cursor()
 		self.state = state  # Default is 1 (live)
 
 	# General purpose functions
