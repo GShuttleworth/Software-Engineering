@@ -72,6 +72,7 @@ $(document).ready(function() {
 				success: function(data, textStatus, jqXHR){
 					//console.log("success");
 					alert("File uploaded");
+					togglemode(0);
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					console.log("fail");

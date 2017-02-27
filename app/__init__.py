@@ -41,6 +41,7 @@ _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
 _sessions = {} #associative array/dictionary to store all the instances of ui
+_sessionslock = threading.Lock()
 
 def init_app():
 	app = Flask(__name__)
@@ -207,16 +208,20 @@ class HandlerThread (threading.Thread):
 			#TODO disconnect stream and reconnect
 			
 			#TODO loop through sessions
-			for key in _sessions:
+			for key in list(_sessions): #create a copy of list as size will change due to deletion
 				#see when it was last accessed, if it hasn't been accessed in the past 6 mins, delete it
 				session_time = str(_sessions[key].lastAccess)
 				now = str(datetime.now())
 				FMT = "%Y-%m-%d %H:%M:%S.%f"
 				difference = datetime.strptime(now, FMT).timestamp() - datetime.strptime(session_time, FMT).timestamp()
 				#print(difference)
-				if(difference>=360):
+				if(difference>=300):
 					#delete session
-					del _session[key]
+					global _sessionslock
+					_sessionslock.acquire()
+					del _sessions[key]
+					_sessionslock.release()
+					#print("Session ID: " + str(key) + " deleted")
 			
 			for i in range(30):
 				if(_running):
@@ -370,8 +375,10 @@ class ProcessorThread (threading.Thread):
 						#doSomething with the anomaly
 						_anomalycounter+=1
 						#for each key in session, add this anomaly
+						_sessionslock.acquire
 						for key in _sessions:
 							_sessions[key].put(newAnomaly)
+						_sessionslock.release
 
 				#
 				#	VOLUME REGRESSION
@@ -586,6 +593,9 @@ def upload_file():
 		if f:
 			#insert validation of file
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'trades.csv'))
+		
+			#create another thread to put into queue otherwise will be blocking/delay in return
+			#it should also empty contents of old queue
 		else:
 			print("error")
 	return "ok"
