@@ -22,6 +22,7 @@ import socket, errno
 import signal
 import sys
 import time #for testing, may need for timed reconnection
+import os
 
 #global declarations and variables
 _mode = 1 #1 live, 0 = static
@@ -66,6 +67,7 @@ def init_app():
 	
 	_running=1
 	app.secret_key = str(uuid.uuid4())
+	app.config['UPLOAD_FOLDER'] = ''
 	init_threads()
 	
 	#on exit
@@ -408,7 +410,7 @@ class ProcessorThread (threading.Thread):
 								# print(self.tickTimeCntPairs[x][0])
 
 							self.tickTimeCntPairs[x][1] += 1
-							print(self.tickTimeCntPairs[x][1])
+							#print(self.tickTimeCntPairs[x][1])
 							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
 
 
@@ -417,7 +419,7 @@ class ProcessorThread (threading.Thread):
 
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
-		# time.sleep(0.1) #good for cpu
+		time.sleep(0.1) #good for cpu
 		db.close()
 
 	def dequeue(self,q,qlock):
@@ -558,10 +560,12 @@ def toggle():
 	if(mode==1):
 		if(_connected!=1):
 			connect_stream()
+		else:
+			return json.dumps({"change":False})
 		_mode=1
-	
-	return "1"
-@app.route('/reset', methods['POST'])
+	return json.dumps({"change":True,})
+
+@app.route('/reset', methods=['POST'])
 def resetstats():
 	#for resetting current stats and db?
 	return "ok"
@@ -578,8 +582,12 @@ def init_session():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
 	if request.method == 'POST':
-		f = request.files['the_file']
-		f.save('trades.csv')
+		f = request.files['file']
+		if f:
+			#insert validation of file
+			f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'trades.csv'))
+		else:
+			print("error")
 	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
