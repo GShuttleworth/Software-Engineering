@@ -217,15 +217,12 @@ class HandlerThread (threading.Thread):
 				#print(difference)
 				if(difference>=300):
 					#delete session
-<<<<<<< HEAD
 					global _sessionslock
 					_sessionslock.acquire()
 					del _sessions[key]
 					_sessionslock.release()
 					#print("Session ID: " + str(key) + " deleted")
-=======
 					del _sessions[key]
->>>>>>> origin/master
 			
 			for i in range(30):
 				if(_running):
