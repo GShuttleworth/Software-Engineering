@@ -216,7 +216,7 @@ class HandlerThread (threading.Thread):
 				#print(difference)
 				if(difference>=360):
 					#delete session
-					del _session[key]
+					del _sessions[key]
 			
 			for i in range(30):
 				if(_running):
