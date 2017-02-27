@@ -217,11 +217,15 @@ class HandlerThread (threading.Thread):
 				#print(difference)
 				if(difference>=300):
 					#delete session
+<<<<<<< HEAD
 					global _sessionslock
 					_sessionslock.acquire()
 					del _sessions[key]
 					_sessionslock.release()
 					#print("Session ID: " + str(key) + " deleted")
+=======
+					del _sessions[key]
+>>>>>>> origin/master
 			
 			for i in range(30):
 				if(_running):
@@ -234,6 +238,7 @@ class StockData:
 		self.symbol = symbol
 		self.priceRegression = PriceRegression(_numberOfRegressors)
 		self.volumeRegression = VolumeRegression(0, stepNumOfStepsPairs[0][1])
+		self.frequencyRegression = AvgOverTimeRegression(0, stepNumOfStepsPairs[0][1])
 
 #Should make it more expandable/less messy
 class PriceRegression:
@@ -254,12 +259,12 @@ class PriceRegression:
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
 #Should make it more expandable/less messy
-class VolumeRegression:
+class AvgOverTimeRegression:
 	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
-		self.stepNumOfStepsPairsIndex = stepNumOfStepsPairsIndex
+		# self.stepNumOfStepsPairsIndex = stepNumOfStepsPairsIndex #for better encapsulation in the future
 		self.xVals = np.zeros(numOfSteps)
 		self.yVals = np.zeros(numOfSteps)
-		self.tempXVals = []
+		self.tempXVals = 0
 		self.rangeVal = 0.3
 		self.coeffList = [0.0, 0.0]
 	
@@ -270,6 +275,11 @@ class VolumeRegression:
 	
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
+
+class VolumeRegression(AvgOverTimeRegression):
+	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
+		super().__init__(stepNumOfStepsPairsIndex, numOfSteps)
+		self.tempXVals = []
 
 
 class ProcessorThread (threading.Thread):
@@ -423,6 +433,50 @@ class ProcessorThread (threading.Thread):
 
 
 				companyList[symb].volumeRegression.tempXVals.append(float(t.size))
+
+
+				#
+				#	FREQUENCY REGRESSION
+				#
+
+				for x in range(len(self.stepNumOfStepsPairs)): #for every possible tick length/beginning time
+					if(self.timeToInt(t.time) >= self.stepNumOfStepsPairs[x][0]+self.tickTimeCntPairs[x][0]): #if the tick has finished
+						if(self.tickTimeCntPairs[x][1] >= self.stepNumOfStepsPairs[x][1]):	#if the number of ticks exceeded maximum (i.e. it's time to upadte the line fit)
+							self.tickTimeCntPairs[x][1] = 0
+							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+								if (company.frequencyRegression.detectError(company.frequencyRegression.tempXVals, self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+									and np.all(company.frequencyRegression.coeffList > [0.0, 0.0])):
+									print("frequency error")
+
+								if(np.all(company.frequencyRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
+									company.frequencyRegression.updateCoeffs()
+								else:
+									company.frequencyRegression.coeffList = [-1.0, -1.0]	#mark the beginning of a first complete pass
+
+
+								company.frequencyRegression.xVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression.tempXVals
+								company.frequencyRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+
+						else:							
+							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+								# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
+								if (company.frequencyRegression.detectError(company.frequencyRegression.tempXVals, self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+									and np.all(company.frequencyRegression.coeffList > [0.0, 0.0])):
+									print("frequency error")
+
+								company.frequencyRegression.xVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression.tempXVals #TODO what happens where no trade comes in during the whole tick
+								company.frequencyRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+								# print(self.tickTimeCntPairs[x][1])
+								# print(self.tickTimeCntPairs[x][0])
+
+							self.tickTimeCntPairs[x][1] += 1
+							#print(self.tickTimeCntPairs[x][1])
+							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+
+
+
+				companyList[symb].frequencyRegression.tempXVals += 1 #might delete that variable in the future
 
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
