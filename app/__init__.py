@@ -652,9 +652,9 @@ def parsefile(file):
 				if row[0] == 'time':
 					continue
 				else:
-					#print(row[0])
-					#print(row[1])
-					_q.put(mtrade.to_TradeData(row))
+					print(row[0], row[1], row[2], row[3],row[4], row[5], row[6], row[7], row[8], row[9])
+					time.sleep(1)
+					#_q.put(mtrade.to_TradeData(row))
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -673,9 +673,11 @@ def upload_file():
 
 		if f and allowed_file(f.filename):
 			
-			print("Reading File ###\n###\n###\n###")
+			print("Reading File \n#####\n#####\n#####")
 			filename = secure_filename(f.filename)
+			
 			#insert validation of file
+			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			f = parsefile(filename)
 			
