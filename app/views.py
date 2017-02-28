@@ -17,8 +17,8 @@ def index():
 	anomalyType = "Pump and Dump"
 	return render_template('dashboard.html',pagename=pagename, numberOfAnomalies=numberOfAnomalies, numberOfTrades=numberOfTrades,totalTradeValue=totalTradeValue, livedata=livedata)
 
-@app.route('/stock',methods=['GET','POST'])
-@app.route('/stock/<symbol>/anomaly/<id>',methods=['GET','POST'])
+@app.route('/stock', methods=['GET','POST'])
+@app.route('/stock/<symbol>/anomaly/<id>', methods=['GET','POST'])
 def anomaly(symbol,id):
 	pagename = "Anomaly Information for " + symbol
 	anomalyType = "Pump and Dump"
@@ -35,7 +35,7 @@ def anomaly(symbol,id):
 	sector = "sector"
 	bid = "bid"
 	ask = "ask"
-	return render_template('anomaly.html',pagename=pagename)
+	return render_template('anomaly.html', pagename=pagename)
 
 
 
@@ -44,4 +44,4 @@ def my_form_post():
 	pagename = "Home"
 	text = request.form['text']
 	print(text)
-	return render_template('index.html',pagename=pagename)
+	return render_template('index.html', pagename=pagename)

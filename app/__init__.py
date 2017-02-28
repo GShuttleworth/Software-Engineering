@@ -23,6 +23,10 @@ import signal
 import sys
 import time #for testing, may need for timed reconnection
 import os
+import csv
+
+from flask import Flask, request, redirect, url_for
+from werkzeug.utils import secure_filename
 
 #global declarations and variables
 _mode = 1 #1 live, 0 = static
@@ -612,11 +616,11 @@ def toggle():
 	mode = int(request.json['mode'])
 	global _mode
 	global _connected
-	if(mode==0):
+	if (mode==0):
 		if(_connected==1):
 			disconnect_stream()
 		_mode=0
-	if(mode==1):
+	if (mode==1):
 		if(_connected!=1):
 			connect_stream()
 		else:
@@ -638,18 +642,48 @@ def init_session():
 	_sessions[id] = sessiondata
 	return "ok"
 
+def parsefile(file):
+		#read file
+		with open(file, 'r') as csvfile:
+			
+			reader = csv.reader(csvfile, delimiter = ',')
+			
+			for row in reader:
+				if row[0] == 'time':
+					continue
+				else:
+					#print(row[0])
+					#print(row[1])
+					_q.put(mtrade.to_TradeData(row))
+
+ALLOWED_EXTENSIONS = set(['csv'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
 	if request.method == 'POST':
 		f = request.files['file']
-		if f:
-			#insert validation of file
-			f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'trades.csv'))
 		
+		if f.filename == '':
+	            flash('No selected file')
+	            return "not ok"
+
+		if f and allowed_file(f.filename):
+			
+			print("Reading File ###\n###\n###\n###")
+			filename = secure_filename(f.filename)
+			#insert validation of file
+			f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			f = parsefile(filename)
+			
 			#create another thread to put into queue otherwise will be blocking/delay in return
 			#it should also empty contents of old queue
+
 		else:
-			print("error")
+			print("Error with file upload")
 	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
