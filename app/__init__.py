@@ -568,7 +568,6 @@ def getdata():
 	data["tradevalue"] = format(_tradevalue, '.2f')
 
 	#empty anomaly queue
-	anomalies=[]
 	if(session.get('id') is not None):
 		#print(session['id']) #debugging
 		try:
