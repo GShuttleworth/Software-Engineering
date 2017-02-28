@@ -13,6 +13,7 @@ import numpy as np
 #modules by us
 from app import mtrade
 from app import database
+from app import detection
 
 #misc
 import uuid #generating random session ids
@@ -317,6 +318,21 @@ class ProcessorThread (threading.Thread):
 	global _numberOfRegressors
 	_numberOfRegressors = 10
 	
+	def new_anomaly(self,db,tradeid,t,category):
+		global _sessionslock
+		global _anomalycounter
+		global _sessions
+		anomalyid = -1
+		anomalyid = db.addAnomaly(tradeid, category)
+		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
+		#doSomething with the anomaly
+		_anomalycounter+=1
+			#for each key in session, add this anomaly
+		_sessionslock.acquire
+		for key in _sessions:
+			_sessions[key].put(newAnomaly)
+		_sessionslock.release
+	
 	def processing(self):
 		#state is processing static/live
 		global _qlock
@@ -370,23 +386,12 @@ class ProcessorThread (threading.Thread):
 
 
 				# PRICE ANOMALY DETECTION
-
-
 				if(np.all(companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
 					# print(companyList[symb].priceCoeffList) #debugging
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(t.time), float(t.price))):
 						print("price anomaly") #debugging
 						#add anomaly to db
-						anomalyid = -1
-						anomalyid = db.addAnomaly(tradeid, 3)
-						newAnomaly = mtrade.Anomaly(anomalyid, t, 3) #todo change 3
-						#doSomething with the anomaly
-						_anomalycounter+=1
-						#for each key in session, add this anomaly
-						_sessionslock.acquire
-						for key in _sessions:
-							_sessions[key].put(newAnomaly)
-						_sessionslock.release
+						self.new_anomaly(db,tradeid,t,3)
 
 				#
 				#	VOLUME REGRESSION
@@ -403,6 +408,8 @@ class ProcessorThread (threading.Thread):
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+									#add anomaly TODO change if appropriate
+									self.new_anomaly(db,tradeid,t,4)
 						
 								if(np.all(company.volumeRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 									company.volumeRegression.updateCoeffs()
@@ -420,6 +427,8 @@ class ProcessorThread (threading.Thread):
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+									#add anomaly TODO change if appropriate
+									self.new_anomaly(db,tradeid,t,4)
 						
 								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
 								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
@@ -568,7 +577,7 @@ def getdata():
 	data["tradevalue"] = format(_tradevalue, '.2f')
 
 	#empty anomaly queue
-	anomalies=[]
+	anomalies = []
 	if(session.get('id') is not None):
 		#print(session['id']) #debugging
 		try:
