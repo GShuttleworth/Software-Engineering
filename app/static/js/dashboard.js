@@ -82,6 +82,10 @@ function convert_type(t){
 			type="Bear raids"
 			break;
 		case 3:
+			type="Price spike"
+			break;
+		case 4:
+			type="Volume spike"
 			break;
 	}
 	return type;
