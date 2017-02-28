@@ -408,8 +408,6 @@ class ProcessorThread (threading.Thread):
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
-									#add anomaly TODO change if appropriate
-									self.new_anomaly(db,tradeid,t,4)
 						
 								if(np.all(company.volumeRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 									company.volumeRegression.updateCoeffs()
@@ -427,8 +425,6 @@ class ProcessorThread (threading.Thread):
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
-									#add anomaly TODO change if appropriate
-									self.new_anomaly(db,tradeid,t,4)
 						
 								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
 								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
