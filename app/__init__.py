@@ -395,10 +395,11 @@ class ProcessorThread (threading.Thread):
 							self.tickTimeCntPairs[x][1] = 0
 							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
-								if (company.volumeRegression.detectError(sum(company.volumeRegression.tempXVals), self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
-									print("volume error")
-
+									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+						
 								if(np.all(company.volumeRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 									company.volumeRegression.updateCoeffs()
 								else:
@@ -411,10 +412,11 @@ class ProcessorThread (threading.Thread):
 						else:							
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 								# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
-								if (company.volumeRegression.detectError(sum(company.volumeRegression.tempXVals), self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
-									print("volume error")
-
+									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+						
 								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
 								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
 								# print(self.tickTimeCntPairs[x][1])
@@ -439,10 +441,11 @@ class ProcessorThread (threading.Thread):
 							self.tickTimeCntPairs[x][1] = 0
 							self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
-								if (company.frequencyRegression.detectError(company.frequencyRegression.tempXVals, self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+								if (company.frequencyRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression.tempXVals)
 									and np.all(company.frequencyRegression.coeffList > [0.0, 0.0])):
-									print("frequency error")
-
+									print("frequency anomaly for x=", company.frequencyRegression.tempXVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									print("expected x=", companyList[symb].frequencyRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", companyList[symb].frequencyRegression.rangeVal) #debugging
+						
 								if(np.all(company.frequencyRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 									company.frequencyRegression.updateCoeffs()
 								else:
@@ -455,10 +458,11 @@ class ProcessorThread (threading.Thread):
 						else:							
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 								# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
-								if (company.frequencyRegression.detectError(company.frequencyRegression.tempXVals, self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))
+								if (company.frequencyRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression.tempXVals)
 									and np.all(company.frequencyRegression.coeffList > [0.0, 0.0])):
-									print("frequency error")
-
+									print("frequency anomaly for x=", company.frequencyRegression.tempXVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									print("expected x=", companyList[symb].frequencyRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", companyList[symb].frequencyRegression.rangeVal) #debugging
+						
 								company.frequencyRegression.xVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression.tempXVals #TODO what happens where no trade comes in during the whole tick
 								company.frequencyRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
 								# print(self.tickTimeCntPairs[x][1])
