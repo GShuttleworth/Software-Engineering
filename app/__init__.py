@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #front end imports
 from flask import Flask
-from flask import request, session
+from flask import request, session, redirect, url_for
+from werkzeug.utils import secure_filename
 import json
 import logging
 import atexit
@@ -25,9 +26,6 @@ import sys
 import time #for testing, may need for timed reconnection
 import os
 import csv
-
-from flask import Flask, request, redirect, url_for
-from werkzeug.utils import secure_filename
 
 #global declarations and variables
 _mode = 1 #1 live, 0 = static
@@ -70,8 +68,11 @@ def init_app():
 	#for sessions, generate a key instead
 	
 	_running=1
+	#app configurations
 	app.secret_key = str(uuid.uuid4())
 	app.config['UPLOAD_FOLDER'] = ''
+	
+	load_data()
 	init_threads()
 	
 	#on exit
@@ -79,6 +80,17 @@ def init_app():
 	#signal handler
 	signal.signal(signal.SIGINT, signal_handler)
 	return app
+
+def load_data():
+	#loads data from db
+	global _tradevalue
+	global _tradecounter
+	global _anomalycounter
+
+	db = database.Database()
+	_tradecounter = int(db.tradecount())
+	_anomalycounter = int(db.anomalycount())
+	_tradevalue = db.tradevalue()
 
 def init_threads():
 	#create threads
@@ -161,6 +173,7 @@ class StreamThread (threading.Thread):
 				except socket.timeout as e:
 					if(counter>60):
 						print("No data received in the past 2 minutes. Disconnecting stream")
+						#raise error
 						disconnect_stream()
 					counter+=1
 				else:
@@ -174,6 +187,9 @@ class StreamThread (threading.Thread):
 			print("\nStream disconnected")
 		
 		except socket.error as e:
+			#debugging midnight error
+			print(str(e.errno))
+			#connecting if stream is down error
 			if e.errno == errno.ECONNREFUSED:
 				print("Stream down, aborting. Please manually reconnect")
 				disconnect_stream()
@@ -209,6 +225,11 @@ class HandlerThread (threading.Thread):
 					break
 			#detect timers
 			#TODO disconnect stream and reconnect
+			#automatically reconnect
+			global _mode
+			global _connected
+			if(_mode==1 and _connected==0):
+				connect_stream()
 			
 			#TODO loop through sessions
 			for key in list(_sessions): #create a copy of list as size will change due to deletion
@@ -225,7 +246,6 @@ class HandlerThread (threading.Thread):
 					del _sessions[key]
 					_sessionslock.release()
 					#print("Session ID: " + str(key) + " deleted")
-					del _sessions[key]
 			
 			for i in range(30):
 				if(_running):
@@ -350,7 +370,7 @@ class ProcessorThread (threading.Thread):
 				global _tradevalue
 				
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
-				_tradevalue+=float(t.price)+float(t.size)
+				_tradevalue+=float(t.price)*float(t.size)
 				#trade is in TradeData format (see trade.py)
 				
 				symb = t.symbol
@@ -391,7 +411,7 @@ class ProcessorThread (threading.Thread):
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(t.time), float(t.price))):
 						print("price anomaly") #debugging
 						#add anomaly to db
-						self.new_anomaly(db,tradeid,t,3)
+						self.new_anomaly(db,tradeid,t,-1)
 
 				#
 				#	VOLUME REGRESSION
@@ -406,11 +426,10 @@ class ProcessorThread (threading.Thread):
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
-									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
-									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
-									#add anomaly TODO change if appropriate
-									self.new_anomaly(db,tradeid,t,4)
-						
+									a=1 #lol indent errors TODO REMOVE
+									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+								
 								if(np.all(company.volumeRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 									company.volumeRegression.updateCoeffs()
 								else:
@@ -425,11 +444,9 @@ class ProcessorThread (threading.Thread):
 								# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
 								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
-									print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
-									print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
-									#add anomaly TODO change if appropriate
-									self.new_anomaly(db,tradeid,t,4)
-						
+									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
+									a=1 #lol indent errors TODO REMOVE
 								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
 								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
 								# print(self.tickTimeCntPairs[x][1])
@@ -597,6 +614,9 @@ def getdata():
 			# Key is not present, no sessions for user
 			#TODO insert better handler, tell user to refresh?
 			pass
+	else:
+		#add session
+		init_session()
 
 	data["anomalies"] = anomalies
 	return json.dumps(data)
