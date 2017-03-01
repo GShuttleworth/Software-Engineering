@@ -306,6 +306,8 @@ class ProcessorThread (threading.Thread):
 	stepNumOfStepsPairs = [[20, 6]]
 	tickTimeCntPairs = [[0,0]]
 
+	senstivityPerTrader = 5
+
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -320,6 +322,10 @@ class ProcessorThread (threading.Thread):
 		global _numOfStepVariants
 		_numOfStepVariants = len(self.stepNumOfStepsPairs)
 
+		#rolling average for all traders
+		#(exponential moving average should make it very computationally efficient)
+		global traderList
+		traderList = {}
 		
 		self.processing() #currently doing live data
 	
@@ -506,9 +512,21 @@ class ProcessorThread (threading.Thread):
 
 				companyList[symb].frequencyRegression.tempXVals += 1 #might delete that variable in the future
 
+				#
+				#	ANOMALY BY TRADER
+				#
+
+				if(t.seller not in traderList):
+					traderList[t.seller] = float(t.size)*float(t.price)
+				else:
+					traderList[t.seller] = traderList[t.seller]*0.9 + 0.1*float(t.size)*float(t.price)
+					if(#traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
+						traderList[t.seller] < float(t.size)*float(t.price)/self.senstivityPerTrader):
+						print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
+
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
-		time.sleep(0.1) #good for cpu
+		time.sleep(0.01) #good for cpu
 		db.close()
 
 	def dequeue(self,q,qlock):
