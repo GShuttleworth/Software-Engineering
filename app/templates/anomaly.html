@@ -13,17 +13,7 @@
     </div>
 
   </div>
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">Visualisation</div>
-      <div class="panel-body">
-
-        <div id="chart_div" style="min-height: 500px"></div>
-      </div>
-    </div>
-  </div>
-    <div class="col-md-6">
-
+    <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">Visualisation</div>
         <div class="panel-body">
@@ -32,26 +22,6 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">Visualisation</div>
-        <div class="panel-body">
-
-          <div id="area_chart_div" style="style=min-height: 500px"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">Visualisation</div>
-        <div class="panel-body">
-
-          <div id="piechart" style="min-height: 500px"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
@@ -100,54 +70,24 @@
   </div>
 </div>
 
-<!-- Scatter Chart -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['Age', 'Weight'],
-    [ 8,      12],
-    [ 4,      5.5],
-    [ 11,     14],
-    [ 4,      5],
-    [ 3,      3.5],
-    [ 6.5,    7]
-  ]);
-
-  var options = {
-    title: 'Age vs. Weight comparison',
-    hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-    vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
-    legend: 'none'
-  };
-
-  var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-
-  chart.draw(data, options);
-}
-</script>
-
 <!-- Line Graph -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
-    ['Year', 'Sales', 'Expenses'],
-    ['2004',  1000,      400],
-    ['2005',  1170,      460],
-    ['2006',  660,       1120],
-    ['2007',  1030,      540]
+		  ['Time', 'Price'],
+		  {%- for trade in trades %}
+		  ['{{ trade.time }}', {{ trade.price }}]{%- if not loop.last %},{% endif %}
+		  {%- endfor %}
   ]);
 
   var options = {
-    title: 'Company Performance',
-    curveType: 'function',
-    legend: { position: 'bottom' }
+    title: 'Recent statistics',
+    legend: { position: 'bottom' },
+    chartArea: { height: "40%", width: "90%" }
   };
 
   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
@@ -155,59 +95,7 @@ function drawChart() {
   chart.draw(data, options);
 }
 </script>
-
-<!-- Pie Chart -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-function drawChart() {
-
-  var data = google.visualization.arrayToDataTable([
-    ['Task', 'Hours per Day'],
-    ['Work',     11],
-    ['Eat',      2],
-    ['Commute',  2],
-    ['Watch TV', 2],
-    ['Sleep',    7]
-  ]);
-
-  var options = {
-    title: 'My Daily Activities'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-  chart.draw(data, options);
-}
 </script>
-
-<!-- Area Chart -->
-<script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['Year', 'Sales', 'Expenses'],
-    ['2013',  1000,      400],
-    ['2014',  1170,      460],
-    ['2015',  660,       1120],
-    ['2016',  1030,      540]
-  ]);
-
-  var options = {
-    title: 'Company Performance',
-    hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-    vAxis: {minValue: 0}
-  };
-
-  var chart = new google.visualization.AreaChart(document.getElementById('area_chart_div'));
-  chart.draw(data, options);
-}
-</script>
-
 {% endblock %}
 
 
