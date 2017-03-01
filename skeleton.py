@@ -14,8 +14,9 @@ if __name__ == '__main__':
 	log.setLevel(logging.ERROR)
 	
 	#help
-	print("\t\t\t****Use CTRL+C then Enter key to exit****")
-	print("\t\t\t\tFlask logging mode off\n")
+	print("\t\t\t**** Use CTRL+C then Enter key to exit ****")
+	print("\t\t\t\tFlask logging mode off")
+	print("\t\t\t**** Access to UI at 127.0.0.1:5000 ****\n")
 	
 
 	app.run(debug=True, use_reloader=False)

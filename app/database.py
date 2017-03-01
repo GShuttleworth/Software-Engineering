@@ -121,6 +121,30 @@ class Database:
 		params = [date]
 		self.action(query, params)
 		return 0
+	
+	def anomalycount(self):
+		table = "anomalies_live"
+		return self.getcount(table)
+	
+	def tradecount(self):
+		table = "trans_live"
+		return self.getcount(table)
+	
+	def getcount(self, table):
+		query = "SELECT COUNT(*) FROM " + table
+		params =[]
+		data = self.query(query, params)
+		t = data.fetchone()
+		return t[0]
+	
+	def tradevalue(self):
+		query = "SELECT SUM(price * volume) FROM trans_live"
+		params = []
+		data = self.query(query, params)
+		t = data.fetchone()
+		if(not t[0]):
+			return 0
+		return t[0]
 
 	# gets all the anomalies for the table, returns a list of anomaly objects
 	def getAnomalies(self, done):
