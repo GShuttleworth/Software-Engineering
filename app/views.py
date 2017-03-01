@@ -31,6 +31,8 @@ def anomaly(symbol, id):
     anomaly = db.getAnomalyById(id)
     baseTrade = anomaly.trade
     trades = db.getTradesForDrillDown(baseTrade.symbol, id)
+    for t in trades:
+        t.time = t.time[10:19]
     db.close() # Close quickly to prevent any issues
     pagename = "Anomaly Information for " + symbol
     anomalyType = "Pump and Dump"

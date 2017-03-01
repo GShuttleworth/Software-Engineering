@@ -11,17 +11,29 @@
         <strong>Anomaly Certainty</strong> {{ certantyPercentage }}% <br />
       </div>
     </div>
+   </div>
 
-  </div>
     <div class="col-md-12">
       <div class="panel panel-default">
-        <div class="panel-heading">Visualisation</div>
+        <div class="panel-heading">Price</div>
         <div class="panel-body">
 
-          <div id="curve_chart" style=style="min-height: 500px"></div>
+          <div id="price_chart" style="style="min-height: 500px""></div>
         </div>
       </div>
     </div>
+
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Volume</div>
+        <div class="panel-body">
+
+          <div id="volume_chart" style="style="min-height: 500px""></div>
+        </div>
+      </div>
+    </div>
+
+</div>
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
@@ -71,7 +83,7 @@
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<!-- Line Graph -->
+<!-- Price Graph -->
 <script type="text/javascript">
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
@@ -85,12 +97,39 @@ function drawChart() {
   ]);
 
   var options = {
-    title: 'Recent statistics',
+    title: 'Prices of most recent trades',
+    legend: { position: 'bottom' },
+    chartArea: { height: "40%", width: "90%" },
+    series: {
+	7: { pointShape: {type: 'star'}}
+    }
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('price_chart'));
+
+  chart.draw(data, options);
+}
+</script>
+<!-- Volume Graph -->
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+		  ['Time', 'Volume'],
+		  {%- for trade in trades %}
+		  ['{{ trade.time }}', {{ trade.size }}]{%- if not loop.last %},{% endif %}
+		  {%- endfor %}
+  ]);
+
+  var options = {
+    title: 'Volume of most recent trades',
     legend: { position: 'bottom' },
     chartArea: { height: "40%", width: "90%" }
   };
 
-  var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+  var chart = new google.visualization.LineChart(document.getElementById('volume_chart'));
 
   chart.draw(data, options);
 }
