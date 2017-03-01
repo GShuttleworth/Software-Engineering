@@ -29,7 +29,7 @@ function refresh() {
 function updatedash(anomalycount,tradecount,tradevalue) {
 	$('#trades').html(tradecount);
 	$('#anomalies').html(anomalycount);
-	$('#tradevalue').html('&pound;'+tradevalue);
+	$('#tradevalue').html('&pound;'+nFormatter(tradevalue,2));
 
 }
 

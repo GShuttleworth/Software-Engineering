@@ -247,7 +247,22 @@ class Database:
 		query = "DELETE FROM " + table + " WHERE time=?"
 		params = [date]
 		self.action(query, params)
-		return 0
+		return 1
+	
+	def clearall(self):
+		#delete all entries from trades and anomalies
+		try:
+			table = "trans_live"
+			query = "DELETE FROM " + table
+			params = []
+			self.action(query, params)
+			table = "anomalies_live"
+			query = "DELETE FROM " + table
+			params = []
+			self.action(query, params)
+		except:
+			return False
+		return True
 
 	# gets all the anomalies for the table, returns a list of anomaly objects
 	def getAnomalies(self, done):

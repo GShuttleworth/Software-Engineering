@@ -660,7 +660,18 @@ def toggle():
 @app.route('/reset', methods=['POST'])
 def resetstats():
 	#for resetting current stats and db?
-	return "ok"
+	db = database.Database()
+	success=db.clearall()
+	global _tradevalue
+	global _tradecounter
+	global _anomalycounter
+	
+	if(success):
+		_tradevalue = 0
+		_tradecounter = 0
+		_anomalycounter = 0
+		return "ok"
+	return "fail"
 	
 @app.route('/session', methods=['POST'])
 def init_session():
