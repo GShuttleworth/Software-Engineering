@@ -3,8 +3,8 @@ from app import app
 from flask import request
 import sys
 sys.path.append(".")
-import mtrade
-import database
+from app import mtrade
+from app import database
 
 
 @app.route('/')
