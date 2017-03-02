@@ -1,0 +1,1000 @@
+﻿time,buyer,seller,price,size,currency,symbol,sector,bid,ask
+00:00.0,m.harding@vinvest.com,warford.benson@tibratrading.com,6802,18881,GBX,RRS.L,Basic Materials,6798,6802
+00:00.2,u.abduallatif@janestreetcap.com,a.clare@sorrel.com,207.09,21568,GBX,ITV.L,Services,207.09,211.09
+00:00.2,w.tuffnell@janestreetcap.com,w.hastings@bridgewater.com,348,24729,GBX,DC.L,Consumer Goods,347.74,351.75
+00:00.4,a.j.johnson@johnsonandfinnemore.com,carlee.c@invensys.com,2001.95,17987,GBX,PSN.L,Industrial Goods,2001.95,2005.94
+00:00.6,m.harding@vinvest.com,a.smith@fenchurchst.com,1597.79,26122,GBX,AHT.L,Services,1593.8,1597.79
+00:00.6,a.j.johnson@johnsonandfinnemore.com,thistle@janestreetcap.com,1598.64,18027,GBX,PRU.L,Financial,1598.64,1602.64
+00:00.7,carlee.c@invensys.com,j.newbury@citadel.com,1046.99,22072,GBX,EZJ.L,Services,1043.02,1046.99
+00:00.8,rudyard.smithies@citadel.com,a.braxton@vinvest.com,227.95,26287,GBX,CNA.L,Utilities,224.98,228.98
+00:00.9,m.corrigan@jlb.com,j.freeman@sorrel.com,349.01,31860,GBX,DLG.L,Financial,346.1,350.1
+00:01.0,n.ainsworth@vinvest.com,a.j.johnson@johnsonandfinnemore.com,4611.7,34507,GBX,SHP.L,Healthcare,4611.7,4615.72
+00:01.1,s.hedgewick@janestreetcap.com,d.bristol@moma.com,355.6,29020,GBX,DC.L,Consumer Goods,352.68,355.6
+00:01.2,warford.benson@tibratrading.com,a.smith@fenchurchst.com,1338.32,15462,GBX,AAL.L,Basic Materials,1334.31,1338.32
+00:01.5,t.barton@knightcapital.com,s.hedgewick@janestreetcap.com,723.48,9449,GBX,III.L,Financial,719.46,723.48
+00:01.7,l.lee@moma.com,a.clare@sorrel.com,2287.31,37163,GBX,RDSA.L,Basic Materials,2287.31,2291.28
+00:01.7,j.amstell@bridgewater.com,u.abduallatif@janestreetcap.com,8749.42,15532,GBX,PPB.L,Other,8746.16,8750.19
+00:01.9,j.freeman@sorrel.com,m.hen@aspectcapital.com,2026.36,23059,GBX,PSN.L,Industrial Goods,2026.36,2026.36
+00:02.0,carlee.c@invensys.com,w.hastings@bridgewater.com,512.45,26828,GBX,BDEV.L,Industrial Goods,512.45,516.45
+00:02.0,m.hen@aspectcapital.com,m.grein@tibratrading.com,1589.72,20876,GBX,BRBY.L,Consumer Goods,1585.7,1589.72
+00:02.2,locke@rochdaleassets.com,m.hen@aspectcapital.com,675.69,37763,GBX,HSBA.L,Financial,671.69,675.69
+00:02.2,a.smith@fenchurchst.com,a.afzal@rochdaleassets.com,3379.33,47495,GBX,ULVR.L,Consumer Goods,3378.07,3382.12
+00:02.4,j.amstell@bridgewater.com,n.a.choudhury@oxam.org,1755.62,18869,GBX,MNDI.L,Consumer Goods,1751.59,1755.62
+00:02.5,m.corrigan@jlb.com,s.benson@bridgewater.com,3227.07,20607,GBX,JMAT.L,Basic Materials,3227.07,3231.04
+00:02.6,l.lee@moma.com,s.chapman@jlb.com,1622.32,20720,GBX,PRU.L,Financial,1618.26,1622.32
+00:02.6,j.amstell@bridgewater.com,m.harding@vinvest.com,1757.67,17180,GBX,ADM.L,Financial,1756.74,1760.74
+00:02.8,locke@rochdaleassets.com,n.a.choudhury@oxam.org,214.14,38430,GBX,ITV.L,Services,210.08,214.14
+00:02.8,rudyard.smithies@citadel.com,w.cromwell@aspectcapital.com,337.73,14973,GBX,GKN.L,Consumer Goods,337.73,341.71
+00:02.8,n.a.choudhury@oxam.org,a.afzal@rochdaleassets.com,991.21,32420,GBX,SKY.L,Other,991.21,995.18
+00:03.0,larabourne@rochdaleassets.com,k.c.cooper@aspectcapital.com,1031.41,17294,GBX,EZJ.L,Services,1031.41,1031.41
+00:03.0,a.braxton@vinvest.com,u.abduallatif@janestreetcap.com,489.81,19160,GBX,IAG.L,Services,485.82,489.89
+00:03.1,s.benson@bridgewater.com,s.withers@oxam.org,954.64,21529,GBX,NG.L,Utilities,950.63,954.64
+00:03.4,a.braxton@vinvest.com,larabourne@rochdaleassets.com,1320.98,16995,GBX,AAL.L,Basic Materials,1320.98,1324.73
+00:03.4,manimal@jlb.com,k.c.cooper@aspectcapital.com,1075.08,40269,GBX,STJ.L,Financial,1075.08,1079.03
+00:03.5,tabby.dowd@janestreetcap.com,n.a.choudhury@oxam.org,1554.37,7125,GBX,SSE.L,Utilities,1550.35,1554.37
+00:03.7,m.corrigan@jlb.com,thistle@janestreetcap.com,3545.52,9883,GBX,ITRK.L,Services,3541.54,3545.52
+00:03.8,zach@invensys.com,u.abduallatif@janestreetcap.com,1884.81,30073,GBX,WPP.L,Services,1880.87,1884.81
+00:03.9,a.clare@sorrel.com,warford.benson@tibratrading.com,2854.81,7709,GBX,CRH.L,Industrial Goods,2853.93,2857.98
+00:04.0,j.amstell@bridgewater.com,n.a.choudhury@oxam.org,717.68,39738,GBX,III.L,Financial,717.68,719.01
+00:04.0,m.atherton@scottishwidows.com,w.hastings@bridgewater.com,1543.21,4450,GBX,SSE.L,Utilities,1543.21,1547.23
+00:04.1,tabby.dowd@janestreetcap.com,zach@invensys.com,351.45,25158,GBX,SL.L,Financial,351.45,355.47
+00:04.1,w.tuffnell@janestreetcap.com,m.grein@tibratrading.com,710.88,18778,GBX,III.L,Financial,710.88,714.85
+00:04.2,s.withers@oxam.org,sam.goldwing@sorrel.com,1397.63,7854,GBX,FRES.L,Basic Materials,1397.63,1401.62
+00:04.3,j.amstell@bridgewater.com,m.hen@aspectcapital.com,2927.67,10483,GBX,LSE.L,Financial,2923.73,2927.67
+00:04.3,w.tuffnell@janestreetcap.com,tabby.dowd@janestreetcap.com,654.88,16980,GBX,HSBA.L,Financial,654.88,658.78
+00:04.3,s.chapman@jlb.com,a.smith@fenchurchst.com,3042.51,12615,GBX,SDR.L,Financial,3038.51,3042.51
+00:04.4,m.hen@aspectcapital.com,w.cromwell@aspectcapital.com,674.94,21111,GBX,HSBA.L,Financial,671.79,675.79
+00:04.5,j.freeman@sorrel.com,warford.benson@tibratrading.com,2210.55,12633,GBX,SVT.L,Utilities,2206.55,2210.55
+00:04.9,a.clare@sorrel.com,a.braxton@vinvest.com,941.25,24221,GBX,NG.L,Utilities,941.25,941.25
+00:05.2,a.m.forex@fenchurchst.com,l.lee@moma.com,580.31,25150,GBX,RSA.L,Financial,576.26,580.31
+00:05.2,p.greyling@fenchurchst.com,u.farooq@tibratrading.com,2387.85,32694,GBX,RDSB.L,Basic Materials,2383.93,2387.85
+00:05.2,a.j.johnson@johnsonandfinnemore.com,t.barton@knightcapital.com,207.24,13691,GBX,ITV.L,Services,207.11,211.13
+00:05.2,locke@rochdaleassets.com,u.farooq@tibratrading.com,3596.98,14506,GBX,IMB.L,Consumer Goods,3596.98,3600.94
+00:05.2,s.chapman@jlb.com,rudyard.smithies@citadel.com,64.48,18496,GBX,LLOY.L,Financial,64.48,68.44
+00:05.4,m.atherton@scottishwidows.com,a.smith@fenchurchst.com,521.46,17457,GBX,BDEV.L,Industrial Goods,521.46,521.46
+00:05.5,carlee.c@invensys.com,w.hastings@bridgewater.com,514.12,10871,GBX,CPI.L,Services,514.12,518.1
+00:05.6,w.hastings@bridgewater.com,s.benson@bridgewater.com,1846.97,20800,GBX,WPP.L,Services,1846.97,1847.53
+00:05.8,j.amstell@bridgewater.com,j.freeman@sorrel.com,341.56,27976,GBX,GKN.L,Consumer Goods,337.69,341.7
+00:06.1,j.newbury@citadel.com,l.lee@moma.com,1522.65,15162,GBX,SMIN.L,Industrial Goods,1518.63,1522.65
+00:06.3,d.bristol@moma.com,warford.benson@tibratrading.com,1885.24,24247,GBX,HIK.L,Healthcare,1883.61,1887.56
+00:06.3,a.smith@fenchurchst.com,u.farooq@tibratrading.com,248.14,29339,GBX,LGEN.L,Financial,245.17,249.17
+00:06.5,l.lee@moma.com,k.c.cooper@aspectcapital.com,238.97,34251,GBX,MRW.L,Consumer Goods,238.97,242.92
+00:06.8,s.hedgewick@janestreetcap.com,a.clare@sorrel.com,1457.4,42458,GBX,CPG.L,Services,1453.44,1457.4
+00:07.1,larabourne@rochdaleassets.com,a.smith@fenchurchst.com,6850.12,19815,GBX,RB.L,Consumer Goods,6846.09,6850.12
+00:07.2,d.bristol@moma.com,n.a.choudhury@oxam.org,1771.83,25720,GBX,ADM.L,Financial,1767.94,1771.83
+00:07.3,a.j.johnson@johnsonandfinnemore.com,carlee.c@invensys.com,689.74,5403,GBX,INF.L,Other,689.74,693.74
+00:07.3,thistle@janestreetcap.com,w.hastings@bridgewater.com,212.56,23602,GBX,VOD.L,Technology,212.56,216.66
+00:07.5,a.braxton@vinvest.com,manimal@jlb.com,1027.13,11259,GBX,EZJ.L,Services,1027.13,1027.13
+00:07.5,a.braxton@vinvest.com,s.withers@oxam.org,1463.55,56686,GBX,REL.L,Services,1459.58,1463.55
+00:07.7,a.afzal@rochdaleassets.com,m.hen@aspectcapital.com,817.4,20310,GBX,PSON.L,Services,816.52,820.44
+00:07.8,m.grein@tibratrading.com,w.tuffnell@janestreetcap.com,233.96,29868,GBX,BARC.L,Financial,229.95,233.96
+00:07.8,rudyard.smithies@citadel.com,tabby.dowd@janestreetcap.com,692.4,15650,GBX,INF.L,Other,689.68,693.66
+00:07.8,n.ainsworth@vinvest.com,larabourne@rochdaleassets.com,316.97,26503,GBX,GLEN.L,Basic Materials,315.74,319.78
+00:07.9,u.abduallatif@janestreetcap.com,tabby.dowd@janestreetcap.com,1573.93,15024,GBX,GSK.L,Healthcare,1569.86,1573.93
+00:08.0,a.clare@sorrel.com,d.bristol@moma.com,522.18,18936,GBX,CPI.L,Services,518.16,522.18
+00:08.0,u.farooq@tibratrading.com,m.harding@vinvest.com,1027.97,28117,GBX,EZJ.L,Services,1027.97,1027.97
+00:08.0,k.c.cooper@aspectcapital.com,rudyard.smithies@citadel.com,6128.29,15634,GBX,DCC.L,Financial,6128.29,6132.38
+00:08.1,larabourne@rochdaleassets.com,u.farooq@tibratrading.com,1736.14,45513,GBX,ADM.L,Financial,1736.14,1740.19
+00:08.2,a.m.forex@fenchurchst.com,w.hastings@bridgewater.com,1893.45,46021,GBX,HIK.L,Healthcare,1889.47,1893.45
+00:08.3,locke@rochdaleassets.com,t.barton@knightcapital.com,1460.68,14108,GBX,BLT.L,Basic Materials,1456.73,1460.68
+00:08.4,w.cromwell@aspectcapital.com,t.barton@knightcapital.com,1222.76,14898,GBX,SN.L,Healthcare,1222.76,1226.92
+00:08.7,n.a.choudhury@oxam.org,m.hen@aspectcapital.com,289.99,6392,GBX,WPG.L,Services,288.31,292.4
+00:08.8,sam.goldwing@sorrel.com,a.m.forex@fenchurchst.com,1137.91,15375,GBX,TUI.L,Other,1133.8,1137.91
+00:08.8,m.atherton@scottishwidows.com,m.harding@vinvest.com,246.56,14192,GBX,MRW.L,Consumer Goods,244.37,246.56
+00:08.9,larabourne@rochdaleassets.com,a.m.forex@fenchurchst.com,1276.45,18596,GBX,HL.L,Financial,1276.45,1280.47
+00:08.9,w.hastings@bridgewater.com,tabby.dowd@janestreetcap.com,4232.17,41902,GBX,CCL.L,Consumer Goods,4231.63,4235.64
+00:09.0,tabby.dowd@janestreetcap.com,j.amstell@bridgewater.com,1730,25759,GBX,MNDI.L,Consumer Goods,1730,1733.9
+00:09.2,u.farooq@tibratrading.com,a.braxton@vinvest.com,1341.99,36077,GBX,AAL.L,Basic Materials,1341.99,1341.99
+00:09.5,thistle@janestreetcap.com,a.j.johnson@johnsonandfinnemore.com,222.84,36400,GBX,CNA.L,Utilities,222.84,226.73
+00:09.5,m.grein@tibratrading.com,carlee.c@invensys.com,2049.06,22909,GBX,PSN.L,Industrial Goods,2044.95,2049.06
+00:09.7,a.m.forex@fenchurchst.com,j.freeman@sorrel.com,954.74,23512,GBX,BAB.L,Industrial Goods,950.71,954.74
+00:09.8,zach@invensys.com,p.greyling@fenchurchst.com,3766.77,28115,GBX,IHG.L,Services,3765.06,3769.18
+00:09.8,j.amstell@bridgewater.com,m.atherton@scottishwidows.com,281.01,32883,GBX,INTU.L,Other,277.01,281.01
+00:09.9,p.greyling@fenchurchst.com,n.ainsworth@vinvest.com,822.96,20182,GBX,PSON.L,Services,822.96,822.96
+00:09.9,w.tuffnell@janestreetcap.com,locke@rochdaleassets.com,729.75,17938,GBX,ANTO.L,Basic Materials,726.37,730.42
+00:10.0,p.greyling@fenchurchst.com,a.afzal@rochdaleassets.com,4621.84,35252,GBX,AZN.L,Healthcare,4617.86,4621.84
+00:10.1,t.barton@knightcapital.com,n.a.choudhury@oxam.org,292.55,26265,GBX,WPG.L,Services,288.5,292.55
+00:10.2,s.hedgewick@janestreetcap.com,rudyard.smithies@citadel.com,892.4,37481,GBX,UU.L,Utilities,888.39,892.4
+00:10.2,locke@rochdaleassets.com,s.hedgewick@janestreetcap.com,229.31,14029,GBX,CNA.L,Utilities,229.31,229.31
+00:10.2,a.clare@sorrel.com,w.hastings@bridgewater.com,346.57,23662,GBX,DLG.L,Financial,346,349.93
+00:10.2,j.newbury@citadel.com,m.grein@tibratrading.com,1411.86,21195,GBX,CPG.L,Services,1411.86,1415.71
+00:10.4,n.a.choudhury@oxam.org,m.corrigan@jlb.com,6764.58,37822,GBX,RB.L,Consumer Goods,6764.58,6764.58
+00:10.5,d.bristol@moma.com,m.harding@vinvest.com,727.42,15995,GBX,III.L,Financial,723.89,727.42
+00:10.6,s.chapman@jlb.com,zach@invensys.com,1126.55,19114,GBX,TUI.L,Other,1126.55,1126.55
+00:10.6,k.c.cooper@aspectcapital.com,a.j.johnson@johnsonandfinnemore.com,673.89,7443,GBX,SGE.L,Technology,671.33,675.21
+00:10.6,m.hen@aspectcapital.com,rudyard.smithies@citadel.com,1556.81,13349,GBX,GSK.L,Healthcare,1556.81,1558.46
+00:10.7,m.hen@aspectcapital.com,w.tuffnell@janestreetcap.com,4111.94,44022,GBX,WTB.L,Services,4111.94,4115.94
+00:10.8,j.newbury@citadel.com,a.m.forex@fenchurchst.com,510.65,31299,GBX,CPI.L,Services,510.65,513.63
+00:10.8,p.greyling@fenchurchst.com,tabby.dowd@janestreetcap.com,1559.96,5966,GBX,GSK.L,Healthcare,1559.96,1564
+00:10.8,s.benson@bridgewater.com,carlee.c@invensys.com,940.01,14240,GBX,BAB.L,Industrial Goods,940.01,940.01
+00:10.9,a.j.johnson@johnsonandfinnemore.com,s.chapman@jlb.com,1602.33,26571,GBX,EXPN.L,Services,1598.33,1602.33
+00:11.0,w.hastings@bridgewater.com,m.harding@vinvest.com,3634.19,24210,GBX,IMB.L,Consumer Goods,3633.09,3634.19
+00:11.1,zach@invensys.com,sam.goldwing@sorrel.com,663.35,17625,GBX,RR.L,Industrial Goods,663.35,667.32
+00:11.1,a.m.forex@fenchurchst.com,t.barton@knightcapital.com,2552.7,28174,GBX,ABF.L,Consumer Goods,2550.2,2554.21
+00:11.3,s.withers@oxam.org,m.corrigan@jlb.com,930.53,35225,GBX,NG.L,Utilities,930.53,933.3
+00:11.4,s.benson@bridgewater.com,a.smith@fenchurchst.com,830.31,28114,GBX,PSON.L,Services,830.31,830.31
+00:11.5,j.freeman@sorrel.com,rudyard.smithies@citadel.com,3276.06,26935,GBX,JMAT.L,Basic Materials,3272.09,3276.06
+00:11.5,a.braxton@vinvest.com,s.chapman@jlb.com,344.19,51257,GBX,GKN.L,Consumer Goods,344.19,344.19
+00:11.6,j.amstell@bridgewater.com,warford.benson@tibratrading.com,3314.75,37559,GBX,CRDA.L,Industrial Goods,3314.75,3318.62
+00:11.6,n.a.choudhury@oxam.org,manimal@jlb.com,338.89,26165,GBX,DLG.L,Financial,338.89,342.77
+00:12.0,s.withers@oxam.org,j.amstell@bridgewater.com,518.22,33640,GBX,BP.L,Basic Materials,518.22,522.14
+00:12.0,larabourne@rochdaleassets.com,p.greyling@fenchurchst.com,788.88,31035,GBX,MDC.L,Healthcare,788.88,792.87
+00:12.1,k.c.cooper@aspectcapital.com,w.cromwell@aspectcapital.com,1566.07,20673,GBX,BRBY.L,Consumer Goods,1566.07,1566.07
+00:12.1,l.lee@moma.com,s.benson@bridgewater.com,3401.36,11268,GBX,CRDA.L,Industrial Goods,3398.63,3401.36
+00:12.3,n.ainsworth@vinvest.com,locke@rochdaleassets.com,1774.35,13036,GBX,MNDI.L,Consumer Goods,1771.44,1774.35
+00:12.3,zach@invensys.com,a.j.johnson@johnsonandfinnemore.com,2849.02,11435,GBX,PFG.L,Financial,2848.39,2852.45
+00:12.4,warford.benson@tibratrading.com,carlee.c@invensys.com,245.44,17832,GBX,MRW.L,Consumer Goods,241.42,245.44
+00:12.4,n.a.choudhury@oxam.org,k.c.cooper@aspectcapital.com,228.75,22644,GBX,BARC.L,Financial,228.75,229.29
+00:12.4,s.withers@oxam.org,m.hen@aspectcapital.com,1011.77,9895,GBX,EZJ.L,Services,1011.77,1015.66
+00:12.5,t.barton@knightcapital.com,a.m.forex@fenchurchst.com,6196.42,29800,GBX,DCC.L,Financial,6192.97,6196.42
+00:12.8,m.grein@tibratrading.com,t.barton@knightcapital.com,568.19,27670,GBX,RSA.L,Financial,568.19,570.31
+00:13.2,m.grein@tibratrading.com,m.hen@aspectcapital.com,2193.69,47831,GBX,SVT.L,Utilities,2193.69,2193.69
+00:13.3,larabourne@rochdaleassets.com,m.corrigan@jlb.com,2537.63,26141,GBX,ABF.L,Consumer Goods,2537.63,2541.59
+00:13.3,a.braxton@vinvest.com,locke@rochdaleassets.com,351.88,28839,GBX,DLG.L,Financial,348.16,351.88
+00:13.5,locke@rochdaleassets.com,a.m.forex@fenchurchst.com,1799.71,21175,GBX,ADM.L,Financial,1799.71,1799.71
+00:13.8,j.freeman@sorrel.com,u.abduallatif@janestreetcap.com,340.58,30341,GBX,DLG.L,Financial,340.58,344.49
+00:14.0,sam.goldwing@sorrel.com,m.atherton@scottishwidows.com,4056.84,23365,GBX,NXT.L,Consumer Goods,4056.84,4060.83
+00:14.0,u.farooq@tibratrading.com,n.ainsworth@vinvest.com,562.41,23999,GBX,HMSO.L,Financial,562.41,566.4
+00:14.1,a.afzal@rochdaleassets.com,n.a.choudhury@oxam.org,1550.7,32362,GBX,SSE.L,Utilities,1549.78,1554.04
+00:14.1,s.chapman@jlb.com,t.barton@knightcapital.com,215.48,14498,GBX,OML.L,Financial,211.49,215.48
+00:14.2,warford.benson@tibratrading.com,sam.goldwing@sorrel.com,4322.04,41409,GBX,CCL.L,Consumer Goods,4318.04,4322.04
+00:14.2,w.cromwell@aspectcapital.com,a.smith@fenchurchst.com,2134.97,27260,GBX,SKG.L,Industrial Goods,2134.97,2138.97
+00:14.2,a.smith@fenchurchst.com,rudyard.smithies@citadel.com,1801.29,36301,GBX,CCH.L,Consumer Goods,1799.53,1803.4
+00:14.3,s.benson@bridgewater.com,m.atherton@scottishwidows.com,1565.92,12579,GBX,AHT.L,Services,1565.92,1569.8
+00:14.3,m.harding@vinvest.com,m.corrigan@jlb.com,203.27,35905,GBX,TSCO.L,Consumer Goods,203.27,207.27
+00:14.4,d.bristol@moma.com,warford.benson@tibratrading.com,2125.04,45137,GBX,BNZL.L,Services,2121.2,2125.04
+00:14.4,larabourne@rochdaleassets.com,zach@invensys.com,2587.42,17645,GBX,ABF.L,Consumer Goods,2587.42,2587.42
+00:14.6,tabby.dowd@janestreetcap.com,sam.goldwing@sorrel.com,4157.67,15381,GBX,CCL.L,Consumer Goods,4157.67,4161.5
+00:14.6,k.c.cooper@aspectcapital.com,m.atherton@scottishwidows.com,1574.4,27013,GBX,GSK.L,Healthcare,1570.64,1574.76
+00:14.6,a.afzal@rochdaleassets.com,larabourne@rochdaleassets.com,4511.52,19512,GBX,AZN.L,Healthcare,4511.52,4515.42
+00:14.7,d.bristol@moma.com,t.barton@knightcapital.com,720.59,11786,GBX,ANTO.L,Basic Materials,720.59,724.63
+00:14.8,m.harding@vinvest.com,s.withers@oxam.org,1571.57,31452,GBX,EXPN.L,Services,1571.57,1574.14
+00:14.9,k.c.cooper@aspectcapital.com,s.chapman@jlb.com,2600.38,32747,GBX,ABF.L,Consumer Goods,2597.81,2600.38
+00:15.1,a.m.forex@fenchurchst.com,w.cromwell@aspectcapital.com,614.7,22620,GBX,BA.L,Industrial Goods,610.89,614.98
+00:15.3,w.hastings@bridgewater.com,m.atherton@scottishwidows.com,715.52,20023,GBX,III.L,Financial,715.52,718.81
+00:15.3,u.abduallatif@janestreetcap.com,d.bristol@moma.com,1594.15,10658,GBX,AHT.L,Services,1593.66,1597.6
+00:15.3,rudyard.smithies@citadel.com,s.chapman@jlb.com,1031.15,16528,GBX,EZJ.L,Services,1031.15,1035.15
+00:15.4,a.m.forex@fenchurchst.com,a.clare@sorrel.com,242.83,39218,GBX,LGEN.L,Financial,242.83,246.45
+00:15.6,m.grein@tibratrading.com,manimal@jlb.com,2342.19,25821,GBX,RDSA.L,Basic Materials,2342.1,2342.19
+00:15.6,warford.benson@tibratrading.com,carlee.c@invensys.com,526.92,13132,GBX,BDEV.L,Industrial Goods,522.78,526.92
+00:15.7,s.hedgewick@janestreetcap.com,j.amstell@bridgewater.com,1599.14,17431,GBX,EXPN.L,Services,1598.96,1602.96
+00:15.9,rudyard.smithies@citadel.com,t.barton@knightcapital.com,1403.56,16231,GBX,FRES.L,Basic Materials,1403.56,1403.56
+00:16.1,carlee.c@invensys.com,s.chapman@jlb.com,663.91,53738,GBX,HSBA.L,Financial,663.91,663.91
+00:16.2,a.j.johnson@johnsonandfinnemore.com,w.tuffnell@janestreetcap.com,1113.78,27530,GBX,TUI.L,Other,1113.78,1117.84
+00:16.4,s.hedgewick@janestreetcap.com,a.afzal@rochdaleassets.com,1597.06,20654,GBX,AHT.L,Services,1594.04,1597.98
+00:16.5,sam.goldwing@sorrel.com,locke@rochdaleassets.com,2564.44,39042,GBX,ABF.L,Consumer Goods,2561.01,2564.44
+00:16.7,s.benson@bridgewater.com,w.tuffnell@janestreetcap.com,575.55,20389,GBX,HMSO.L,Financial,571.4,575.55
+00:16.7,a.j.johnson@johnsonandfinnemore.com,manimal@jlb.com,4710.96,33837,GBX,BATS.L,Consumer Goods,4706.88,4710.96
+00:16.8,locke@rochdaleassets.com,n.ainsworth@vinvest.com,870.78,40220,GBX,UU.L,Utilities,870.78,870.78
+00:16.9,sam.goldwing@sorrel.com,larabourne@rochdaleassets.com,702.35,25851,GBX,INF.L,Other,698.28,702.35
+00:17.0,j.newbury@citadel.com,p.greyling@fenchurchst.com,1234.3,12249,GBX,SN.L,Healthcare,1234.3,1234.3
+00:17.0,a.smith@fenchurchst.com,m.harding@vinvest.com,238.72,39599,GBX,MRW.L,Consumer Goods,238.72,241.55
+00:17.0,s.hedgewick@janestreetcap.com,m.grein@tibratrading.com,229.01,27449,GBX,CNA.L,Utilities,229.01,229.01
+00:17.0,thistle@janestreetcap.com,j.freeman@sorrel.com,357.32,15128,GBX,SL.L,Financial,357.32,357.32
+00:17.0,manimal@jlb.com,s.benson@bridgewater.com,215.67,29237,GBX,VOD.L,Technology,212.33,216.38
+00:17.0,a.smith@fenchurchst.com,thistle@janestreetcap.com,934.35,18943,GBX,BAB.L,Industrial Goods,934.35,938.32
+00:17.1,s.chapman@jlb.com,w.tuffnell@janestreetcap.com,671.55,53101,GBX,RR.L,Industrial Goods,671.48,671.55
+00:17.3,u.farooq@tibratrading.com,p.greyling@fenchurchst.com,484.28,35864,GBX,AV.L,Financial,482.45,486.39
+00:17.3,locke@rochdaleassets.com,manimal@jlb.com,1418.94,19886,GBX,FRES.L,Basic Materials,1414.97,1418.94
+00:17.3,a.m.forex@fenchurchst.com,l.lee@moma.com,3649.5,20689,GBX,IMB.L,Consumer Goods,3645.41,3649.5
+00:17.4,m.atherton@scottishwidows.com,w.cromwell@aspectcapital.com,356.76,30241,GBX,GKN.L,Consumer Goods,352.58,356.76
+00:17.6,m.hen@aspectcapital.com,thistle@janestreetcap.com,642.55,15063,GBX,HSBA.L,Financial,642.55,644.59
+00:17.9,a.smith@fenchurchst.com,j.freeman@sorrel.com,252.6,28134,GBX,LGEN.L,Financial,248.69,252.6
+00:18.4,s.hedgewick@janestreetcap.com,u.farooq@tibratrading.com,948.34,23942,GBX,NG.L,Utilities,948.34,952.47
+00:18.6,s.withers@oxam.org,d.bristol@moma.com,1583.16,31714,GBX,SSE.L,Utilities,1549.88,1554.15
+00:18.7,a.braxton@vinvest.com,w.cromwell@aspectcapital.com,694.47,31467,GBX,RR.L,Industrial Goods,690.34,694.47
+00:18.8,zach@invensys.com,w.hastings@bridgewater.com,726.55,13083,GBX,III.L,Financial,723.45,726.55
+00:18.8,sam.goldwing@sorrel.com,m.hen@aspectcapital.com,483.24,27575,GBX,MERL.L,Other,479.12,483.24
+00:18.8,t.barton@knightcapital.com,a.braxton@vinvest.com,283.37,23953,GBX,WPG.L,Services,283.37,287.37
+00:19.3,s.withers@oxam.org,a.clare@sorrel.com,563.12,16461,GBX,HMSO.L,Financial,562.22,566.29
+00:19.4,p.greyling@fenchurchst.com,n.a.choudhury@oxam.org,839.98,13089,GBX,PSON.L,Services,839.36,839.98
+00:19.4,n.ainsworth@vinvest.com,s.withers@oxam.org,4247.4,29764,GBX,CCL.L,Consumer Goods,4243.87,4247.4
+00:19.5,m.grein@tibratrading.com,tabby.dowd@janestreetcap.com,242.75,23453,GBX,LGEN.L,Financial,242.75,246.31
+00:19.7,a.smith@fenchurchst.com,carlee.c@invensys.com,4237.01,28428,GBX,WTB.L,Services,4233.91,4237.01
+00:19.7,m.atherton@scottishwidows.com,a.j.johnson@johnsonandfinnemore.com,2902.37,38430,GBX,LSE.L,Financial,2902.37,2902.37
+00:19.8,s.withers@oxam.org,a.j.johnson@johnsonandfinnemore.com,2055.3,17573,GBX,BNZL.L,Services,2055.3,2059.09
+00:20.0,tabby.dowd@janestreetcap.com,k.c.cooper@aspectcapital.com,686.35,38080,GBX,INF.L,Other,686.35,686.81
+00:20.1,manimal@jlb.com,s.withers@oxam.org,1601.09,21620,GBX,SSE.L,Utilities,1598.28,1601.09
+00:20.2,m.corrigan@jlb.com,m.grein@tibratrading.com,349.95,27488,GBX,DLG.L,Financial,349.95,349.95
+00:20.3,m.hen@aspectcapital.com,s.hedgewick@janestreetcap.com,966.95,31043,GBX,NG.L,Utilities,962.79,966.95
+00:20.5,j.newbury@citadel.com,carlee.c@invensys.com,3412.91,37776,GBX,RIO.L,Basic Materials,3409.93,3413.78
+00:20.6,a.clare@sorrel.com,n.a.choudhury@oxam.org,3426.29,18507,GBX,ULVR.L,Consumer Goods,3422.3,3426.29
+00:20.7,w.tuffnell@janestreetcap.com,rudyard.smithies@citadel.com,2173.59,43917,GBX,SKG.L,Industrial Goods,2173.59,2173.59
+00:20.7,l.lee@moma.com,m.corrigan@jlb.com,1569.79,20157,GBX,SSE.L,Utilities,1569.65,1569.79
+00:20.8,d.bristol@moma.com,carlee.c@invensys.com,4630.96,28962,GBX,AZN.L,Healthcare,4626.9,4630.96
+00:20.9,k.c.cooper@aspectcapital.com,zach@invensys.com,390.16,38678,GBX,BT.A.L,Technology,390.16,394.08
+00:21.0,locke@rochdaleassets.com,larabourne@rochdaleassets.com,533.28,23709,GBX,BP.L,Basic Materials,529.34,533.28
+00:21.0,m.harding@vinvest.com,a.j.johnson@johnsonandfinnemore.com,348.87,19298,GBX,DC.L,Consumer Goods,348.21,352.38
+00:21.1,s.benson@bridgewater.com,k.c.cooper@aspectcapital.com,1240.96,22260,GBX,SN.L,Healthcare,1239.12,1240.96
+00:21.2,j.freeman@sorrel.com,m.hen@aspectcapital.com,262.21,33689,GBX,SBRY.L,Consumer Goods,258.6,262.66
+00:21.4,w.hastings@bridgewater.com,n.a.choudhury@oxam.org,707.05,16053,GBX,STAN.L,Financial,705.56,709.63
+00:21.5,t.barton@knightcapital.com,u.farooq@tibratrading.com,357.74,28758,GBX,DLG.L,Financial,353.65,357.74
+00:21.7,u.farooq@tibratrading.com,locke@rochdaleassets.com,4992.77,19952,GBX,WOS.L,Industrial Goods,4988.72,4992.77
+00:22.0,u.farooq@tibratrading.com,carlee.c@invensys.com,174.35,19672,GBX,TW.L,Industrial Goods,172.53,176.78
+00:22.0,s.chapman@jlb.com,j.freeman@sorrel.com,517.87,36659,GBX,CPI.L,Services,514.44,518.46
+00:22.0,d.bristol@moma.com,u.abduallatif@janestreetcap.com,2131.28,21215,GBX,SVT.L,Utilities,2131.28,2131.28
+00:22.1,tabby.dowd@janestreetcap.com,j.amstell@bridgewater.com,4168.05,28577,GBX,CCL.L,Consumer Goods,4168.05,4168.05
+00:22.3,tabby.dowd@janestreetcap.com,rudyard.smithies@citadel.com,320.71,15028,GBX,GLEN.L,Basic Materials,318.11,320.71
+00:22.3,d.bristol@moma.com,w.cromwell@aspectcapital.com,1551.98,10660,GBX,BRBY.L,Consumer Goods,1551.98,1555.52
+00:22.4,locke@rochdaleassets.com,m.atherton@scottishwidows.com,1579.33,49041,GBX,BRBY.L,Consumer Goods,1579.33,1579.33
+00:22.5,s.benson@bridgewater.com,thistle@janestreetcap.com,271.64,27099,GBX,INTU.L,Other,271.64,275.1
+00:22.5,sam.goldwing@sorrel.com,larabourne@rochdaleassets.com,3363.35,22733,GBX,RIO.L,Basic Materials,3363.35,3367.12
+00:22.5,n.ainsworth@vinvest.com,j.freeman@sorrel.com,235.4,41321,GBX,CNA.L,Utilities,231.3,235.4
+00:22.8,n.a.choudhury@oxam.org,p.greyling@fenchurchst.com,517.44,23263,GBX,BDEV.L,Industrial Goods,513.39,517.44
+00:22.8,a.clare@sorrel.com,k.c.cooper@aspectcapital.com,1834.08,27587,GBX,HIK.L,Healthcare,1834.08,1834.08
+00:22.9,s.hedgewick@janestreetcap.com,a.braxton@vinvest.com,294.6,12122,GBX,WPG.L,Services,290.59,294.6
+00:23.1,a.smith@fenchurchst.com,a.m.forex@fenchurchst.com,2834.94,24454,GBX,LSE.L,Financial,2834.94,2836.19
+00:23.2,m.corrigan@jlb.com,s.hedgewick@janestreetcap.com,1234.58,14803,GBX,SN.L,Healthcare,1234.58,1234.58
+00:23.5,a.clare@sorrel.com,warford.benson@tibratrading.com,1373.92,32225,GBX,AAL.L,Basic Materials,1369.96,1373.92
+00:23.6,a.braxton@vinvest.com,m.harding@vinvest.com,1993.01,43278,GBX,PSN.L,Industrial Goods,1993.01,1997
+00:23.7,j.freeman@sorrel.com,s.withers@oxam.org,1147.04,15721,GBX,TUI.L,Other,1142.96,1147.04
+00:23.7,s.hedgewick@janestreetcap.com,u.abduallatif@janestreetcap.com,717.24,14448,GBX,III.L,Financial,717.24,721.17
+00:23.7,m.harding@vinvest.com,u.abduallatif@janestreetcap.com,2138.02,21532,GBX,MCRO.L,Technology,2136.15,2140.18
+00:23.9,w.hastings@bridgewater.com,rudyard.smithies@citadel.com,2861.61,25015,GBX,PFG.L,Financial,2861.61,2861.61
+00:24.1,m.hen@aspectcapital.com,manimal@jlb.com,2137.45,10565,GBX,SVT.L,Utilities,2137.45,2139.45
+00:24.3,tabby.dowd@janestreetcap.com,w.cromwell@aspectcapital.com,320.17,37750,GBX,GLEN.L,Basic Materials,316.09,320.17
+00:24.5,locke@rochdaleassets.com,u.abduallatif@janestreetcap.com,725.84,24250,GBX,III.L,Financial,724.96,725.84
+00:24.7,larabourne@rochdaleassets.com,a.clare@sorrel.com,2863.3,32886,GBX,CRH.L,Industrial Goods,2863.3,2863.3
+00:24.8,k.c.cooper@aspectcapital.com,a.smith@fenchurchst.com,248.17,27754,GBX,LGEN.L,Financial,244.7,248.64
+00:24.8,m.corrigan@jlb.com,k.c.cooper@aspectcapital.com,2354.81,15185,GBX,RDSA.L,Basic Materials,2350.66,2354.81
+00:24.8,s.hedgewick@janestreetcap.com,m.hen@aspectcapital.com,855.95,29218,GBX,UU.L,Utilities,855.95,858.24
+00:24.9,manimal@jlb.com,rudyard.smithies@citadel.com,1044.38,21485,GBX,EZJ.L,Services,1042.82,1046.83
+00:24.9,u.abduallatif@janestreetcap.com,a.smith@fenchurchst.com,2177.68,26668,GBX,DGE.L,Consumer Goods,2175.41,2179.38
+00:25.0,m.atherton@scottishwidows.com,rudyard.smithies@citadel.com,177.1,13120,GBX,TW.L,Industrial Goods,172.8,177.1
+00:25.0,k.c.cooper@aspectcapital.com,p.greyling@fenchurchst.com,6085.01,35456,GBX,DCC.L,Financial,6085.01,6088.8
+00:25.1,w.cromwell@aspectcapital.com,d.bristol@moma.com,2515.79,61338,GBX,ABF.L,Consumer Goods,2515.79,2515.79
+00:25.2,s.chapman@jlb.com,j.freeman@sorrel.com,710.52,21747,GBX,STAN.L,Financial,707.65,710.52
+00:25.4,carlee.c@invensys.com,larabourne@rochdaleassets.com,2924.1,24925,GBX,CRH.L,Industrial Goods,2920.92,2924.1
+00:25.4,a.m.forex@fenchurchst.com,a.afzal@rochdaleassets.com,3018.61,10014,GBX,SDR.L,Financial,3018.61,3022.23
+00:25.5,a.j.johnson@johnsonandfinnemore.com,l.lee@moma.com,486.87,17315,GBX,AV.L,Financial,482.92,486.87
+00:25.5,w.tuffnell@janestreetcap.com,zach@invensys.com,282,15432,GBX,INTU.L,Other,277.92,282
+00:25.7,a.afzal@rochdaleassets.com,s.benson@bridgewater.com,1123.91,19313,GBX,TUI.L,Other,1123.91,1128.01
+00:25.7,s.withers@oxam.org,warford.benson@tibratrading.com,354.84,20928,GBX,DC.L,Consumer Goods,350.58,354.84
+00:25.7,thistle@janestreetcap.com,s.chapman@jlb.com,957.6,26213,GBX,BAB.L,Industrial Goods,953.53,957.6
+00:25.9,m.atherton@scottishwidows.com,t.barton@knightcapital.com,1110,20929,GBX,STJ.L,Financial,1105.97,1110
+00:26.0,w.cromwell@aspectcapital.com,w.hastings@bridgewater.com,8690.04,32553,GBX,PPB.L,Other,8690.04,8692.52
+00:26.1,k.c.cooper@aspectcapital.com,p.greyling@fenchurchst.com,728.95,25228,GBX,ANTO.L,Basic Materials,726.16,730.23
+00:26.3,sam.goldwing@sorrel.com,s.hedgewick@janestreetcap.com,1058.89,25233,GBX,EZJ.L,Services,1054.8,1058.89
+00:26.3,w.cromwell@aspectcapital.com,m.corrigan@jlb.com,218.34,11981,GBX,RBS.L,Financial,217.73,221.55
+00:26.5,zach@invensys.com,m.hen@aspectcapital.com,2856.4,25332,GBX,LSE.L,Financial,2856.4,2860.21
+00:26.5,larabourne@rochdaleassets.com,rudyard.smithies@citadel.com,242.66,20094,GBX,CTEC.L,Healthcare,239.71,243.86
+00:26.6,a.afzal@rochdaleassets.com,n.a.choudhury@oxam.org,209.61,22010,GBX,OML.L,Financial,209.61,213.52
+00:26.6,j.amstell@bridgewater.com,a.m.forex@fenchurchst.com,1586.74,45399,GBX,PRU.L,Financial,1586.74,1590.6
+00:26.9,w.hastings@bridgewater.com,tabby.dowd@janestreetcap.com,208.35,15382,GBX,TSCO.L,Consumer Goods,208.35,208.35
+00:26.9,a.clare@sorrel.com,rudyard.smithies@citadel.com,1845.34,4457,GBX,WPP.L,Services,1845.34,1849.31
+00:27.0,j.newbury@citadel.com,a.j.johnson@johnsonandfinnemore.com,1579.66,15550,GBX,EXPN.L,Services,1579.66,1579.66
+00:27.0,t.barton@knightcapital.com,a.clare@sorrel.com,339.04,6154,GBX,GKN.L,Consumer Goods,337.65,341.56
+00:27.4,j.freeman@sorrel.com,j.amstell@bridgewater.com,6243.39,10354,GBX,DCC.L,Financial,6243.39,6243.39
+00:27.5,n.ainsworth@vinvest.com,j.newbury@citadel.com,515.91,22489,GBX,BP.L,Basic Materials,515.91,519.22
+00:27.6,a.m.forex@fenchurchst.com,a.braxton@vinvest.com,4117.39,29608,GBX,CCL.L,Consumer Goods,4117.39,4121.13
+00:27.6,n.ainsworth@vinvest.com,larabourne@rochdaleassets.com,6230.7,13263,GBX,DCC.L,Financial,6230.7,6230.7
+00:27.7,thistle@janestreetcap.com,s.chapman@jlb.com,528.41,20291,GBX,CPI.L,Services,528.41,528.41
+00:27.7,tabby.dowd@janestreetcap.com,m.grein@tibratrading.com,1017.51,18412,GBX,SKY.L,Other,1013.28,1017.51
+00:27.8,s.withers@oxam.org,a.braxton@vinvest.com,522.91,17177,GBX,BP.L,Basic Materials,522.91,522.91
+00:27.8,a.braxton@vinvest.com,m.harding@vinvest.com,3574.96,4399,GBX,IMB.L,Consumer Goods,3574.96,3578.92
+00:27.9,a.braxton@vinvest.com,a.m.forex@fenchurchst.com,4716.34,39332,GBX,SHP.L,Healthcare,4716.34,4716.34
+00:28.1,s.hedgewick@janestreetcap.com,w.hastings@bridgewater.com,808.57,6090,GBX,MDC.L,Healthcare,804.66,808.57
+00:28.4,a.j.johnson@johnsonandfinnemore.com,a.clare@sorrel.com,474.3,30242,GBX,MERL.L,Other,474.3,474.3
+00:28.5,sam.goldwing@sorrel.com,a.smith@fenchurchst.com,1020.59,28271,GBX,LAND.L,Financial,1020.59,1024.76
+00:28.6,a.clare@sorrel.com,a.j.johnson@johnsonandfinnemore.com,3051.48,24009,GBX,SDR.L,Financial,3048.42,3051.48
+00:28.9,j.amstell@bridgewater.com,s.hedgewick@janestreetcap.com,2861.43,13361,GBX,CRH.L,Industrial Goods,2860.11,2861.43
+00:29.0,u.farooq@tibratrading.com,locke@rochdaleassets.com,341.37,15975,GBX,GKN.L,Consumer Goods,337.68,341.56
+00:29.0,a.m.forex@fenchurchst.com,manimal@jlb.com,670.58,13573,GBX,SGE.L,Technology,670.58,674.42
+00:29.2,n.a.choudhury@oxam.org,a.clare@sorrel.com,348.14,26503,GBX,MKS.L,Consumer Goods,344.15,348.14
+00:29.2,u.abduallatif@janestreetcap.com,a.smith@fenchurchst.com,528.76,24118,GBX,CPI.L,Services,528.76,528.76
+00:29.2,m.grein@tibratrading.com,n.a.choudhury@oxam.org,3015.95,19377,GBX,SDR.L,Financial,3015.95,3017.59
+00:29.3,j.freeman@sorrel.com,s.hedgewick@janestreetcap.com,213.74,35152,GBX,OML.L,Financial,211.66,215.54
+00:29.4,w.cromwell@aspectcapital.com,manimal@jlb.com,311.96,17442,GBX,GLEN.L,Basic Materials,311.96,311.96
+00:29.4,sam.goldwing@sorrel.com,w.tuffnell@janestreetcap.com,1079.21,14460,GBX,STJ.L,Financial,1077.27,1081.25
+00:29.6,rudyard.smithies@citadel.com,s.benson@bridgewater.com,228.96,22632,GBX,BARC.L,Financial,228.96,228.96
+00:29.7,larabourne@rochdaleassets.com,m.grein@tibratrading.com,355.45,17808,GBX,KGF.L,Services,351.53,355.45
+00:29.7,s.hedgewick@janestreetcap.com,s.benson@bridgewater.com,1617.47,19083,GBX,AHT.L,Services,1617.47,1617.47
+00:29.7,zach@invensys.com,j.newbury@citadel.com,4123.99,5908,GBX,NXT.L,Consumer Goods,4123.29,4123.99
+00:29.8,a.braxton@vinvest.com,l.lee@moma.com,509.9,8803,GBX,BDEV.L,Industrial Goods,509.9,509.9
+00:29.8,m.atherton@scottishwidows.com,warford.benson@tibratrading.com,311.61,6885,GBX,GLEN.L,Basic Materials,311.61,312.22
+00:30.0,m.atherton@scottishwidows.com,p.greyling@fenchurchst.com,526.49,51376,GBX,BP.L,Basic Materials,526.49,526.49
+00:30.0,m.hen@aspectcapital.com,w.hastings@bridgewater.com,4792.13,33296,GBX,SHP.L,Healthcare,4787.86,4792.13
+00:30.1,carlee.c@invensys.com,w.cromwell@aspectcapital.com,1032.04,25752,GBX,EZJ.L,Services,1032.04,1032.88
+00:30.1,m.atherton@scottishwidows.com,a.clare@sorrel.com,221.97,11014,GBX,VOD.L,Technology,218.24,221.97
+00:30.2,n.a.choudhury@oxam.org,d.bristol@moma.com,874.31,11081,GBX,UU.L,Utilities,874.31,877.07
+00:30.3,s.benson@bridgewater.com,m.harding@vinvest.com,2139.34,42937,GBX,MCRO.L,Technology,2137.15,2141.2
+00:30.4,j.freeman@sorrel.com,k.c.cooper@aspectcapital.com,65.27,24211,GBX,LLOY.L,Financial,64.47,68.37
+00:30.4,p.greyling@fenchurchst.com,a.j.johnson@johnsonandfinnemore.com,450.44,24991,GBX,RMG.L,Services,446.62,450.64
+00:30.4,a.braxton@vinvest.com,manimal@jlb.com,226.49,19205,GBX,CNA.L,Utilities,225.02,228.99
+00:30.6,m.grein@tibratrading.com,thistle@janestreetcap.com,221.73,16860,GBX,CNA.L,Utilities,221.73,225.62
+00:30.6,thistle@janestreetcap.com,w.hastings@bridgewater.com,4606.94,10701,GBX,SHP.L,Healthcare,4606.94,4611.04
+00:30.7,j.freeman@sorrel.com,a.braxton@vinvest.com,6711.83,10315,GBX,RRS.L,Basic Materials,6711.83,6715.82
+00:30.8,n.a.choudhury@oxam.org,w.tuffnell@janestreetcap.com,6630.67,19249,GBX,RB.L,Consumer Goods,6630.67,6630.67
+00:30.9,manimal@jlb.com,carlee.c@invensys.com,2109.83,26256,GBX,BNZL.L,Services,2109.83,2113.65
+00:31.0,a.braxton@vinvest.com,t.barton@knightcapital.com,3354.05,49674,GBX,CRDA.L,Industrial Goods,3350.13,3354.05
+00:31.5,tabby.dowd@janestreetcap.com,m.harding@vinvest.com,2203.86,12482,GBX,MCRO.L,Technology,2199.69,2203.86
+00:31.7,tabby.dowd@janestreetcap.com,n.ainsworth@vinvest.com,314.36,19505,GBX,GLEN.L,Basic Materials,314.36,314.36
+00:31.8,a.afzal@rochdaleassets.com,carlee.c@invensys.com,510.63,22953,GBX,BDEV.L,Industrial Goods,510.63,510.63
+00:31.8,a.smith@fenchurchst.com,l.lee@moma.com,543.44,28019,GBX,BP.L,Basic Materials,540.43,543.44
+00:31.9,a.j.johnson@johnsonandfinnemore.com,w.cromwell@aspectcapital.com,2222.12,16388,GBX,SKG.L,Industrial Goods,2217.96,2222.12
+00:32.0,sam.goldwing@sorrel.com,s.hedgewick@janestreetcap.com,793.61,10798,GBX,MDC.L,Healthcare,793.61,793.61
+00:32.1,larabourne@rochdaleassets.com,k.c.cooper@aspectcapital.com,1805.52,13246,GBX,CCH.L,Consumer Goods,1805.37,1805.52
+00:32.1,thistle@janestreetcap.com,locke@rochdaleassets.com,2167.43,15561,GBX,SVT.L,Utilities,2167.43,2171.38
+00:32.2,m.harding@vinvest.com,s.benson@bridgewater.com,291.11,24093,GBX,WPG.L,Services,288.68,292.68
+00:32.2,m.corrigan@jlb.com,d.bristol@moma.com,4660.37,20702,GBX,SHP.L,Healthcare,4660.37,4660.37
+00:32.2,n.a.choudhury@oxam.org,a.afzal@rochdaleassets.com,798.07,17513,GBX,MDC.L,Healthcare,798.07,798.07
+00:32.3,t.barton@knightcapital.com,u.farooq@tibratrading.com,677.72,22961,GBX,SGE.L,Technology,677.46,677.72
+00:32.3,w.cromwell@aspectcapital.com,w.hastings@bridgewater.com,3523.96,13187,GBX,ITRK.L,Services,3523.96,3527.66
+00:32.4,s.chapman@jlb.com,j.newbury@citadel.com,226.11,23238,GBX,CNA.L,Utilities,225,228.94
+00:32.5,u.abduallatif@janestreetcap.com,a.j.johnson@johnsonandfinnemore.com,217.46,13357,GBX,OML.L,Financial,217.46,217.46
+00:32.5,j.newbury@citadel.com,w.tuffnell@janestreetcap.com,1625.93,25758,GBX,AHT.L,Services,1625.93,1625.93
+00:32.5,rudyard.smithies@citadel.com,m.atherton@scottishwidows.com,1081.52,31702,GBX,STJ.L,Financial,1077.61,1081.52
+00:32.6,j.amstell@bridgewater.com,s.withers@oxam.org,529.21,15350,GBX,BP.L,Basic Materials,525.29,529.21
+00:32.6,l.lee@moma.com,manimal@jlb.com,2303.52,32674,GBX,RDSA.L,Basic Materials,2299.8,2303.52
+00:32.7,carlee.c@invensys.com,s.withers@oxam.org,654.02,31762,GBX,HSBA.L,Financial,654.02,658.05
+00:32.7,u.abduallatif@janestreetcap.com,larabourne@rochdaleassets.com,1391.98,12427,GBX,FRES.L,Basic Materials,1391.98,1392.46
+00:32.8,u.abduallatif@janestreetcap.com,j.newbury@citadel.com,2168.64,30310,GBX,DGE.L,Consumer Goods,2168.64,2172.68
+00:32.9,m.corrigan@jlb.com,t.barton@knightcapital.com,1829.14,27303,GBX,HIK.L,Healthcare,1829.14,1829.14
+00:32.9,a.smith@fenchurchst.com,l.lee@moma.com,241.25,29709,GBX,CTEC.L,Healthcare,239.91,244.03
+00:33.0,a.clare@sorrel.com,k.c.cooper@aspectcapital.com,2217.35,24371,GBX,DGE.L,Consumer Goods,2215.23,2217.35
+00:33.1,larabourne@rochdaleassets.com,m.atherton@scottishwidows.com,2430.36,11617,GBX,ABF.L,Consumer Goods,2430.36,2432.87
+00:33.2,j.freeman@sorrel.com,carlee.c@invensys.com,675.61,11373,GBX,HSBA.L,Financial,673.09,675.61
+00:33.2,j.freeman@sorrel.com,m.hen@aspectcapital.com,241.66,5729,GBX,CTEC.L,Healthcare,239.89,244.02
+00:33.4,p.greyling@fenchurchst.com,j.newbury@citadel.com,311.87,45479,GBX,GLEN.L,Basic Materials,311.87,311.87
+00:33.5,warford.benson@tibratrading.com,j.newbury@citadel.com,305.11,33847,GBX,GLEN.L,Basic Materials,305.11,305.11
+00:33.5,m.grein@tibratrading.com,s.benson@bridgewater.com,65.87,8721,GBX,LLOY.L,Financial,64.43,68.33
+00:33.5,n.ainsworth@vinvest.com,k.c.cooper@aspectcapital.com,1822.32,36746,GBX,CCH.L,Consumer Goods,1818.49,1822.32
+00:33.9,a.afzal@rochdaleassets.com,d.bristol@moma.com,3564.06,27581,GBX,ITRK.L,Services,3561.91,3564.06
+00:33.9,k.c.cooper@aspectcapital.com,a.afzal@rochdaleassets.com,1766.43,31755,GBX,CCH.L,Consumer Goods,1766.43,1770.17
+00:33.9,thistle@janestreetcap.com,s.withers@oxam.org,2158.82,32191,GBX,SKG.L,Industrial Goods,2155.68,2158.82
+00:33.9,s.hedgewick@janestreetcap.com,thistle@janestreetcap.com,1543.08,15486,GBX,GSK.L,Healthcare,1543.08,1546.89
+00:34.0,tabby.dowd@janestreetcap.com,n.ainsworth@vinvest.com,3018.17,14778,GBX,SDR.L,Financial,3018.17,3021.93
+00:34.0,l.lee@moma.com,j.freeman@sorrel.com,211.91,23163,GBX,TSCO.L,Consumer Goods,207.94,211.91
+00:34.1,larabourne@rochdaleassets.com,warford.benson@tibratrading.com,1803.21,17622,GBX,ADM.L,Financial,1799.04,1803.21
+00:34.1,sam.goldwing@sorrel.com,w.hastings@bridgewater.com,4141.72,12611,GBX,WTB.L,Services,4138.46,4141.72
+00:34.2,a.smith@fenchurchst.com,j.freeman@sorrel.com,1143.27,26828,GBX,TUI.L,Other,1143.07,1143.27
+00:34.3,m.hen@aspectcapital.com,a.afzal@rochdaleassets.com,257.96,18152,GBX,SBRY.L,Consumer Goods,257.96,257.96
+00:34.5,s.withers@oxam.org,manimal@jlb.com,344.38,39753,GBX,DC.L,Consumer Goods,344.38,348.57
+00:34.5,m.harding@vinvest.com,warford.benson@tibratrading.com,359.49,21138,GBX,DC.L,Consumer Goods,355.64,359.49
+00:34.6,a.clare@sorrel.com,j.freeman@sorrel.com,2129.34,29334,GBX,SKG.L,Industrial Goods,2129.34,2133.36
+00:34.7,rudyard.smithies@citadel.com,s.withers@oxam.org,2144.9,7905,GBX,BNZL.L,Services,2144.47,2144.9
+00:34.7,m.atherton@scottishwidows.com,m.hen@aspectcapital.com,678.36,22176,GBX,INF.L,Other,678.36,678.36
+00:35.0,s.benson@bridgewater.com,m.harding@vinvest.com,405,26538,GBX,BT.A.L,Technology,400.93,405
+00:35.1,j.newbury@citadel.com,a.m.forex@fenchurchst.com,1024.14,16050,GBX,EZJ.L,Services,1024.14,1028.16
+00:35.1,m.atherton@scottishwidows.com,a.braxton@vinvest.com,1867.62,49124,GBX,WPP.L,Services,1867.62,1871.7
+00:35.2,rudyard.smithies@citadel.com,w.hastings@bridgewater.com,683.2,25072,GBX,SGE.L,Technology,683.2,683.2
+00:35.3,j.newbury@citadel.com,rudyard.smithies@citadel.com,1390.06,25727,GBX,FRES.L,Basic Materials,1390.06,1390.06
+00:35.3,zach@invensys.com,tabby.dowd@janestreetcap.com,69.55,33518,GBX,LLOY.L,Financial,65.63,69.55
+00:35.3,m.corrigan@jlb.com,a.j.johnson@johnsonandfinnemore.com,1326.28,28114,GBX,AAL.L,Basic Materials,1326.28,1327.76
+00:35.5,m.corrigan@jlb.com,l.lee@moma.com,220.55,15950,GBX,OML.L,Financial,216.58,220.55
+00:35.5,zach@invensys.com,w.tuffnell@janestreetcap.com,65.35,32949,GBX,LLOY.L,Financial,64.45,68.31
+00:35.7,m.corrigan@jlb.com,j.amstell@bridgewater.com,1932.56,52422,GBX,WPP.L,Services,1932.56,1932.56
+00:35.7,s.hedgewick@janestreetcap.com,j.newbury@citadel.com,883.21,12561,GBX,UU.L,Utilities,883.21,883.21
+00:36.0,manimal@jlb.com,j.newbury@citadel.com,226.06,14888,GBX,BARC.L,Financial,226.06,227.42
+00:36.4,rudyard.smithies@citadel.com,m.harding@vinvest.com,3199.22,31306,GBX,JMAT.L,Basic Materials,3199.22,3199.22
+00:36.7,n.a.choudhury@oxam.org,j.freeman@sorrel.com,501.39,9261,GBX,BDEV.L,Industrial Goods,501.39,505.38
+00:36.8,zach@invensys.com,p.greyling@fenchurchst.com,1367.71,24062,GBX,FRES.L,Basic Materials,1367.71,1371.65
+00:36.9,j.freeman@sorrel.com,k.c.cooper@aspectcapital.com,2931.84,28803,GBX,LSE.L,Financial,2929.61,2931.84
+00:37.1,carlee.c@invensys.com,n.ainsworth@vinvest.com,351.14,22203,GBX,KGF.L,Services,351.14,351.14
+00:37.4,a.braxton@vinvest.com,a.smith@fenchurchst.com,4915.98,31563,GBX,WOS.L,Industrial Goods,4915.98,4920.06
+00:37.5,sam.goldwing@sorrel.com,larabourne@rochdaleassets.com,1326.78,27631,GBX,AAL.L,Basic Materials,1326.78,1330.6
+00:37.6,u.farooq@tibratrading.com,m.grein@tibratrading.com,559.43,29923,GBX,HMSO.L,Financial,559.43,559.43
+00:37.7,tabby.dowd@janestreetcap.com,a.braxton@vinvest.com,1750.96,29716,GBX,MNDI.L,Consumer Goods,1749.94,1753.87
+00:37.7,m.corrigan@jlb.com,p.greyling@fenchurchst.com,4714.16,26454,GBX,SHP.L,Healthcare,4709.95,4714.16
+00:38.1,s.withers@oxam.org,j.newbury@citadel.com,2135.96,25691,GBX,BNZL.L,Services,2135.96,2135.96
+00:38.2,k.c.cooper@aspectcapital.com,m.atherton@scottishwidows.com,207.1,25794,GBX,ITV.L,Services,206.86,210.71
+00:38.2,larabourne@rochdaleassets.com,a.afzal@rochdaleassets.com,479.93,6436,GBX,IAG.L,Services,479.93,483.86
+00:38.8,sam.goldwing@sorrel.com,p.greyling@fenchurchst.com,1571.19,37988,GBX,EXPN.L,Services,1571.19,1573
+00:38.8,n.a.choudhury@oxam.org,a.m.forex@fenchurchst.com,2262.27,58831,GBX,RDSA.L,Basic Materials,2262.27,2262.27
+00:39.0,a.afzal@rochdaleassets.com,tabby.dowd@janestreetcap.com,1243.01,9492,GBX,SN.L,Healthcare,1243.01,1243.01
+00:39.0,carlee.c@invensys.com,a.smith@fenchurchst.com,547.67,19544,GBX,HMSO.L,Financial,547.67,551.67
+00:39.1,warford.benson@tibratrading.com,m.atherton@scottishwidows.com,3229.86,15728,GBX,CRDA.L,Industrial Goods,3229.86,3233.62
+00:39.3,n.a.choudhury@oxam.org,m.harding@vinvest.com,246.86,19375,GBX,LGEN.L,Financial,244.72,248.55
+00:39.3,a.clare@sorrel.com,s.withers@oxam.org,570.82,21982,GBX,RSA.L,Financial,570.82,574.89
+00:39.4,a.clare@sorrel.com,m.hen@aspectcapital.com,4593.84,25767,GBX,SHP.L,Healthcare,4593.84,4593.84
+00:39.5,m.corrigan@jlb.com,carlee.c@invensys.com,3361.02,12188,GBX,ULVR.L,Consumer Goods,3361.02,3363.43
+00:39.6,p.greyling@fenchurchst.com,s.benson@bridgewater.com,488.73,18884,GBX,IAG.L,Services,485.67,489.63
+00:39.6,locke@rochdaleassets.com,a.clare@sorrel.com,5056.55,29164,GBX,WOS.L,Industrial Goods,5056.55,5056.55
+00:39.6,s.hedgewick@janestreetcap.com,t.barton@knightcapital.com,1042.82,31160,GBX,EZJ.L,Services,1042.29,1046.41
+00:40.0,t.barton@knightcapital.com,rudyard.smithies@citadel.com,669.19,23538,GBX,HSBA.L,Financial,669.19,671.65
+00:40.1,u.farooq@tibratrading.com,k.c.cooper@aspectcapital.com,1642.97,36866,GBX,AHT.L,Services,1638.99,1642.97
+00:40.1,n.ainsworth@vinvest.com,m.corrigan@jlb.com,478.81,18511,GBX,IAG.L,Services,478.81,482.43
+00:40.2,warford.benson@tibratrading.com,u.abduallatif@janestreetcap.com,939.54,17176,GBX,NG.L,Utilities,939.54,940.22
+00:40.3,tabby.dowd@janestreetcap.com,locke@rochdaleassets.com,2907.98,22253,GBX,LSE.L,Financial,2907.98,2911.9
+00:40.3,zach@invensys.com,a.j.johnson@johnsonandfinnemore.com,1292.62,17204,GBX,HL.L,Financial,1292.62,1292.62
+00:40.6,w.hastings@bridgewater.com,j.amstell@bridgewater.com,731.75,70100,GBX,III.L,Financial,727.84,731.75
+00:40.7,rudyard.smithies@citadel.com,a.smith@fenchurchst.com,1359.84,33320,GBX,AAL.L,Basic Materials,1355.93,1359.84
+00:40.9,a.smith@fenchurchst.com,p.greyling@fenchurchst.com,6797.07,15940,GBX,RRS.L,Basic Materials,6797.07,6797.07
+00:41.0,j.amstell@bridgewater.com,a.j.johnson@johnsonandfinnemore.com,488.76,14446,GBX,IAG.L,Services,485.64,489.61
+00:41.0,a.m.forex@fenchurchst.com,sam.goldwing@sorrel.com,4250.35,25755,GBX,CCL.L,Consumer Goods,4250.35,4250.35
+00:41.1,a.afzal@rochdaleassets.com,warford.benson@tibratrading.com,989.85,18209,GBX,SKY.L,Other,989.85,994.17
+00:41.1,p.greyling@fenchurchst.com,m.grein@tibratrading.com,604.61,27612,GBX,BA.L,Industrial Goods,604.61,608.66
+00:41.3,l.lee@moma.com,larabourne@rochdaleassets.com,3150.46,13764,GBX,JMAT.L,Basic Materials,3150.46,3154.19
+00:41.3,u.abduallatif@janestreetcap.com,a.smith@fenchurchst.com,1404.34,35690,GBX,REL.L,Services,1404.34,1406.28
+00:41.4,u.abduallatif@janestreetcap.com,tabby.dowd@janestreetcap.com,3443.15,45146,GBX,RIO.L,Basic Materials,3440.4,3443.15
+00:41.5,s.chapman@jlb.com,carlee.c@invensys.com,2187.22,47864,GBX,RDSA.L,Basic Materials,2187.22,2191
+00:41.5,d.bristol@moma.com,w.tuffnell@janestreetcap.com,2203.29,27606,GBX,SVT.L,Utilities,2203.29,2207.31
+00:41.6,a.m.forex@fenchurchst.com,a.smith@fenchurchst.com,6639.43,25716,GBX,RB.L,Consumer Goods,6639.43,6643.28
+00:41.6,n.a.choudhury@oxam.org,larabourne@rochdaleassets.com,4302.09,27674,GBX,CCL.L,Consumer Goods,4300.32,4302.09
+00:41.8,thistle@janestreetcap.com,zach@invensys.com,743.95,17534,GBX,ANTO.L,Basic Materials,739.59,743.95
+00:41.8,w.cromwell@aspectcapital.com,warford.benson@tibratrading.com,2496.62,18805,GBX,ABF.L,Consumer Goods,2496.62,2499.13
+00:42.1,sam.goldwing@sorrel.com,rudyard.smithies@citadel.com,580.47,12982,GBX,RSA.L,Financial,579.85,580.47
+00:42.2,carlee.c@invensys.com,j.freeman@sorrel.com,441.03,20078,GBX,RMG.L,Services,441.03,443.7
+00:42.2,w.hastings@bridgewater.com,warford.benson@tibratrading.com,300.12,26382,GBX,GLEN.L,Basic Materials,300.12,304.07
+00:42.3,d.bristol@moma.com,a.braxton@vinvest.com,1432.36,39786,GBX,REL.L,Services,1432.36,1434.25
+00:42.4,s.chapman@jlb.com,w.tuffnell@janestreetcap.com,389.03,32486,GBX,BT.A.L,Technology,389.03,393.01
+00:42.4,a.j.johnson@johnsonandfinnemore.com,w.hastings@bridgewater.com,220.29,33328,GBX,RBS.L,Financial,217.59,221.56
+00:42.5,n.a.choudhury@oxam.org,j.freeman@sorrel.com,2313.58,18840,GBX,RDSA.L,Basic Materials,2309.6,2313.58
+00:42.5,l.lee@moma.com,a.clare@sorrel.com,673.74,15487,GBX,HSBA.L,Financial,670.41,674.58
+00:42.5,locke@rochdaleassets.com,u.abduallatif@janestreetcap.com,665.82,44000,GBX,HSBA.L,Financial,665.82,665.82
+00:42.6,a.smith@fenchurchst.com,s.hedgewick@janestreetcap.com,339.69,17819,GBX,MKS.L,Consumer Goods,339.69,341.93
+00:42.7,k.c.cooper@aspectcapital.com,carlee.c@invensys.com,620.09,18060,GBX,BA.L,Industrial Goods,620.09,620.09
+00:42.8,j.amstell@bridgewater.com,zach@invensys.com,2058.88,12379,GBX,PSN.L,Industrial Goods,2058.88,2058.88
+00:42.8,t.barton@knightcapital.com,manimal@jlb.com,727.52,18503,GBX,ANTO.L,Basic Materials,726.62,730.91
+00:43.0,thistle@janestreetcap.com,m.hen@aspectcapital.com,1790.7,34287,GBX,MNDI.L,Consumer Goods,1786.71,1790.7
+00:43.0,s.chapman@jlb.com,n.ainsworth@vinvest.com,4266.37,13227,GBX,CCL.L,Consumer Goods,4266.37,4266.37
+00:43.1,s.benson@bridgewater.com,w.tuffnell@janestreetcap.com,933.72,21844,GBX,BAB.L,Industrial Goods,933.72,937.71
+00:43.1,w.tuffnell@janestreetcap.com,m.harding@vinvest.com,1974.71,18530,GBX,WPP.L,Services,1970.39,1974.71
+00:43.2,k.c.cooper@aspectcapital.com,w.tuffnell@janestreetcap.com,1528.66,26251,GBX,BRBY.L,Consumer Goods,1528.66,1528.83
+00:43.5,thistle@janestreetcap.com,sam.goldwing@sorrel.com,2196.53,21878,GBX,DGE.L,Consumer Goods,2192.47,2196.53
+00:43.6,j.newbury@citadel.com,carlee.c@invensys.com,1158.06,9237,GBX,TUI.L,Other,1154.19,1158.06
+00:43.6,a.m.forex@fenchurchst.com,j.newbury@citadel.com,1645.95,20265,GBX,PRU.L,Financial,1645.95,1645.95
+00:43.7,m.grein@tibratrading.com,s.benson@bridgewater.com,689.8,18741,GBX,SGE.L,Technology,689.33,689.8
+00:43.9,m.grein@tibratrading.com,l.lee@moma.com,2243.72,17851,GBX,SVT.L,Utilities,2239.61,2243.72
+00:43.9,a.j.johnson@johnsonandfinnemore.com,rudyard.smithies@citadel.com,1827.71,29989,GBX,CCH.L,Consumer Goods,1824.74,1827.71
+00:44.1,s.hedgewick@janestreetcap.com,u.abduallatif@janestreetcap.com,703.49,38849,GBX,STAN.L,Financial,703.49,705.82
+00:44.2,s.chapman@jlb.com,rudyard.smithies@citadel.com,2180.6,19447,GBX,SKG.L,Industrial Goods,2180.6,2180.6
+00:44.3,manimal@jlb.com,d.bristol@moma.com,2955.03,27341,GBX,LSE.L,Financial,2951.13,2955.03
+00:44.3,w.hastings@bridgewater.com,w.cromwell@aspectcapital.com,710.07,29446,GBX,STAN.L,Financial,705.94,710.07
+00:44.4,j.amstell@bridgewater.com,m.atherton@scottishwidows.com,1504.83,13665,GBX,SMIN.L,Industrial Goods,1504.83,1507.5
+00:44.4,n.a.choudhury@oxam.org,t.barton@knightcapital.com,1759.39,30076,GBX,ADM.L,Financial,1759.39,1759.39
+00:44.4,n.ainsworth@vinvest.com,manimal@jlb.com,2266.75,19668,GBX,RDSA.L,Basic Materials,2266.75,2266.75
+00:44.5,larabourne@rochdaleassets.com,warford.benson@tibratrading.com,347.5,25526,GBX,DC.L,Consumer Goods,347.49,351.76
+00:44.6,m.corrigan@jlb.com,tabby.dowd@janestreetcap.com,4107.74,31509,GBX,NXT.L,Consumer Goods,4106.95,4107.74
+00:44.7,m.hen@aspectcapital.com,a.smith@fenchurchst.com,3775.46,24453,GBX,IHG.L,Services,3771.2,3775.46
+00:44.8,n.ainsworth@vinvest.com,u.abduallatif@janestreetcap.com,232.28,20157,GBX,CNA.L,Utilities,228.62,232.28
+00:45.1,a.m.forex@fenchurchst.com,s.withers@oxam.org,584.37,28512,GBX,RSA.L,Financial,580.11,584.37
+00:45.1,t.barton@knightcapital.com,w.cromwell@aspectcapital.com,1589.03,17189,GBX,SSE.L,Utilities,1584.66,1589.03
+00:45.3,a.smith@fenchurchst.com,n.a.choudhury@oxam.org,8746.29,18156,GBX,PPB.L,Other,8746.29,8746.29
+00:45.5,sam.goldwing@sorrel.com,locke@rochdaleassets.com,3316.02,39276,GBX,CRDA.L,Industrial Goods,3316.02,3319.85
+00:45.5,a.clare@sorrel.com,a.braxton@vinvest.com,513.39,31917,GBX,BDEV.L,Industrial Goods,511.66,515.74
+00:45.6,m.grein@tibratrading.com,k.c.cooper@aspectcapital.com,2155.01,17856,GBX,DGE.L,Consumer Goods,2155.01,2158.97
+00:45.6,n.a.choudhury@oxam.org,carlee.c@invensys.com,1797.44,21632,GBX,ADM.L,Financial,1797.44,1797.44
+00:45.8,m.grein@tibratrading.com,j.amstell@bridgewater.com,227.21,17784,GBX,CNA.L,Utilities,224.64,228.72
+00:45.8,m.atherton@scottishwidows.com,a.clare@sorrel.com,251.77,13606,GBX,LGEN.L,Financial,248.91,251.77
+00:45.9,thistle@janestreetcap.com,m.hen@aspectcapital.com,957.89,18652,GBX,BAB.L,Industrial Goods,955.92,957.89
+00:45.9,warford.benson@tibratrading.com,w.cromwell@aspectcapital.com,2334.83,12744,GBX,RDSB.L,Basic Materials,2334.83,2334.83
+00:46.0,l.lee@moma.com,m.harding@vinvest.com,2163.73,31238,GBX,BNZL.L,Services,2163.73,2163.73
+00:46.0,n.a.choudhury@oxam.org,s.benson@bridgewater.com,1039.46,14027,GBX,LAND.L,Financial,1039.43,1039.46
+00:46.0,a.afzal@rochdaleassets.com,a.smith@fenchurchst.com,2873.63,14168,GBX,CRH.L,Industrial Goods,2869.72,2873.63
+00:46.2,j.amstell@bridgewater.com,locke@rochdaleassets.com,1003.63,17207,GBX,SKY.L,Other,1003.63,1003.63
+00:46.3,zach@invensys.com,w.hastings@bridgewater.com,1453.57,13282,GBX,CPG.L,Services,1453.57,1457.56
+00:46.5,m.atherton@scottishwidows.com,j.amstell@bridgewater.com,518.17,11707,GBX,BP.L,Basic Materials,517.07,520.87
+00:46.6,l.lee@moma.com,a.braxton@vinvest.com,253.35,25700,GBX,SBRY.L,Consumer Goods,253.35,257.27
+00:46.9,w.hastings@bridgewater.com,m.corrigan@jlb.com,807.71,39124,GBX,MDC.L,Healthcare,803.84,807.71
+00:46.9,t.barton@knightcapital.com,w.tuffnell@janestreetcap.com,936.25,37739,GBX,NG.L,Utilities,936.25,940.42
+00:47.3,n.ainsworth@vinvest.com,tabby.dowd@janestreetcap.com,8850.57,16307,GBX,PPB.L,Other,8846.39,8850.57
+00:47.3,u.farooq@tibratrading.com,p.greyling@fenchurchst.com,498.61,16088,GBX,BDEV.L,Industrial Goods,498.61,502.59
+00:47.8,d.bristol@moma.com,p.greyling@fenchurchst.com,287.49,42686,GBX,WPG.L,Services,287.49,287.49
+00:48.0,locke@rochdaleassets.com,manimal@jlb.com,345.68,30220,GBX,DLG.L,Financial,345.51,349.38
+00:48.1,j.amstell@bridgewater.com,manimal@jlb.com,1011.71,12321,GBX,SKY.L,Other,1009.1,1011.71
+00:48.2,w.hastings@bridgewater.com,m.atherton@scottishwidows.com,279.28,21514,GBX,WPG.L,Services,279.28,281.74
+00:48.3,s.hedgewick@janestreetcap.com,d.bristol@moma.com,619.97,29820,GBX,BLND.L,Financial,619.97,623.96
+00:48.4,j.amstell@bridgewater.com,j.freeman@sorrel.com,1580.27,57863,GBX,EXPN.L,Services,1580.27,1582.81
+00:48.5,a.braxton@vinvest.com,a.smith@fenchurchst.com,1315.62,18467,GBX,AAL.L,Basic Materials,1315.62,1319.43
+00:48.5,j.amstell@bridgewater.com,s.chapman@jlb.com,1650.97,20490,GBX,PRU.L,Financial,1646.81,1650.97
+00:48.6,zach@invensys.com,a.braxton@vinvest.com,2051,44694,GBX,PSN.L,Industrial Goods,2047.13,2051
+00:48.6,s.withers@oxam.org,a.m.forex@fenchurchst.com,216.4,33458,GBX,OML.L,Financial,212.48,216.4
+00:48.9,w.hastings@bridgewater.com,m.harding@vinvest.com,4526.85,32162,GBX,AZN.L,Healthcare,4526.85,4526.85
+00:49.0,a.afzal@rochdaleassets.com,t.barton@knightcapital.com,2196.79,39951,GBX,DGE.L,Consumer Goods,2193.6,2196.79
+00:49.0,w.tuffnell@janestreetcap.com,larabourne@rochdaleassets.com,777.4,27111,GBX,MDC.L,Healthcare,777.4,780.75
+00:49.2,a.j.johnson@johnsonandfinnemore.com,larabourne@rochdaleassets.com,510.36,42944,GBX,BDEV.L,Industrial Goods,510.36,513.86
+00:49.3,a.braxton@vinvest.com,a.clare@sorrel.com,6844.88,35619,GBX,RB.L,Consumer Goods,6844.88,6844.88
+00:49.4,w.hastings@bridgewater.com,t.barton@knightcapital.com,3375.08,34908,GBX,RIO.L,Basic Materials,3375.08,3376.57
+00:49.5,m.harding@vinvest.com,u.farooq@tibratrading.com,3548,17509,GBX,ITRK.L,Services,3547.78,3551.83
+00:49.6,a.clare@sorrel.com,j.freeman@sorrel.com,1611.03,18946,GBX,PRU.L,Financial,1606.93,1611.03
+00:49.6,m.grein@tibratrading.com,warford.benson@tibratrading.com,624.99,32262,GBX,BA.L,Industrial Goods,623.49,624.99
+00:49.7,thistle@janestreetcap.com,manimal@jlb.com,2196.54,8366,GBX,SVT.L,Utilities,2196.54,2196.54
+00:49.7,locke@rochdaleassets.com,s.benson@bridgewater.com,2248.32,26990,GBX,RDSA.L,Basic Materials,2248.32,2248.32
+00:49.8,s.withers@oxam.org,w.cromwell@aspectcapital.com,3604.89,17709,GBX,IMB.L,Consumer Goods,3603.38,3604.89
+00:50.0,rudyard.smithies@citadel.com,l.lee@moma.com,1806.57,18319,GBX,ADM.L,Financial,1804.93,1806.57
+00:50.4,a.smith@fenchurchst.com,s.chapman@jlb.com,1402.6,18780,GBX,FRES.L,Basic Materials,1401.98,1402.6
+00:50.4,s.withers@oxam.org,w.hastings@bridgewater.com,362.38,16371,GBX,SL.L,Financial,358.25,362.38
+00:50.5,rudyard.smithies@citadel.com,larabourne@rochdaleassets.com,2223.5,17458,GBX,RDSA.L,Basic Materials,2223.5,2226.08
+00:50.5,w.cromwell@aspectcapital.com,m.grein@tibratrading.com,1412.16,29634,GBX,FRES.L,Basic Materials,1408.04,1412.16
+00:50.7,n.a.choudhury@oxam.org,m.corrigan@jlb.com,218.6,28121,GBX,VOD.L,Technology,214.55,218.6
+00:50.7,k.c.cooper@aspectcapital.com,a.clare@sorrel.com,1377.35,34215,GBX,FRES.L,Basic Materials,1377.35,1377.35
+00:50.7,tabby.dowd@janestreetcap.com,larabourne@rochdaleassets.com,210.19,35287,GBX,VOD.L,Technology,210.19,214.17
+00:50.7,sam.goldwing@sorrel.com,a.afzal@rochdaleassets.com,245.54,18537,GBX,MRW.L,Consumer Goods,241.35,245.54
+00:50.8,u.abduallatif@janestreetcap.com,carlee.c@invensys.com,795.88,32436,GBX,MDC.L,Healthcare,795.88,795.88
+00:50.8,j.newbury@citadel.com,m.hen@aspectcapital.com,206.96,22316,GBX,TSCO.L,Consumer Goods,203.73,207.66
+00:50.8,j.amstell@bridgewater.com,u.abduallatif@janestreetcap.com,3614.23,5550,GBX,IMB.L,Consumer Goods,3613.46,3614.23
+00:50.9,m.harding@vinvest.com,w.cromwell@aspectcapital.com,1062.9,40102,GBX,EZJ.L,Services,1062.9,1062.9
+00:51.0,j.amstell@bridgewater.com,n.ainsworth@vinvest.com,690.26,14489,GBX,III.L,Financial,690.26,693.16
+00:51.1,m.atherton@scottishwidows.com,j.newbury@citadel.com,4295.08,9945,GBX,CCL.L,Consumer Goods,4291.52,4295.08
+00:51.4,s.hedgewick@janestreetcap.com,n.a.choudhury@oxam.org,4605.94,4928,GBX,BATS.L,Consumer Goods,4605.94,4605.94
+00:51.4,a.braxton@vinvest.com,j.amstell@bridgewater.com,1974.99,35162,GBX,PSN.L,Industrial Goods,1974.99,1974.99
+00:51.5,larabourne@rochdaleassets.com,w.hastings@bridgewater.com,632.51,38623,GBX,BLND.L,Financial,632.51,632.51
+00:51.6,s.benson@bridgewater.com,a.afzal@rochdaleassets.com,348.41,19705,GBX,KGF.L,Services,348.41,348.41
+00:51.6,j.newbury@citadel.com,u.abduallatif@janestreetcap.com,1581.57,21820,GBX,AHT.L,Services,1581.57,1584.37
+00:51.8,tabby.dowd@janestreetcap.com,thistle@janestreetcap.com,226.01,33167,GBX,BARC.L,Financial,226.01,229.1
+00:52.3,thistle@janestreetcap.com,t.barton@knightcapital.com,1356.99,10106,GBX,FRES.L,Basic Materials,1356.99,1357.33
+00:52.3,rudyard.smithies@citadel.com,tabby.dowd@janestreetcap.com,1044.37,56076,GBX,LAND.L,Financial,1040.16,1044.37
+00:52.3,m.hen@aspectcapital.com,a.afzal@rochdaleassets.com,4638.65,46075,GBX,BATS.L,Consumer Goods,4638.65,4642.77
+00:52.4,s.benson@bridgewater.com,p.greyling@fenchurchst.com,4811.28,35369,GBX,BATS.L,Consumer Goods,4808.86,4811.28
+00:52.6,n.ainsworth@vinvest.com,larabourne@rochdaleassets.com,3223.39,43504,GBX,JMAT.L,Basic Materials,3223.39,3223.39
+00:52.7,n.ainsworth@vinvest.com,a.smith@fenchurchst.com,994.87,35929,GBX,LAND.L,Financial,994.87,997.89
+00:52.8,w.cromwell@aspectcapital.com,w.hastings@bridgewater.com,1601.82,21274,GBX,EXPN.L,Services,1598.86,1602.83
+00:52.8,warford.benson@tibratrading.com,manimal@jlb.com,205.32,21565,GBX,TSCO.L,Consumer Goods,203.79,207.73
+00:52.8,s.hedgewick@janestreetcap.com,l.lee@moma.com,2903.95,24841,GBX,PFG.L,Financial,2899.92,2903.95
+00:52.9,sam.goldwing@sorrel.com,u.farooq@tibratrading.com,1079.45,46247,GBX,EZJ.L,Services,1079.45,1079.45
+00:53.0,w.tuffnell@janestreetcap.com,a.clare@sorrel.com,872.9,29868,GBX,UU.L,Utilities,872.9,876.76
+00:53.2,k.c.cooper@aspectcapital.com,m.harding@vinvest.com,261.23,24965,GBX,SBRY.L,Consumer Goods,258.85,262.78
+00:53.6,w.cromwell@aspectcapital.com,carlee.c@invensys.com,3708.49,14545,GBX,IHG.L,Services,3708.49,3708.49
+00:53.6,thistle@janestreetcap.com,t.barton@knightcapital.com,2882.21,21502,GBX,LSE.L,Financial,2882.21,2882.21
+00:53.8,zach@invensys.com,m.corrigan@jlb.com,809.72,29660,GBX,MDC.L,Healthcare,809.72,809.72
+00:53.8,m.harding@vinvest.com,k.c.cooper@aspectcapital.com,675.29,13202,GBX,INF.L,Other,675.29,675.29
+00:53.9,locke@rochdaleassets.com,s.chapman@jlb.com,341.77,30048,GBX,MKS.L,Consumer Goods,341.77,345.68
+00:54.0,s.benson@bridgewater.com,m.corrigan@jlb.com,642.57,18156,GBX,BLND.L,Financial,642.31,642.57
+00:54.0,p.greyling@fenchurchst.com,carlee.c@invensys.com,643.11,8499,GBX,BLND.L,Financial,638.9,643.11
+00:54.1,w.hastings@bridgewater.com,w.tuffnell@janestreetcap.com,171.08,21450,GBX,TW.L,Industrial Goods,171.08,175.1
+00:54.1,m.hen@aspectcapital.com,rudyard.smithies@citadel.com,311.82,47097,GBX,GLEN.L,Basic Materials,311.82,315.99
+00:54.2,a.smith@fenchurchst.com,j.freeman@sorrel.com,351.59,20050,GBX,SL.L,Financial,351.59,355.63
+00:54.2,a.m.forex@fenchurchst.com,d.bristol@moma.com,1001.61,14167,GBX,SKY.L,Other,999.42,1001.61
+00:54.5,u.abduallatif@janestreetcap.com,a.j.johnson@johnsonandfinnemore.com,1909.04,27354,GBX,WPP.L,Services,1906.94,1909.04
+00:54.6,j.freeman@sorrel.com,locke@rochdaleassets.com,66.04,31328,GBX,LLOY.L,Financial,64.46,68.34
+00:54.6,d.bristol@moma.com,l.lee@moma.com,2189.28,9600,GBX,SKG.L,Industrial Goods,2188.84,2189.28
+00:54.7,k.c.cooper@aspectcapital.com,larabourne@rochdaleassets.com,2521.54,27790,GBX,ABF.L,Consumer Goods,2521.54,2525.31
+00:54.7,u.farooq@tibratrading.com,a.braxton@vinvest.com,3404.4,6835,GBX,CRDA.L,Industrial Goods,3402.19,3404.4
+00:54.7,a.clare@sorrel.com,tabby.dowd@janestreetcap.com,819.74,36101,GBX,MDC.L,Healthcare,815.76,819.74
+00:54.8,a.braxton@vinvest.com,a.clare@sorrel.com,532.59,11133,GBX,CPI.L,Services,530.1,532.59
+00:54.8,j.newbury@citadel.com,n.a.choudhury@oxam.org,723.95,18125,GBX,ANTO.L,Basic Materials,723.95,728.26
+00:54.9,w.tuffnell@janestreetcap.com,m.corrigan@jlb.com,449.52,31608,GBX,RMG.L,Services,446.68,450.75
+00:55.1,u.farooq@tibratrading.com,a.m.forex@fenchurchst.com,691.9,26799,GBX,SGE.L,Technology,687.97,691.9
+00:55.3,j.amstell@bridgewater.com,n.ainsworth@vinvest.com,2259.17,19362,GBX,RDSA.L,Basic Materials,2259.17,2263.15
+00:55.4,w.hastings@bridgewater.com,n.a.choudhury@oxam.org,1732.12,12638,GBX,MNDI.L,Consumer Goods,1732.12,1733.19
+00:55.4,a.braxton@vinvest.com,k.c.cooper@aspectcapital.com,2575.4,20484,GBX,ABF.L,Consumer Goods,2572.24,2575.4
+00:55.6,u.farooq@tibratrading.com,s.benson@bridgewater.com,1905.63,24413,GBX,WPP.L,Services,1904.12,1905.63
+00:55.6,sam.goldwing@sorrel.com,s.withers@oxam.org,278.07,2629,GBX,INTU.L,Other,277.02,281.08
+00:55.7,thistle@janestreetcap.com,m.harding@vinvest.com,3592.03,38083,GBX,ITRK.L,Services,3587.85,3592.03
+00:55.8,a.smith@fenchurchst.com,s.hedgewick@janestreetcap.com,341.93,8008,GBX,DLG.L,Financial,341.93,344.78
+00:55.9,tabby.dowd@janestreetcap.com,t.barton@knightcapital.com,1591.3,10931,GBX,PRU.L,Financial,1591.3,1595.37
+00:55.9,d.bristol@moma.com,s.hedgewick@janestreetcap.com,1094.47,16559,GBX,EZJ.L,Services,1094.47,1094.47
+00:55.9,warford.benson@tibratrading.com,m.hen@aspectcapital.com,241.69,19692,GBX,CTEC.L,Healthcare,239.66,243.79
+00:56.4,manimal@jlb.com,j.amstell@bridgewater.com,2336.83,40447,GBX,RDSB.L,Basic Materials,2336.83,2339.49
+00:56.4,l.lee@moma.com,d.bristol@moma.com,1021.42,16633,GBX,LAND.L,Financial,1020.57,1024.71
+00:56.4,m.grein@tibratrading.com,a.clare@sorrel.com,221.06,26569,GBX,VOD.L,Technology,216.94,221.06
+00:56.5,m.grein@tibratrading.com,j.freeman@sorrel.com,1137.88,20963,GBX,TUI.L,Other,1136.74,1137.88
+00:56.5,s.hedgewick@janestreetcap.com,w.cromwell@aspectcapital.com,2179.24,11645,GBX,SKG.L,Industrial Goods,2179.24,2179.24
+00:56.8,a.clare@sorrel.com,a.j.johnson@johnsonandfinnemore.com,1059.9,37821,GBX,STJ.L,Financial,1059.9,1059.9
+00:57.2,sam.goldwing@sorrel.com,u.farooq@tibratrading.com,1602.78,25101,GBX,AHT.L,Services,1602.78,1602.78
+00:57.4,m.harding@vinvest.com,s.benson@bridgewater.com,1531.01,22013,GBX,BRBY.L,Consumer Goods,1531.01,1531.01
+00:57.4,sam.goldwing@sorrel.com,locke@rochdaleassets.com,566.05,25030,GBX,HMSO.L,Financial,562.27,566.5
+00:57.5,a.afzal@rochdaleassets.com,w.tuffnell@janestreetcap.com,361.02,21884,GBX,SL.L,Financial,356.9,361.02
+00:57.7,m.atherton@scottishwidows.com,n.a.choudhury@oxam.org,785.34,18905,GBX,MDC.L,Healthcare,785.34,789.2
+00:57.8,w.cromwell@aspectcapital.com,manimal@jlb.com,738.72,14245,GBX,ANTO.L,Basic Materials,734.97,738.72
+00:57.8,u.farooq@tibratrading.com,n.ainsworth@vinvest.com,4117.26,15700,GBX,WTB.L,Services,4115.63,4119.79
+00:57.8,a.clare@sorrel.com,n.a.choudhury@oxam.org,1466.73,32435,GBX,CPG.L,Services,1463.48,1466.73
+00:57.9,tabby.dowd@janestreetcap.com,a.smith@fenchurchst.com,1795.19,15444,GBX,ADM.L,Financial,1790.9,1795.19
+00:57.9,carlee.c@invensys.com,s.withers@oxam.org,835.91,16666,GBX,PSON.L,Services,835.06,835.91
+00:57.9,thistle@janestreetcap.com,n.ainsworth@vinvest.com,205.15,36796,GBX,ITV.L,Services,205.15,205.15
+00:58.1,u.abduallatif@janestreetcap.com,sam.goldwing@sorrel.com,6861.65,39438,GBX,RRS.L,Basic Materials,6861.65,6861.65
+00:58.2,n.a.choudhury@oxam.org,tabby.dowd@janestreetcap.com,2187.48,30592,GBX,BNZL.L,Services,2187.48,2187.48
+00:58.3,a.smith@fenchurchst.com,tabby.dowd@janestreetcap.com,2298.85,39779,GBX,RDSA.L,Basic Materials,2294.76,2298.85
+00:58.6,tabby.dowd@janestreetcap.com,larabourne@rochdaleassets.com,2189.91,13970,GBX,SVT.L,Utilities,2189.91,2193.21
+00:58.6,zach@invensys.com,u.farooq@tibratrading.com,1739.32,11312,GBX,MNDI.L,Consumer Goods,1739.32,1740.65
+00:58.7,sam.goldwing@sorrel.com,carlee.c@invensys.com,4169.82,51455,GBX,WTB.L,Services,4166.18,4169.82
+00:58.7,s.chapman@jlb.com,w.tuffnell@janestreetcap.com,202.38,26550,GBX,ITV.L,Services,202.38,202.38
+00:58.7,w.cromwell@aspectcapital.com,w.tuffnell@janestreetcap.com,344.45,11582,GBX,GKN.L,Consumer Goods,344.45,344.45
+00:58.8,a.braxton@vinvest.com,p.greyling@fenchurchst.com,555.35,16365,GBX,HMSO.L,Financial,555.35,555.35
+00:58.9,n.a.choudhury@oxam.org,w.hastings@bridgewater.com,565.97,24647,GBX,RSA.L,Financial,565.97,570.07
+00:58.9,n.ainsworth@vinvest.com,warford.benson@tibratrading.com,1041.4,42793,GBX,STJ.L,Financial,1041.4,1044.46
+00:59.0,m.atherton@scottishwidows.com,a.j.johnson@johnsonandfinnemore.com,4244.7,15541,GBX,CCL.L,Consumer Goods,4240.82,4244.7
+00:59.0,j.freeman@sorrel.com,a.clare@sorrel.com,403.53,17376,GBX,BT.A.L,Technology,399.38,403.53
+00:59.0,warford.benson@tibratrading.com,d.bristol@moma.com,1557.16,10786,GBX,SSE.L,Utilities,1553.16,1557.16
+00:59.1,m.grein@tibratrading.com,a.clare@sorrel.com,2856.64,12757,GBX,LSE.L,Financial,2856.64,2860.37
+00:59.1,a.smith@fenchurchst.com,s.hedgewick@janestreetcap.com,7004.98,22974,GBX,RRS.L,Basic Materials,7003.82,7004.98
+00:59.1,m.corrigan@jlb.com,p.greyling@fenchurchst.com,349.75,23994,GBX,MKS.L,Consumer Goods,349.37,349.75
+00:59.2,k.c.cooper@aspectcapital.com,m.harding@vinvest.com,693.9,24945,GBX,STAN.L,Financial,693.9,695.54
+00:59.3,larabourne@rochdaleassets.com,s.benson@bridgewater.com,343.43,11044,GBX,KGF.L,Services,343.43,347.2
+00:59.3,a.braxton@vinvest.com,t.barton@knightcapital.com,1146.81,14072,GBX,TUI.L,Other,1142.8,1146.81
+00:59.4,rudyard.smithies@citadel.com,j.newbury@citadel.com,584.15,44559,GBX,RSA.L,Financial,579.94,584.15
+00:59.5,m.atherton@scottishwidows.com,larabourne@rochdaleassets.com,1908.74,34967,GBX,WPP.L,Services,1908.74,1908.74
+00:59.6,tabby.dowd@janestreetcap.com,k.c.cooper@aspectcapital.com,464.46,24361,GBX,MERL.L,Other,464.46,468.75
+00:59.8,a.afzal@rochdaleassets.com,sam.goldwing@sorrel.com,3058.19,25095,GBX,SDR.L,Financial,3058.19,3058.19
+00:59.8,sam.goldwing@sorrel.com,t.barton@knightcapital.com,999.34,27105,GBX,SKY.L,Other,997.97,999.34
+00:59.9,m.hen@aspectcapital.com,w.hastings@bridgewater.com,3702.1,10382,GBX,IHG.L,Services,3702.1,3703.25
+00:59.9,manimal@jlb.com,thistle@janestreetcap.com,2912.72,39614,GBX,LSE.L,Financial,2912.72,2912.72
+01:00.0,t.barton@knightcapital.com,j.amstell@bridgewater.com,3620.6,23639,GBX,IMB.L,Consumer Goods,3617.37,3620.6
+01:00.0,s.benson@bridgewater.com,u.farooq@tibratrading.com,1627.3,25662,GBX,AHT.L,Services,1627.3,1627.3
+01:00.1,s.hedgewick@janestreetcap.com,n.ainsworth@vinvest.com,1618.52,22154,GBX,EXPN.L,Services,1618.52,1618.52
+01:00.4,m.grein@tibratrading.com,warford.benson@tibratrading.com,1440.72,34607,GBX,CPG.L,Services,1440.72,1440.72
+01:00.4,w.cromwell@aspectcapital.com,t.barton@knightcapital.com,4467.42,24168,GBX,AZN.L,Healthcare,4467.42,4467.42
+01:00.7,d.bristol@moma.com,m.grein@tibratrading.com,395.03,17147,GBX,BT.A.L,Technology,391.04,395.11
+01:00.9,s.benson@bridgewater.com,m.hen@aspectcapital.com,4040.45,25529,GBX,WTB.L,Services,4040.45,4044.55
+01:01.1,s.chapman@jlb.com,w.hastings@bridgewater.com,220.92,24691,GBX,RBS.L,Financial,217.59,221.44
+01:01.1,w.tuffnell@janestreetcap.com,thistle@janestreetcap.com,4456.88,8503,GBX,AZN.L,Healthcare,4456.88,4456.88
+01:01.3,carlee.c@invensys.com,a.m.forex@fenchurchst.com,1946.53,29751,GBX,WPP.L,Services,1946.53,1946.53
+01:01.4,tabby.dowd@janestreetcap.com,zach@invensys.com,563.74,31607,GBX,RSA.L,Financial,563.74,563.74
+01:01.5,a.clare@sorrel.com,m.harding@vinvest.com,1633.84,33616,GBX,EXPN.L,Services,1630.14,1633.84
+01:01.5,j.freeman@sorrel.com,a.braxton@vinvest.com,3384.41,37264,GBX,RIO.L,Basic Materials,3384.41,3384.41
+01:01.6,carlee.c@invensys.com,u.farooq@tibratrading.com,3576.03,16797,GBX,IMB.L,Consumer Goods,3576.03,3579.94
+01:01.8,w.tuffnell@janestreetcap.com,a.clare@sorrel.com,201.91,45287,GBX,ITV.L,Services,201.91,202.17
+01:01.8,rudyard.smithies@citadel.com,manimal@jlb.com,343.97,12593,GBX,DLG.L,Financial,343.97,347.8
+01:01.9,s.hedgewick@janestreetcap.com,larabourne@rochdaleassets.com,1570.21,30168,GBX,GSK.L,Healthcare,1570.21,1574.64
+01:02.1,s.withers@oxam.org,u.farooq@tibratrading.com,3096.6,27929,GBX,SDR.L,Financial,3096.6,3096.6
+01:02.2,j.newbury@citadel.com,zach@invensys.com,1798.44,42508,GBX,CCH.L,Consumer Goods,1798.44,1798.44
+01:02.3,s.hedgewick@janestreetcap.com,tabby.dowd@janestreetcap.com,647.46,10143,GBX,HSBA.L,Financial,647.46,649.06
+01:02.5,j.freeman@sorrel.com,m.corrigan@jlb.com,1613.36,29609,GBX,PRU.L,Financial,1613.36,1613.36
+01:03.0,locke@rochdaleassets.com,k.c.cooper@aspectcapital.com,708.24,7289,GBX,III.L,Financial,708.24,712.09
+01:03.1,t.barton@knightcapital.com,s.withers@oxam.org,555.57,31507,GBX,RSA.L,Financial,555.57,559.15
+01:03.3,carlee.c@invensys.com,p.greyling@fenchurchst.com,1306.21,32841,GBX,HL.L,Financial,1303.9,1306.21
+01:03.3,a.smith@fenchurchst.com,s.chapman@jlb.com,3714.21,17343,GBX,IHG.L,Services,3714.21,3718.29
+01:03.3,a.smith@fenchurchst.com,p.greyling@fenchurchst.com,3128.32,11199,GBX,JMAT.L,Basic Materials,3128.32,3129.07
+01:03.3,m.grein@tibratrading.com,m.corrigan@jlb.com,3636,19966,GBX,IMB.L,Consumer Goods,3633.01,3636
+01:03.3,rudyard.smithies@citadel.com,warford.benson@tibratrading.com,2211.46,36621,GBX,SVT.L,Utilities,2211.46,2215.17
+01:03.4,m.atherton@scottishwidows.com,n.ainsworth@vinvest.com,664.01,32866,GBX,RR.L,Industrial Goods,663.97,668.02
+01:03.5,a.smith@fenchurchst.com,zach@invensys.com,2204.09,34735,GBX,BNZL.L,Services,2201.22,2204.09
+01:03.5,tabby.dowd@janestreetcap.com,s.hedgewick@janestreetcap.com,718.58,17371,GBX,III.L,Financial,717.87,721.77
+01:03.5,j.freeman@sorrel.com,thistle@janestreetcap.com,2374.26,13442,GBX,RDSB.L,Basic Materials,2374.26,2378.39
+01:03.5,m.atherton@scottishwidows.com,j.amstell@bridgewater.com,803.94,25452,GBX,MDC.L,Healthcare,800.73,803.94
+01:03.7,k.c.cooper@aspectcapital.com,a.j.johnson@johnsonandfinnemore.com,673.66,14342,GBX,SGE.L,Technology,671.6,675.45
+01:03.8,a.j.johnson@johnsonandfinnemore.com,u.farooq@tibratrading.com,4737.03,21857,GBX,BATS.L,Consumer Goods,4735.02,4737.03
+01:04.2,a.clare@sorrel.com,n.a.choudhury@oxam.org,485.48,26714,GBX,IAG.L,Services,485.3,489.09
+01:04.3,k.c.cooper@aspectcapital.com,a.m.forex@fenchurchst.com,527.28,49742,GBX,CPI.L,Services,522.97,527.28
+01:04.3,s.benson@bridgewater.com,j.newbury@citadel.com,953.41,22834,GBX,BAB.L,Industrial Goods,950.88,954.84
+01:04.4,w.cromwell@aspectcapital.com,j.newbury@citadel.com,358.61,38419,GBX,DC.L,Consumer Goods,354.25,358.61
+01:04.7,carlee.c@invensys.com,a.afzal@rochdaleassets.com,478.53,27380,GBX,MERL.L,Other,478.51,482.87
+01:04.8,locke@rochdaleassets.com,w.hastings@bridgewater.com,709.6,20944,GBX,III.L,Financial,709.6,709.93
+01:04.8,u.farooq@tibratrading.com,carlee.c@invensys.com,1603.49,33318,GBX,GSK.L,Healthcare,1598.95,1603.49
+01:04.9,m.corrigan@jlb.com,m.atherton@scottishwidows.com,1246.72,30401,GBX,SN.L,Healthcare,1242.38,1246.72
+01:04.9,tabby.dowd@janestreetcap.com,rudyard.smithies@citadel.com,3314.13,32700,GBX,RIO.L,Basic Materials,3314.13,3314.13
+01:05.0,n.ainsworth@vinvest.com,s.withers@oxam.org,965.02,33652,GBX,NG.L,Utilities,965.02,965.02
+01:05.1,j.freeman@sorrel.com,rudyard.smithies@citadel.com,2152.45,35998,GBX,BNZL.L,Services,2150.01,2152.45
+01:05.3,d.bristol@moma.com,w.tuffnell@janestreetcap.com,626.56,22666,GBX,BA.L,Industrial Goods,622.53,626.56
+01:05.3,m.harding@vinvest.com,a.braxton@vinvest.com,1030.81,22615,GBX,LAND.L,Financial,1030.81,1030.81
+01:05.3,j.amstell@bridgewater.com,n.ainsworth@vinvest.com,241.26,47689,GBX,MRW.L,Consumer Goods,238.51,242.72
+01:05.4,l.lee@moma.com,a.afzal@rochdaleassets.com,1963.78,17394,GBX,WPP.L,Services,1959.39,1963.78
+01:05.4,m.corrigan@jlb.com,j.amstell@bridgewater.com,1749.06,20498,GBX,CCH.L,Consumer Goods,1749.06,1753.07
+01:05.4,m.corrigan@jlb.com,j.freeman@sorrel.com,478.05,14555,GBX,AV.L,Financial,478.05,481.81
+01:05.5,m.hen@aspectcapital.com,w.cromwell@aspectcapital.com,3776.17,18196,GBX,IHG.L,Services,3771.9,3776.17
+01:05.5,m.harding@vinvest.com,m.corrigan@jlb.com,1586.75,26122,GBX,EXPN.L,Services,1586.75,1588.15
+01:05.5,w.hastings@bridgewater.com,w.tuffnell@janestreetcap.com,1823.24,47799,GBX,HIK.L,Healthcare,1823.24,1823.24
+01:05.6,manimal@jlb.com,a.braxton@vinvest.com,1369.17,27844,GBX,FRES.L,Basic Materials,1369.17,1369.17
+01:05.8,m.harding@vinvest.com,n.a.choudhury@oxam.org,980.95,24660,GBX,NG.L,Utilities,976.59,980.95
+01:05.8,u.farooq@tibratrading.com,carlee.c@invensys.com,274.93,24067,GBX,INTU.L,Other,274.93,279.01
+01:05.9,k.c.cooper@aspectcapital.com,carlee.c@invensys.com,3360.15,19708,GBX,CRDA.L,Industrial Goods,3356.96,3360.15
+01:05.9,j.amstell@bridgewater.com,p.greyling@fenchurchst.com,212.17,23154,GBX,OML.L,Financial,212.03,215.88
+01:05.9,j.amstell@bridgewater.com,a.clare@sorrel.com,235.63,8217,GBX,CTEC.L,Healthcare,235.63,239.66
+01:06.1,a.smith@fenchurchst.com,m.atherton@scottishwidows.com,526.45,28927,GBX,BP.L,Basic Materials,524.11,526.45
+01:06.1,a.m.forex@fenchurchst.com,locke@rochdaleassets.com,1005.13,27020,GBX,SKY.L,Other,1002.93,1005.13
+01:06.1,s.chapman@jlb.com,j.amstell@bridgewater.com,1945.02,55372,GBX,PSN.L,Industrial Goods,1945.02,1948.88
+01:06.4,a.braxton@vinvest.com,a.j.johnson@johnsonandfinnemore.com,1289.43,30246,GBX,HL.L,Financial,1289.43,1289.43
+01:06.4,a.braxton@vinvest.com,l.lee@moma.com,3126.34,71892,GBX,SDR.L,Financial,3123.83,3126.34
+01:06.4,larabourne@rochdaleassets.com,a.j.johnson@johnsonandfinnemore.com,349.53,22548,GBX,KGF.L,Services,349.53,353.42
+01:06.5,j.amstell@bridgewater.com,m.grein@tibratrading.com,3717.73,26924,GBX,IHG.L,Services,3717.73,3717.73
+01:06.6,a.clare@sorrel.com,s.hedgewick@janestreetcap.com,4539.79,31310,GBX,SHP.L,Healthcare,4539.79,4540.72
+01:06.6,w.cromwell@aspectcapital.com,d.bristol@moma.com,3667.97,20353,GBX,IHG.L,Services,3667.97,3670.37
+01:06.8,w.tuffnell@janestreetcap.com,rudyard.smithies@citadel.com,1127.26,20085,GBX,TUI.L,Other,1127.26,1131.23
+01:06.8,manimal@jlb.com,a.braxton@vinvest.com,4159.9,49390,GBX,WTB.L,Services,4156.33,4159.9
+01:06.9,m.corrigan@jlb.com,j.newbury@citadel.com,519.22,26438,GBX,BDEV.L,Industrial Goods,519.22,519.22
+01:07.3,tabby.dowd@janestreetcap.com,a.m.forex@fenchurchst.com,2138.78,23748,GBX,BNZL.L,Services,2136.03,2138.78
+01:07.3,sam.goldwing@sorrel.com,carlee.c@invensys.com,489.17,47242,GBX,AV.L,Financial,485.33,489.17
+01:07.3,n.ainsworth@vinvest.com,larabourne@rochdaleassets.com,2257.96,29483,GBX,SVT.L,Utilities,2253.85,2257.96
+01:07.4,locke@rochdaleassets.com,zach@invensys.com,1354.29,20824,GBX,FRES.L,Basic Materials,1354.29,1354.29
+01:07.7,rudyard.smithies@citadel.com,sam.goldwing@sorrel.com,681.81,37714,GBX,RR.L,Industrial Goods,680.97,681.81
+01:07.8,m.atherton@scottishwidows.com,d.bristol@moma.com,1526.43,13977,GBX,BRBY.L,Consumer Goods,1526.43,1530.46
+01:08.0,j.newbury@citadel.com,u.farooq@tibratrading.com,699.64,37206,GBX,STAN.L,Financial,699.64,699.64
+01:08.1,n.a.choudhury@oxam.org,l.lee@moma.com,321.07,21811,GBX,GLEN.L,Basic Materials,321.07,321.07
+01:08.1,l.lee@moma.com,larabourne@rochdaleassets.com,1564.93,24661,GBX,BRBY.L,Consumer Goods,1564.93,1566.07
+01:08.3,tabby.dowd@janestreetcap.com,w.tuffnell@janestreetcap.com,1547.88,37185,GBX,GSK.L,Healthcare,1547.88,1552.12
+01:08.5,t.barton@knightcapital.com,s.chapman@jlb.com,231.01,21815,GBX,BARC.L,Financial,229.85,233.89
+01:08.6,a.smith@fenchurchst.com,w.tuffnell@janestreetcap.com,2186.1,14139,GBX,SVT.L,Utilities,2186.1,2190.05
+01:08.7,j.newbury@citadel.com,n.ainsworth@vinvest.com,1520.95,22400,GBX,SMIN.L,Industrial Goods,1520.1,1523.92
+01:08.8,s.hedgewick@janestreetcap.com,a.clare@sorrel.com,3287.77,11927,GBX,RIO.L,Basic Materials,3287.77,3287.77
+01:08.8,m.grein@tibratrading.com,u.farooq@tibratrading.com,1442.83,31390,GBX,BLT.L,Basic Materials,1442.83,1446.18
+01:08.8,a.m.forex@fenchurchst.com,s.hedgewick@janestreetcap.com,350.98,47508,GBX,DLG.L,Financial,347.15,350.98
+01:08.9,warford.benson@tibratrading.com,a.m.forex@fenchurchst.com,2534.24,10794,GBX,ABF.L,Consumer Goods,2534.24,2534.54
+01:09.1,s.benson@bridgewater.com,u.farooq@tibratrading.com,334.96,26847,GBX,DLG.L,Financial,334.96,338.66
+01:09.1,a.m.forex@fenchurchst.com,warford.benson@tibratrading.com,1740,32378,GBX,MNDI.L,Consumer Goods,1740,1743.82
+01:09.3,m.atherton@scottishwidows.com,s.chapman@jlb.com,788.34,26295,GBX,MDC.L,Healthcare,788.34,792.22
+01:09.3,w.hastings@bridgewater.com,m.atherton@scottishwidows.com,706.03,11084,GBX,III.L,Financial,706.03,706.03
+01:09.5,j.newbury@citadel.com,m.harding@vinvest.com,684.04,13535,GBX,STAN.L,Financial,684.04,685.05
+01:09.5,a.m.forex@fenchurchst.com,carlee.c@invensys.com,577.16,44312,GBX,RSA.L,Financial,574.36,578.51
+01:09.9,m.atherton@scottishwidows.com,a.smith@fenchurchst.com,1043.14,9702,GBX,LAND.L,Financial,1041.14,1043.14
+01:10.0,m.grein@tibratrading.com,locke@rochdaleassets.com,210.96,51285,GBX,VOD.L,Technology,210.96,215.03
+01:10.0,d.bristol@moma.com,m.hen@aspectcapital.com,234.77,26177,GBX,MRW.L,Consumer Goods,234.77,234.77
+01:10.1,s.withers@oxam.org,a.smith@fenchurchst.com,951.76,28622,GBX,NG.L,Utilities,949.85,954.09
+01:10.6,warford.benson@tibratrading.com,locke@rochdaleassets.com,2182.01,18819,GBX,SKG.L,Industrial Goods,2182.01,2182.01
+01:10.7,m.hen@aspectcapital.com,s.hedgewick@janestreetcap.com,613.38,23615,GBX,BA.L,Industrial Goods,613.19,617.07
+01:10.9,k.c.cooper@aspectcapital.com,m.hen@aspectcapital.com,1145.83,19741,GBX,TUI.L,Other,1145.83,1145.83
+01:10.9,s.chapman@jlb.com,w.tuffnell@janestreetcap.com,1470.08,22423,GBX,BLT.L,Basic Materials,1468.45,1470.08
+01:11.2,u.farooq@tibratrading.com,j.freeman@sorrel.com,1553.3,32544,GBX,BRBY.L,Consumer Goods,1553.3,1555.33
+01:11.3,a.j.johnson@johnsonandfinnemore.com,u.abduallatif@janestreetcap.com,2145.87,25469,GBX,DGE.L,Consumer Goods,2145.87,2149.77
+01:11.5,s.benson@bridgewater.com,u.farooq@tibratrading.com,2396.78,29522,GBX,RDSB.L,Basic Materials,2392.79,2396.78
+01:11.6,m.corrigan@jlb.com,carlee.c@invensys.com,504.96,13764,GBX,CPI.L,Services,504.96,507.72
+01:11.7,w.hastings@bridgewater.com,m.corrigan@jlb.com,1805.33,14929,GBX,CCH.L,Consumer Goods,1804.68,1808.81
+01:11.7,m.hen@aspectcapital.com,tabby.dowd@janestreetcap.com,669.33,37235,GBX,SGE.L,Technology,669.33,670.82
+01:11.7,locke@rochdaleassets.com,t.barton@knightcapital.com,6262.38,9573,GBX,DCC.L,Financial,6262.01,6262.38
+01:11.8,m.hen@aspectcapital.com,w.cromwell@aspectcapital.com,233.92,17084,GBX,BARC.L,Financial,229.87,233.93
+01:11.8,s.hedgewick@janestreetcap.com,s.chapman@jlb.com,1349.13,27922,GBX,AAL.L,Basic Materials,1345.03,1349.13
+01:12.1,m.harding@vinvest.com,a.smith@fenchurchst.com,4530.67,22447,GBX,SHP.L,Healthcare,4530.67,4534.66
+01:12.2,rudyard.smithies@citadel.com,u.abduallatif@janestreetcap.com,1780.79,45271,GBX,CCH.L,Consumer Goods,1780.79,1784.15
+01:12.6,a.smith@fenchurchst.com,u.abduallatif@janestreetcap.com,6662.17,17690,GBX,RB.L,Consumer Goods,6662.17,6663.35
+01:12.7,warford.benson@tibratrading.com,thistle@janestreetcap.com,2225.85,10570,GBX,RDSA.L,Basic Materials,2225.85,2225.85
+01:12.7,k.c.cooper@aspectcapital.com,m.atherton@scottishwidows.com,1588.85,24974,GBX,EXPN.L,Services,1588.85,1588.85
+01:12.8,thistle@janestreetcap.com,a.clare@sorrel.com,489.95,43343,GBX,MERL.L,Other,485.49,489.95
+01:12.8,warford.benson@tibratrading.com,u.farooq@tibratrading.com,527.71,24540,GBX,BDEV.L,Industrial Goods,523.47,527.71
+01:13.0,m.hen@aspectcapital.com,m.corrigan@jlb.com,6706.02,23378,GBX,RB.L,Consumer Goods,6706.02,6710.1
+01:13.0,thistle@janestreetcap.com,manimal@jlb.com,2155.6,30560,GBX,MCRO.L,Technology,2154.24,2155.6
+01:13.2,a.afzal@rochdaleassets.com,a.braxton@vinvest.com,998.73,25735,GBX,SKY.L,Other,998.73,998.73
+01:13.2,locke@rochdaleassets.com,carlee.c@invensys.com,1157.94,45493,GBX,TUI.L,Other,1154.11,1157.94
+01:13.3,j.amstell@bridgewater.com,w.tuffnell@janestreetcap.com,2167.21,17757,GBX,MCRO.L,Technology,2167.21,2167.21
+01:13.4,s.chapman@jlb.com,n.a.choudhury@oxam.org,346.3,17816,GBX,DC.L,Consumer Goods,346.3,346.3
+01:13.5,j.newbury@citadel.com,k.c.cooper@aspectcapital.com,3592.8,20004,GBX,IMB.L,Consumer Goods,3592.8,3595.76
+01:13.6,a.braxton@vinvest.com,tabby.dowd@janestreetcap.com,243,38527,GBX,CTEC.L,Healthcare,240.09,244.22
+01:13.7,a.j.johnson@johnsonandfinnemore.com,a.braxton@vinvest.com,549.71,40169,GBX,HMSO.L,Financial,549.71,553.85
+01:13.8,m.atherton@scottishwidows.com,a.clare@sorrel.com,1314.92,6290,GBX,HL.L,Financial,1312.51,1314.92
+01:13.9,n.ainsworth@vinvest.com,a.m.forex@fenchurchst.com,1782.19,52366,GBX,MNDI.L,Consumer Goods,1782.14,1782.19
+01:13.9,tabby.dowd@janestreetcap.com,m.atherton@scottishwidows.com,2128.35,10770,GBX,BNZL.L,Services,2124.44,2128.35
+01:13.9,j.freeman@sorrel.com,a.braxton@vinvest.com,231.5,26425,GBX,MRW.L,Consumer Goods,231.5,234.71
+01:14.0,larabourne@rochdaleassets.com,t.barton@knightcapital.com,1035.61,23266,GBX,LAND.L,Financial,1031.49,1035.61
+01:14.2,u.abduallatif@janestreetcap.com,locke@rochdaleassets.com,519.95,19843,GBX,BP.L,Basic Materials,516.93,520.75
+01:14.5,w.cromwell@aspectcapital.com,s.withers@oxam.org,1498.67,25631,GBX,SMIN.L,Industrial Goods,1498.67,1498.67
+01:14.7,sam.goldwing@sorrel.com,p.greyling@fenchurchst.com,471.78,34069,GBX,AV.L,Financial,471.78,471.78
+01:14.8,m.atherton@scottishwidows.com,locke@rochdaleassets.com,199.75,13542,GBX,ITV.L,Services,199.75,199.75
+01:14.9,zach@invensys.com,n.a.choudhury@oxam.org,2114.48,18230,GBX,BNZL.L,Services,2114.48,2117.61
+01:14.9,m.hen@aspectcapital.com,m.harding@vinvest.com,6255.76,21402,GBX,DCC.L,Financial,6251.76,6255.76
+01:15.1,l.lee@moma.com,sam.goldwing@sorrel.com,1415.16,12330,GBX,CPG.L,Services,1415.16,1415.16
+01:15.4,j.freeman@sorrel.com,l.lee@moma.com,1466.46,17962,GBX,BLT.L,Basic Materials,1466.46,1466.46
+01:15.5,w.tuffnell@janestreetcap.com,a.smith@fenchurchst.com,1601.08,39725,GBX,GSK.L,Healthcare,1596.87,1601.08
+01:15.6,m.grein@tibratrading.com,s.chapman@jlb.com,2138.56,28545,GBX,BNZL.L,Services,2137.16,2138.56
+01:15.6,n.ainsworth@vinvest.com,a.smith@fenchurchst.com,221.96,23695,GBX,VOD.L,Technology,219.51,221.96
+01:15.8,t.barton@knightcapital.com,u.farooq@tibratrading.com,1764.02,25887,GBX,ADM.L,Financial,1764.02,1764.02
+01:16.0,u.abduallatif@janestreetcap.com,w.cromwell@aspectcapital.com,232.86,28352,GBX,CTEC.L,Healthcare,232.86,236.87
+01:16.0,m.atherton@scottishwidows.com,tabby.dowd@janestreetcap.com,347.59,25741,GBX,DLG.L,Financial,345.33,349.24
+01:16.2,a.braxton@vinvest.com,t.barton@knightcapital.com,516.54,10712,GBX,CPI.L,Services,513.46,517.79
+01:16.3,k.c.cooper@aspectcapital.com,warford.benson@tibratrading.com,2234.89,16833,GBX,RDSA.L,Basic Materials,2234.89,2238.38
+01:16.3,j.amstell@bridgewater.com,zach@invensys.com,2272.01,35959,GBX,RDSA.L,Basic Materials,2272.01,2276.02
+01:16.3,s.chapman@jlb.com,thistle@janestreetcap.com,6861.34,31215,GBX,RB.L,Consumer Goods,6857.48,6861.34
+01:16.4,j.freeman@sorrel.com,a.j.johnson@johnsonandfinnemore.com,440.41,44882,GBX,RMG.L,Services,440.41,440.41
+01:16.5,u.farooq@tibratrading.com,m.hen@aspectcapital.com,2835.15,34275,GBX,PFG.L,Financial,2835.15,2835.15
+01:16.5,u.abduallatif@janestreetcap.com,larabourne@rochdaleassets.com,670.92,20677,GBX,SGE.L,Technology,670.92,670.98
+01:16.6,a.m.forex@fenchurchst.com,m.harding@vinvest.com,468.12,9832,GBX,AV.L,Financial,468.12,468.12
+01:16.9,manimal@jlb.com,j.freeman@sorrel.com,1352.09,5904,GBX,FRES.L,Basic Materials,1352.09,1352.09
+01:16.9,thistle@janestreetcap.com,m.hen@aspectcapital.com,387.71,16192,GBX,BT.A.L,Technology,387.71,391.69
+01:16.9,n.a.choudhury@oxam.org,p.greyling@fenchurchst.com,4489.85,21881,GBX,AZN.L,Healthcare,4489.85,4490.77
+01:17.0,k.c.cooper@aspectcapital.com,m.grein@tibratrading.com,1482.33,11356,GBX,BLT.L,Basic Materials,1479.6,1482.33
+01:17.1,a.j.johnson@johnsonandfinnemore.com,n.a.choudhury@oxam.org,2142.34,15101,GBX,BNZL.L,Services,2142.34,2142.34
+01:17.1,m.grein@tibratrading.com,d.bristol@moma.com,3312.65,18990,GBX,RIO.L,Basic Materials,3312.65,3312.65
+01:17.2,m.grein@tibratrading.com,thistle@janestreetcap.com,2199.94,32351,GBX,DGE.L,Consumer Goods,2196.52,2199.94
+01:17.5,sam.goldwing@sorrel.com,m.hen@aspectcapital.com,808.86,60465,GBX,MDC.L,Healthcare,804.97,808.86
+01:17.7,s.withers@oxam.org,larabourne@rochdaleassets.com,199.19,30507,GBX,ITV.L,Services,199.19,201.98
+01:17.7,w.tuffnell@janestreetcap.com,m.grein@tibratrading.com,2342.9,33482,GBX,RDSB.L,Basic Materials,2342.9,2342.9
+01:18.1,w.cromwell@aspectcapital.com,rudyard.smithies@citadel.com,3166.36,10743,GBX,JMAT.L,Basic Materials,3166.36,3167.98
+01:18.2,m.atherton@scottishwidows.com,sam.goldwing@sorrel.com,725.26,35206,GBX,ANTO.L,Basic Materials,725.26,729.62
+01:18.2,a.braxton@vinvest.com,m.grein@tibratrading.com,838.94,14299,GBX,PSON.L,Services,835.9,838.94
+01:18.2,m.harding@vinvest.com,t.barton@knightcapital.com,1363.34,9252,GBX,FRES.L,Basic Materials,1363.34,1363.34
+01:18.4,j.newbury@citadel.com,t.barton@knightcapital.com,1797.8,44538,GBX,ADM.L,Financial,1797.8,1797.8
+01:18.4,l.lee@moma.com,s.withers@oxam.org,260.93,28329,GBX,SBRY.L,Consumer Goods,258.81,262.74
+01:18.5,a.m.forex@fenchurchst.com,a.braxton@vinvest.com,3630.87,25686,GBX,IMB.L,Consumer Goods,3627,3630.87
+01:18.6,carlee.c@invensys.com,m.corrigan@jlb.com,3379.05,31494,GBX,ULVR.L,Consumer Goods,3379.05,3383.12
+01:18.7,locke@rochdaleassets.com,carlee.c@invensys.com,935.31,25928,GBX,NG.L,Utilities,935.31,936.79
+01:18.7,m.atherton@scottishwidows.com,a.braxton@vinvest.com,524.92,24385,GBX,BP.L,Basic Materials,524.92,524.92
+01:18.8,a.smith@fenchurchst.com,tabby.dowd@janestreetcap.com,4733.69,22848,GBX,BATS.L,Consumer Goods,4730.33,4733.69
+01:18.8,j.amstell@bridgewater.com,d.bristol@moma.com,228.89,23038,GBX,BARC.L,Financial,228.89,230.82
+01:18.9,rudyard.smithies@citadel.com,n.ainsworth@vinvest.com,1825.06,16843,GBX,CCH.L,Consumer Goods,1823.42,1825.06
+01:19.0,u.farooq@tibratrading.com,a.afzal@rochdaleassets.com,687.82,18037,GBX,STAN.L,Financial,687.82,691.82
+01:19.1,m.atherton@scottishwidows.com,l.lee@moma.com,826.64,22346,GBX,PSON.L,Services,826.64,826.64
+01:19.4,s.hedgewick@janestreetcap.com,d.bristol@moma.com,227.83,20973,GBX,BARC.L,Financial,227.83,231.88
+01:19.5,m.harding@vinvest.com,w.hastings@bridgewater.com,342.7,5649,GBX,DC.L,Consumer Goods,342.7,345.64
+01:19.6,warford.benson@tibratrading.com,p.greyling@fenchurchst.com,211.62,43848,GBX,OML.L,Financial,211.62,211.62
+01:19.6,d.bristol@moma.com,s.benson@bridgewater.com,1785.16,27132,GBX,HIK.L,Healthcare,1785.16,1789.1
+01:19.6,locke@rochdaleassets.com,a.clare@sorrel.com,574.14,16776,GBX,HMSO.L,Financial,569.78,574.14
+01:19.8,s.chapman@jlb.com,t.barton@knightcapital.com,174.87,27419,GBX,TW.L,Industrial Goods,173.04,176.97
+01:20.0,a.braxton@vinvest.com,a.smith@fenchurchst.com,3714.73,24118,GBX,IHG.L,Services,3714.73,3714.73
+01:20.0,warford.benson@tibratrading.com,j.newbury@citadel.com,344.82,75550,GBX,DC.L,Consumer Goods,344.82,349.15
+01:20.0,carlee.c@invensys.com,k.c.cooper@aspectcapital.com,3556.16,16108,GBX,IMB.L,Consumer Goods,3556.16,3559.82
+01:20.1,s.withers@oxam.org,larabourne@rochdaleassets.com,1819.25,31916,GBX,CCH.L,Consumer Goods,1814.98,1819.25
+01:20.1,d.bristol@moma.com,j.freeman@sorrel.com,6712.48,15831,GBX,RB.L,Consumer Goods,6712.48,6714.02
+01:20.2,m.hen@aspectcapital.com,n.ainsworth@vinvest.com,4198.67,21932,GBX,CCL.L,Consumer Goods,4198.67,4202.56
+01:20.6,s.chapman@jlb.com,n.ainsworth@vinvest.com,181,36463,GBX,TW.L,Industrial Goods,177.03,181
+01:20.6,manimal@jlb.com,m.grein@tibratrading.com,6943.06,30227,GBX,RRS.L,Basic Materials,6943.06,6943.06
+01:20.7,m.hen@aspectcapital.com,larabourne@rochdaleassets.com,288.07,52418,GBX,WPG.L,Services,288.07,288.07
+01:20.8,u.farooq@tibratrading.com,a.j.johnson@johnsonandfinnemore.com,2184.33,7251,GBX,MCRO.L,Technology,2183.44,2184.33
+01:20.8,w.tuffnell@janestreetcap.com,warford.benson@tibratrading.com,6744.43,33127,GBX,RB.L,Consumer Goods,6744.43,6748.67
+01:20.9,m.corrigan@jlb.com,thistle@janestreetcap.com,4040.62,18967,GBX,WTB.L,Services,4040.62,4041.06
+01:20.9,w.hastings@bridgewater.com,u.abduallatif@janestreetcap.com,896.95,24820,GBX,UU.L,Utilities,896.22,896.95
+01:21.0,a.clare@sorrel.com,a.afzal@rochdaleassets.com,1080.93,36909,GBX,STJ.L,Financial,1077.9,1081.81
+01:21.2,m.corrigan@jlb.com,a.braxton@vinvest.com,1637.44,15512,GBX,AHT.L,Services,1637.44,1637.44
+01:21.3,a.m.forex@fenchurchst.com,a.j.johnson@johnsonandfinnemore.com,352.15,19881,GBX,MKS.L,Consumer Goods,350.88,352.15
+01:21.5,d.bristol@moma.com,locke@rochdaleassets.com,2194.54,38131,GBX,SKG.L,Industrial Goods,2194.54,2194.54
+01:22.0,rudyard.smithies@citadel.com,n.ainsworth@vinvest.com,558.28,24267,GBX,RSA.L,Financial,558.28,558.28
+01:22.1,tabby.dowd@janestreetcap.com,a.clare@sorrel.com,325.71,13387,GBX,GLEN.L,Basic Materials,321.17,325.71
+01:22.1,sam.goldwing@sorrel.com,j.amstell@bridgewater.com,676.6,29550,GBX,INF.L,Other,676.6,676.6
+01:22.3,u.abduallatif@janestreetcap.com,carlee.c@invensys.com,1361.03,17950,GBX,FRES.L,Basic Materials,1361.03,1364.99
+01:22.4,a.smith@fenchurchst.com,j.freeman@sorrel.com,1912.01,30715,GBX,WPP.L,Services,1910.31,1912.01
+01:22.4,sam.goldwing@sorrel.com,n.a.choudhury@oxam.org,3620.23,24851,GBX,IMB.L,Consumer Goods,3620.23,3620.23
+01:22.5,j.newbury@citadel.com,manimal@jlb.com,470.84,6032,GBX,MERL.L,Other,470.84,471.8
+01:22.6,a.smith@fenchurchst.com,m.harding@vinvest.com,2228.88,8606,GBX,SKG.L,Industrial Goods,2228.88,2228.88
+01:22.6,m.atherton@scottishwidows.com,n.a.choudhury@oxam.org,665.14,35175,GBX,INF.L,Other,665.14,669.21
+01:22.8,m.hen@aspectcapital.com,locke@rochdaleassets.com,244.87,30948,GBX,CTEC.L,Healthcare,240.79,244.87
+01:22.8,w.cromwell@aspectcapital.com,a.j.johnson@johnsonandfinnemore.com,3051.48,15418,GBX,SDR.L,Financial,3051.48,3051.48
+01:23.1,zach@invensys.com,thistle@janestreetcap.com,1210.21,21024,GBX,SN.L,Healthcare,1210.21,1214.37
+01:23.3,p.greyling@fenchurchst.com,l.lee@moma.com,3298.59,40451,GBX,RIO.L,Basic Materials,3298.59,3302.26
+01:23.3,rudyard.smithies@citadel.com,t.barton@knightcapital.com,363.24,13000,GBX,DC.L,Consumer Goods,363.24,363.24
+01:23.3,d.bristol@moma.com,u.abduallatif@janestreetcap.com,6924.01,36114,GBX,RB.L,Consumer Goods,6922.26,6924.01
+01:23.4,carlee.c@invensys.com,a.m.forex@fenchurchst.com,280,18100,GBX,INTU.L,Other,277.01,281.15
+01:23.4,rudyard.smithies@citadel.com,t.barton@knightcapital.com,1549.54,31315,GBX,SSE.L,Utilities,1547.38,1551.67
+01:23.5,j.newbury@citadel.com,sam.goldwing@sorrel.com,1775.1,31831,GBX,CCH.L,Consumer Goods,1775.1,1775.2
+01:23.7,w.tuffnell@janestreetcap.com,n.a.choudhury@oxam.org,275.12,34328,GBX,WPG.L,Services,275.12,279.22
+01:23.7,p.greyling@fenchurchst.com,u.farooq@tibratrading.com,240.1,32993,GBX,MRW.L,Consumer Goods,238.7,242.95
+01:23.8,carlee.c@invensys.com,a.j.johnson@johnsonandfinnemore.com,237.02,10667,GBX,MRW.L,Consumer Goods,237.02,237.02
+01:23.9,warford.benson@tibratrading.com,a.afzal@rochdaleassets.com,936.6,51041,GBX,NG.L,Utilities,936.6,940.8
+01:23.9,s.benson@bridgewater.com,m.atherton@scottishwidows.com,2834.1,41798,GBX,CRH.L,Industrial Goods,2834.1,2837.93
+01:24.1,m.atherton@scottishwidows.com,j.amstell@bridgewater.com,200.24,30880,GBX,TSCO.L,Consumer Goods,200.24,203.78
+01:24.2,a.clare@sorrel.com,m.hen@aspectcapital.com,2829.14,18928,GBX,LSE.L,Financial,2829.14,2829.14
+01:24.2,zach@invensys.com,s.chapman@jlb.com,1115.34,18984,GBX,TUI.L,Other,1115.34,1119.36
+01:24.2,larabourne@rochdaleassets.com,a.afzal@rochdaleassets.com,206.67,25141,GBX,ITV.L,Services,206.63,210.52
+01:24.3,u.abduallatif@janestreetcap.com,manimal@jlb.com,4675.28,23904,GBX,BATS.L,Consumer Goods,4675.28,4679.28
+01:24.3,w.tuffnell@janestreetcap.com,m.grein@tibratrading.com,351.28,7184,GBX,SL.L,Financial,351.07,355.07
+01:24.3,carlee.c@invensys.com,a.smith@fenchurchst.com,1469.88,13166,GBX,BLT.L,Basic Materials,1465.59,1469.88
+01:24.4,w.cromwell@aspectcapital.com,k.c.cooper@aspectcapital.com,1047.58,34426,GBX,STJ.L,Financial,1047.58,1051.35
+01:25.0,zach@invensys.com,a.braxton@vinvest.com,398.04,29110,GBX,BT.A.L,Technology,394.05,398.04
+01:25.0,rudyard.smithies@citadel.com,a.braxton@vinvest.com,1014.81,10108,GBX,LAND.L,Financial,1014.81,1016.16
+01:25.1,larabourne@rochdaleassets.com,l.lee@moma.com,2308.12,21174,GBX,RDSB.L,Basic Materials,2308.12,2310.26
+01:25.2,s.benson@bridgewater.com,a.braxton@vinvest.com,1833.66,38336,GBX,ADM.L,Financial,1833.66,1833.66
+01:25.3,a.clare@sorrel.com,a.braxton@vinvest.com,171.1,29377,GBX,TW.L,Industrial Goods,171.1,174.93
+01:25.4,n.ainsworth@vinvest.com,k.c.cooper@aspectcapital.com,3673.95,12706,GBX,IMB.L,Consumer Goods,3670.12,3673.95
+01:25.6,zach@invensys.com,j.freeman@sorrel.com,179.81,14829,GBX,TW.L,Industrial Goods,175.88,179.81
+01:25.8,a.braxton@vinvest.com,t.barton@knightcapital.com,2783.15,27355,GBX,PFG.L,Financial,2783.15,2783.15
+01:25.9,warford.benson@tibratrading.com,k.c.cooper@aspectcapital.com,1564.46,30023,GBX,BRBY.L,Consumer Goods,1564.46,1564.93
+01:25.9,w.tuffnell@janestreetcap.com,s.chapman@jlb.com,203.31,15444,GBX,ITV.L,Services,203.31,203.31
+01:25.9,w.cromwell@aspectcapital.com,sam.goldwing@sorrel.com,684.66,11449,GBX,RR.L,Industrial Goods,684.29,684.66
+01:26.1,j.newbury@citadel.com,l.lee@moma.com,65.59,12055,GBX,LLOY.L,Financial,64.28,68.45
+01:26.1,locke@rochdaleassets.com,s.benson@bridgewater.com,2830.64,25642,GBX,LSE.L,Financial,2830.64,2833.02
+01:26.2,k.c.cooper@aspectcapital.com,tabby.dowd@janestreetcap.com,265.57,10560,GBX,SBRY.L,Consumer Goods,264.26,265.57
+01:26.6,manimal@jlb.com,j.freeman@sorrel.com,2344.32,15702,GBX,RDSB.L,Basic Materials,2344.32,2345.22
+01:26.6,j.amstell@bridgewater.com,n.ainsworth@vinvest.com,1441.4,17638,GBX,REL.L,Services,1441.4,1442.41
+01:26.6,w.cromwell@aspectcapital.com,m.atherton@scottishwidows.com,1087.97,12857,GBX,EZJ.L,Services,1083.88,1087.97
+01:26.7,a.afzal@rochdaleassets.com,m.hen@aspectcapital.com,4142.71,38332,GBX,NXT.L,Consumer Goods,4138.88,4142.71
+01:26.9,a.m.forex@fenchurchst.com,w.hastings@bridgewater.com,1435.85,39996,GBX,REL.L,Services,1435.85,1439.73
+01:27.0,thistle@janestreetcap.com,p.greyling@fenchurchst.com,233.4,32133,GBX,MRW.L,Consumer Goods,233.4,237.55
+01:27.0,n.ainsworth@vinvest.com,a.braxton@vinvest.com,472.8,38927,GBX,MERL.L,Other,472.8,476.31
+01:27.5,u.farooq@tibratrading.com,m.grein@tibratrading.com,2761.84,20817,GBX,PFG.L,Financial,2761.84,2765.78
+01:27.5,u.abduallatif@janestreetcap.com,a.smith@fenchurchst.com,1481.61,17950,GBX,REL.L,Services,1481.61,1481.61
+01:27.7,k.c.cooper@aspectcapital.com,s.hedgewick@janestreetcap.com,4487.54,44395,GBX,AZN.L,Healthcare,4487.54,4487.54
+01:27.8,t.barton@knightcapital.com,carlee.c@invensys.com,2877.28,29240,GBX,LSE.L,Financial,2877.28,2880.24
+01:27.8,rudyard.smithies@citadel.com,p.greyling@fenchurchst.com,3315.7,19924,GBX,CRDA.L,Industrial Goods,3315.7,3315.7
+01:27.9,sam.goldwing@sorrel.com,a.braxton@vinvest.com,1566.73,20858,GBX,EXPN.L,Services,1566.73,1570.65
+01:28.1,rudyard.smithies@citadel.com,s.benson@bridgewater.com,2048.69,21254,GBX,PSN.L,Industrial Goods,2048.08,2048.69
+01:28.2,a.m.forex@fenchurchst.com,m.harding@vinvest.com,2152.6,60007,GBX,DGE.L,Consumer Goods,2152.6,2153.87
+01:28.2,tabby.dowd@janestreetcap.com,j.freeman@sorrel.com,770.2,17397,GBX,MDC.L,Healthcare,770.2,770.2
+01:28.2,m.hen@aspectcapital.com,s.withers@oxam.org,1419.72,42405,GBX,CPG.L,Services,1419.72,1423.48
+01:28.4,w.hastings@bridgewater.com,thistle@janestreetcap.com,236.34,26282,GBX,CTEC.L,Healthcare,236.34,238.8
+01:28.5,s.hedgewick@janestreetcap.com,locke@rochdaleassets.com,509.04,26868,GBX,BDEV.L,Industrial Goods,509.04,513
+01:28.6,manimal@jlb.com,s.hedgewick@janestreetcap.com,69.04,26187,GBX,LLOY.L,Financial,64.77,69.04
+01:28.7,s.chapman@jlb.com,thistle@janestreetcap.com,1751.62,9369,GBX,CCH.L,Consumer Goods,1751.62,1755.77
+01:28.7,a.clare@sorrel.com,a.afzal@rochdaleassets.com,1847.77,30194,GBX,ADM.L,Financial,1847.77,1847.77
+01:28.8,a.m.forex@fenchurchst.com,zach@invensys.com,385.29,17791,GBX,BT.A.L,Technology,385.29,389.16
+01:28.8,u.abduallatif@janestreetcap.com,thistle@janestreetcap.com,952.63,24978,GBX,BAB.L,Industrial Goods,950.32,954.27
+01:28.8,s.chapman@jlb.com,j.freeman@sorrel.com,1548.42,31504,GBX,GSK.L,Healthcare,1548.42,1550.87
+01:28.8,u.abduallatif@janestreetcap.com,rudyard.smithies@citadel.com,6128.29,22151,GBX,DCC.L,Financial,6128.29,6130.61
+01:29.2,l.lee@moma.com,m.harding@vinvest.com,4001.32,20900,GBX,NXT.L,Consumer Goods,4001.32,4005.05
+01:29.4,m.corrigan@jlb.com,u.abduallatif@janestreetcap.com,397.29,36219,GBX,BT.A.L,Technology,393.32,397.29
+01:29.4,k.c.cooper@aspectcapital.com,s.withers@oxam.org,244.49,21618,GBX,MRW.L,Consumer Goods,240.08,244.49
+01:29.5,zach@invensys.com,l.lee@moma.com,1236.28,37789,GBX,SN.L,Healthcare,1236.06,1236.28
+01:29.7,w.tuffnell@janestreetcap.com,d.bristol@moma.com,2177.05,22522,GBX,MCRO.L,Technology,2172.86,2177.05
+01:29.8,j.freeman@sorrel.com,u.abduallatif@janestreetcap.com,2327.39,41429,GBX,RDSA.L,Basic Materials,2327.39,2327.39
+01:30.1,d.bristol@moma.com,rudyard.smithies@citadel.com,1864,11694,GBX,HIK.L,Healthcare,1864,1864
+01:30.2,zach@invensys.com,a.afzal@rochdaleassets.com,1486.38,15812,GBX,REL.L,Services,1483,1486.38
+01:30.2,m.corrigan@jlb.com,a.m.forex@fenchurchst.com,2365.02,42911,GBX,RDSA.L,Basic Materials,2365.02,2365.02
+01:30.3,sam.goldwing@sorrel.com,j.freeman@sorrel.com,3279.58,36163,GBX,CRDA.L,Industrial Goods,3279.58,3279.58
+01:30.3,carlee.c@invensys.com,u.abduallatif@janestreetcap.com,509.78,24856,GBX,CPI.L,Services,509.78,513.85
+01:30.3,s.benson@bridgewater.com,n.a.choudhury@oxam.org,2135.74,25595,GBX,DGE.L,Consumer Goods,2135.74,2135.74
+01:30.5,u.abduallatif@janestreetcap.com,s.hedgewick@janestreetcap.com,1313.54,13808,GBX,AAL.L,Basic Materials,1313.54,1317.63
+01:30.7,k.c.cooper@aspectcapital.com,m.harding@vinvest.com,1390.13,15216,GBX,FRES.L,Basic Materials,1390.13,1390.13
+01:30.9,n.ainsworth@vinvest.com,m.corrigan@jlb.com,747.67,33177,GBX,ANTO.L,Basic Materials,743.14,747.67
+01:31.0,tabby.dowd@janestreetcap.com,j.newbury@citadel.com,1455.61,23989,GBX,BLT.L,Basic Materials,1455.61,1455.61
+01:31.0,m.atherton@scottishwidows.com,w.cromwell@aspectcapital.com,1843.94,52558,GBX,HIK.L,Healthcare,1843.94,1848.04
+01:31.0,d.bristol@moma.com,a.braxton@vinvest.com,349.85,14979,GBX,DLG.L,Financial,347.14,349.85
+01:31.1,w.hastings@bridgewater.com,a.j.johnson@johnsonandfinnemore.com,773.05,13358,GBX,MDC.L,Healthcare,773.05,774.55
+01:31.1,m.hen@aspectcapital.com,a.smith@fenchurchst.com,7028.3,16133,GBX,RRS.L,Basic Materials,7028.3,7028.3
+01:31.2,larabourne@rochdaleassets.com,carlee.c@invensys.com,1607.14,13299,GBX,EXPN.L,Services,1603.11,1607.14
+01:31.2,m.grein@tibratrading.com,w.cromwell@aspectcapital.com,2341.83,28339,GBX,RDSB.L,Basic Materials,2341.83,2341.83
+01:31.3,locke@rochdaleassets.com,u.abduallatif@janestreetcap.com,3612.68,28559,GBX,IMB.L,Consumer Goods,3608.93,3612.68
+01:31.3,l.lee@moma.com,locke@rochdaleassets.com,1257.42,18328,GBX,SN.L,Healthcare,1257.42,1257.42
+01:31.4,w.tuffnell@janestreetcap.com,l.lee@moma.com,235.76,28855,GBX,BARC.L,Financial,231.52,235.76
+01:31.4,a.j.johnson@johnsonandfinnemore.com,a.afzal@rochdaleassets.com,1562.88,17299,GBX,GSK.L,Healthcare,1562.88,1567.29
+01:31.4,m.harding@vinvest.com,warford.benson@tibratrading.com,1848.66,42793,GBX,ADM.L,Financial,1848.66,1848.66
+01:31.4,u.farooq@tibratrading.com,n.ainsworth@vinvest.com,1637.91,27803,GBX,AHT.L,Services,1633.69,1637.91
+01:31.4,a.j.johnson@johnsonandfinnemore.com,tabby.dowd@janestreetcap.com,1645.44,23627,GBX,PRU.L,Financial,1645.44,1645.44
+01:31.7,t.barton@knightcapital.com,warford.benson@tibratrading.com,175.36,6735,GBX,TW.L,Industrial Goods,173.06,176.89
+01:31.8,m.grein@tibratrading.com,a.afzal@rochdaleassets.com,1530,23042,GBX,SSE.L,Utilities,1530,1533.52
+01:32.2,u.farooq@tibratrading.com,rudyard.smithies@citadel.com,4768.66,37072,GBX,BATS.L,Consumer Goods,4764.57,4768.66
+01:32.3,a.m.forex@fenchurchst.com,carlee.c@invensys.com,176.72,15217,GBX,TW.L,Industrial Goods,173.05,176.87
+01:32.3,s.chapman@jlb.com,a.m.forex@fenchurchst.com,3427.94,28536,GBX,RIO.L,Basic Materials,3425.64,3427.94
+01:32.6,n.a.choudhury@oxam.org,a.smith@fenchurchst.com,4646.18,29184,GBX,SHP.L,Healthcare,4642.1,4646.18
+01:32.6,p.greyling@fenchurchst.com,w.cromwell@aspectcapital.com,3191.95,11033,GBX,JMAT.L,Basic Materials,3191.95,3191.95
+01:32.6,s.hedgewick@janestreetcap.com,m.atherton@scottishwidows.com,2162.48,43321,GBX,BNZL.L,Services,2158.39,2162.48
+01:32.8,a.clare@sorrel.com,j.amstell@bridgewater.com,2925.35,18924,GBX,CRH.L,Industrial Goods,2925.17,2925.35
+01:32.9,p.greyling@fenchurchst.com,u.abduallatif@janestreetcap.com,553.65,22810,GBX,RSA.L,Financial,553.65,557.55
+01:32.9,carlee.c@invensys.com,a.smith@fenchurchst.com,3180.7,47784,GBX,JMAT.L,Basic Materials,3180.7,3180.7
+01:32.9,p.greyling@fenchurchst.com,j.amstell@bridgewater.com,314.86,13330,GBX,GLEN.L,Basic Materials,314.86,319.44
+01:33.1,n.ainsworth@vinvest.com,j.freeman@sorrel.com,2225.21,28305,GBX,SVT.L,Utilities,2221.15,2225.21
+01:33.1,a.clare@sorrel.com,rudyard.smithies@citadel.com,685.15,22740,GBX,RR.L,Industrial Goods,681.13,685.15
+01:33.1,thistle@janestreetcap.com,k.c.cooper@aspectcapital.com,1867.47,27278,GBX,ADM.L,Financial,1867.47,1867.47
+01:33.3,carlee.c@invensys.com,l.lee@moma.com,628.87,20677,GBX,BLND.L,Financial,628.87,628.87
+01:33.3,s.withers@oxam.org,m.grein@tibratrading.com,1922.64,22413,GBX,WPP.L,Services,1918.27,1922.64
+01:33.4,m.atherton@scottishwidows.com,warford.benson@tibratrading.com,1478,36536,GBX,CPG.L,Services,1474.25,1478
+01:33.4,locke@rochdaleassets.com,a.j.johnson@johnsonandfinnemore.com,204.12,20766,GBX,OML.L,Financial,204.12,207.8
+01:33.5,t.barton@knightcapital.com,tabby.dowd@janestreetcap.com,3092.61,16341,GBX,JMAT.L,Basic Materials,3092.61,3096.24
+01:33.5,u.abduallatif@janestreetcap.com,j.newbury@citadel.com,292.01,19362,GBX,WPG.L,Services,289.09,293.41
+01:33.5,w.tuffnell@janestreetcap.com,u.farooq@tibratrading.com,237.44,17236,GBX,MRW.L,Consumer Goods,237.44,239.2
+01:33.6,a.braxton@vinvest.com,u.abduallatif@janestreetcap.com,1865.4,28793,GBX,ADM.L,Financial,1860.91,1865.4
+01:33.7,n.a.choudhury@oxam.org,carlee.c@invensys.com,6895.48,8261,GBX,RB.L,Consumer Goods,6891.08,6895.48
+01:33.8,m.atherton@scottishwidows.com,manimal@jlb.com,936.33,8463,GBX,BAB.L,Industrial Goods,936.33,936.33
+01:34.0,k.c.cooper@aspectcapital.com,locke@rochdaleassets.com,1338.51,23203,GBX,AAL.L,Basic Materials,1336.08,1338.51
+01:34.2,k.c.cooper@aspectcapital.com,thistle@janestreetcap.com,2841.14,35479,GBX,PFG.L,Financial,2841.14,2841.4
+01:34.3,zach@invensys.com,j.newbury@citadel.com,67.67,37016,GBX,LLOY.L,Financial,64.23,68.53
+01:34.4,s.benson@bridgewater.com,m.harding@vinvest.com,3219.05,48219,GBX,CRDA.L,Industrial Goods,3219.05,3220.86
+01:34.5,t.barton@knightcapital.com,thistle@janestreetcap.com,1436.37,29420,GBX,BLT.L,Basic Materials,1436.37,1436.37
+01:34.5,a.clare@sorrel.com,a.smith@fenchurchst.com,382.82,14840,GBX,BT.A.L,Technology,382.82,386.68
+01:34.6,a.afzal@rochdaleassets.com,rudyard.smithies@citadel.com,362.16,36440,GBX,DC.L,Consumer Goods,357.58,362.16
+01:34.7,m.grein@tibratrading.com,manimal@jlb.com,1299.84,15841,GBX,HL.L,Financial,1297.02,1299.84
+01:34.7,m.corrigan@jlb.com,j.newbury@citadel.com,532.55,14922,GBX,BP.L,Basic Materials,530.11,532.55
+01:34.8,larabourne@rochdaleassets.com,m.harding@vinvest.com,4283.11,32235,GBX,CCL.L,Consumer Goods,4283.11,4283.11
+01:34.8,s.benson@bridgewater.com,thistle@janestreetcap.com,1920.56,42441,GBX,HIK.L,Healthcare,1920.56,1920.56
+01:35.1,k.c.cooper@aspectcapital.com,d.bristol@moma.com,1557.89,30235,GBX,SSE.L,Utilities,1556,1557.89
+01:35.3,carlee.c@invensys.com,a.clare@sorrel.com,1144.54,38290,GBX,TUI.L,Other,1140.45,1144.54
+01:35.6,a.m.forex@fenchurchst.com,j.newbury@citadel.com,901.36,46368,GBX,UU.L,Utilities,897.43,901.36
+01:35.9,w.tuffnell@janestreetcap.com,a.afzal@rochdaleassets.com,284.69,39044,GBX,INTU.L,Other,281.21,284.69
+01:36.0,w.tuffnell@janestreetcap.com,n.a.choudhury@oxam.org,6174.68,18046,GBX,DCC.L,Financial,6174.68,6174.68
+01:36.0,s.chapman@jlb.com,a.m.forex@fenchurchst.com,573.92,15259,GBX,RSA.L,Financial,573.92,573.92
+01:36.0,w.tuffnell@janestreetcap.com,a.m.forex@fenchurchst.com,2083.47,22316,GBX,BNZL.L,Services,2083.47,2087.43
+01:36.1,a.m.forex@fenchurchst.com,a.afzal@rochdaleassets.com,4534.77,10025,GBX,SHP.L,Healthcare,4534.77,4538.02
+01:36.1,a.j.johnson@johnsonandfinnemore.com,p.greyling@fenchurchst.com,224.06,7046,GBX,CNA.L,Utilities,224.06,228.3
+01:36.4,j.newbury@citadel.com,thistle@janestreetcap.com,1825.3,50771,GBX,MNDI.L,Consumer Goods,1825.3,1825.3
+01:36.4,w.hastings@bridgewater.com,m.atherton@scottishwidows.com,1261.86,16883,GBX,SN.L,Healthcare,1257.6,1261.86
+01:36.5,larabourne@rochdaleassets.com,manimal@jlb.com,2395.93,28869,GBX,RDSA.L,Basic Materials,2391.78,2395.93
+01:36.6,k.c.cooper@aspectcapital.com,u.farooq@tibratrading.com,215.53,26848,GBX,VOD.L,Technology,212.49,216.59
+01:36.7,s.benson@bridgewater.com,s.chapman@jlb.com,2205.5,32270,GBX,SKG.L,Industrial Goods,2203.21,2205.5
+01:36.8,rudyard.smithies@citadel.com,n.ainsworth@vinvest.com,358.77,25945,GBX,KGF.L,Services,355.05,358.77
+01:36.8,m.atherton@scottishwidows.com,larabourne@rochdaleassets.com,344.96,30786,GBX,DC.L,Consumer Goods,344.96,349.37
+01:36.9,j.freeman@sorrel.com,k.c.cooper@aspectcapital.com,1420.43,28580,GBX,BLT.L,Basic Materials,1420.43,1420.43
+01:37.0,s.withers@oxam.org,rudyard.smithies@citadel.com,1233.27,27448,GBX,SN.L,Healthcare,1232.1,1233.27
+01:37.1,tabby.dowd@janestreetcap.com,p.greyling@fenchurchst.com,1289.19,19011,GBX,HL.L,Financial,1285.33,1289.19
+01:37.2,u.farooq@tibratrading.com,sam.goldwing@sorrel.com,2779.58,19710,GBX,PFG.L,Financial,2779.58,2779.58
+01:37.4,a.j.johnson@johnsonandfinnemore.com,sam.goldwing@sorrel.com,778.4,28325,GBX,MDC.L,Healthcare,778.4,781.65
+01:37.4,w.hastings@bridgewater.com,carlee.c@invensys.com,795.88,38886,GBX,MDC.L,Healthcare,793.3,795.88
+01:37.4,j.freeman@sorrel.com,a.smith@fenchurchst.com,520.83,24013,GBX,BDEV.L,Industrial Goods,520.83,520.83
+01:37.5,m.atherton@scottishwidows.com,s.hedgewick@janestreetcap.com,939.36,47187,GBX,BAB.L,Industrial Goods,939.36,939.36
+01:37.5,larabourne@rochdaleassets.com,m.harding@vinvest.com,702.86,14587,GBX,III.L,Financial,702.86,705.88
+01:37.6,warford.benson@tibratrading.com,m.harding@vinvest.com,723.4,20797,GBX,ANTO.L,Basic Materials,723.4,723.4
+01:37.6,zach@invensys.com,w.hastings@bridgewater.com,866.97,38698,GBX,UU.L,Utilities,866.97,868.06
+01:37.6,u.farooq@tibratrading.com,m.grein@tibratrading.com,1485.92,18639,GBX,SMIN.L,Industrial Goods,1485.92,1485.92
+01:37.6,s.benson@bridgewater.com,a.clare@sorrel.com,2922.3,30524,GBX,CRH.L,Industrial Goods,2922.08,2922.3
+01:37.8,s.withers@oxam.org,j.amstell@bridgewater.com,1108.06,23245,GBX,TUI.L,Other,1108.06,1111.67
+01:37.9,s.hedgewick@janestreetcap.com,s.benson@bridgewater.com,565.37,39012,GBX,RSA.L,Financial,565.37,566.88
+01:38.0,zach@invensys.com,u.farooq@tibratrading.com,266.13,24766,GBX,SBRY.L,Consumer Goods,262.16,266.13
+01:38.3,larabourne@rochdaleassets.com,a.braxton@vinvest.com,562.83,11030,GBX,RSA.L,Financial,562.83,566.73
+01:38.3,sam.goldwing@sorrel.com,thistle@janestreetcap.com,558.19,31398,GBX,HMSO.L,Financial,558.19,562.56
+01:38.4,t.barton@knightcapital.com,m.hen@aspectcapital.com,348.84,27510,GBX,KGF.L,Services,348.84,350.89
+01:38.5,n.a.choudhury@oxam.org,s.withers@oxam.org,1793.2,26338,GBX,ADM.L,Financial,1793.2,1793.2
+01:38.7,l.lee@moma.com,u.abduallatif@janestreetcap.com,574.17,19628,GBX,RSA.L,Financial,573.93,577.93
+01:38.9,w.tuffnell@janestreetcap.com,s.benson@bridgewater.com,1018.44,21756,GBX,LAND.L,Financial,1018.44,1020.06
+01:38.9,m.corrigan@jlb.com,warford.benson@tibratrading.com,2528.17,18080,GBX,ABF.L,Consumer Goods,2528.17,2528.17
+01:39.0,zach@invensys.com,s.chapman@jlb.com,522.17,22344,GBX,CPI.L,Services,519.18,522.17
+01:39.1,tabby.dowd@janestreetcap.com,u.farooq@tibratrading.com,2114.48,23862,GBX,DGE.L,Consumer Goods,2114.48,2116.2
+01:39.3,locke@rochdaleassets.com,w.hastings@bridgewater.com,1430.24,29226,GBX,CPG.L,Services,1430.24,1430.24
+01:39.3,a.braxton@vinvest.com,carlee.c@invensys.com,222.75,5570,GBX,VOD.L,Technology,218.53,222.75
+01:39.4,a.smith@fenchurchst.com,j.newbury@citadel.com,1371.12,40797,GBX,FRES.L,Basic Materials,1371.12,1371.73
+01:39.5,m.corrigan@jlb.com,j.amstell@bridgewater.com,1019.86,30202,GBX,LAND.L,Financial,1019.86,1019.86
+01:39.5,u.farooq@tibratrading.com,m.grein@tibratrading.com,1088.57,40210,GBX,STJ.L,Financial,1084.62,1088.57
+01:39.6,thistle@janestreetcap.com,j.amstell@bridgewater.com,6249.46,26438,GBX,DCC.L,Financial,6246.95,6249.46
+01:39.8,a.clare@sorrel.com,manimal@jlb.com,3547.43,18345,GBX,IMB.L,Consumer Goods,3547.43,3548.22
+01:39.8,m.hen@aspectcapital.com,p.greyling@fenchurchst.com,3668.92,7816,GBX,IHG.L,Services,3668.92,3670.2
+01:39.9,rudyard.smithies@citadel.com,a.afzal@rochdaleassets.com,4099.91,19284,GBX,NXT.L,Consumer Goods,4096.19,4099.91
+01:40.0,locke@rochdaleassets.com,m.atherton@scottishwidows.com,1947.16,43255,GBX,HIK.L,Healthcare,1945.52,1947.16
+01:40.3,j.freeman@sorrel.com,n.ainsworth@vinvest.com,2308.84,8245,GBX,RDSB.L,Basic Materials,2308.84,2309.93
+01:40.4,u.abduallatif@janestreetcap.com,j.amstell@bridgewater.com,6828.83,10236,GBX,RB.L,Consumer Goods,6828.83,6828.83
+01:40.5,zach@invensys.com,larabourne@rochdaleassets.com,2504.42,25538,GBX,ABF.L,Consumer Goods,2504.42,2507.12
+01:40.5,s.chapman@jlb.com,k.c.cooper@aspectcapital.com,711.22,18487,GBX,III.L,Financial,711.22,715.12
+01:40.8,a.m.forex@fenchurchst.com,n.ainsworth@vinvest.com,6790.22,14474,GBX,RB.L,Consumer Goods,6790.22,6790.22
+01:40.8,s.hedgewick@janestreetcap.com,rudyard.smithies@citadel.com,3475.09,43406,GBX,ITRK.L,Services,3475.09,3479.27
+01:40.8,a.clare@sorrel.com,thistle@janestreetcap.com,219.52,24106,GBX,VOD.L,Technology,215.34,219.52

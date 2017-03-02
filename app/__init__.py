@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 #front end imports
 from flask import Flask
 from flask import request, session, redirect, url_for
@@ -31,6 +32,7 @@ import csv
 _mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
+_staticlive = 0 #1 if a file has been uploaded
 _q = queue.Queue() #queue for data stream
 _qlock = threading.Lock() #mutex lock for queue
 _threads = []
@@ -122,7 +124,7 @@ def disconnect_stream():
 	global _connected
 	_connected = 0
 
-class StreamThread (threading.Thread):
+class StreamThread(threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
@@ -179,10 +181,18 @@ class StreamThread (threading.Thread):
 				else:
 					if(len(data)>0):
 						#puts new line of data into queue
-						_qlock.acquire()
-						_q.put(data)
-						_qlock.release()
+						if(_staticlive == 0):	
+							_qlock.acquire()
+							_q.put(data)
+							_qlock.release()
+						elif(_uploaddone == 1):
+							while not(_q.empty()):
+								_qlock.acquire()
+								_q.put(mtrade.to_TradeData(row))
+								_qlock.release()
+							_uploaddone = 0
 					counter=0
+			
 			s.close()
 			print("\nStream disconnected")
 		
@@ -301,7 +311,7 @@ class VolumeRegression(AvgOverTimeRegression):
 		super().__init__(stepNumOfStepsPairsIndex, numOfSteps)
 		self.tempXVals = []
 
-class ProcessorThread (threading.Thread):
+class ProcessorThread(threading.Thread):
 
 	stepNumOfStepsPairs = [[20, 6]]
 	tickTimeCntPairs = [[0,0]]
@@ -386,7 +396,7 @@ class ProcessorThread (threading.Thread):
 					#error has occurred TODO insert better handler
 					print("Error adding trade")
 				
-				#create a StockData objecty for every coimap0ny
+				#create a StockData object for every company
 				if (symb not in companyList):
 					self.setupCompanyData(t)
 				
@@ -700,19 +710,47 @@ def init_session():
 	_sessions[id] = sessiondata
 	return "ok"
 
+def prepare():
+		#needs to clear current queue and reset counters
+		global _tradecounter
+		global _anomalycounter
+		global _tradevalue
+		global _mode
+		_mode = 0
+		#disconnect_stream()
+		_tradecounter = 0
+		_anomalycounter = 0
+		_tradevalue = 0
+
 def parsefile(file):
 		#read file
+		global _qlock
+		global _q
+		global _staticlive
+
+		_staticlive = 1
+		prepare()
+
 		with open(file, 'r') as csvfile:
 			
 			reader = csv.reader(csvfile, delimiter = ',')
-			
+
+			while not _q.empty():
+			    try:
+			    	_q.get()
+			    except Empty:
+			        continue
+
 			for row in reader:
 				if row[0] == 'time':
 					continue
 				else:
 					print(row[0], row[1], row[2], row[3],row[4], row[5], row[6], row[7], row[8], row[9])
-					time.sleep(1)
-					#_q.put(mtrade.to_TradeData(row))
+					#time.sleep(0.5)
+			_uploaddone = 1
+
+		_staticlive = 0
+		#connect_stream()
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -722,6 +760,7 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
+	
 	if request.method == 'POST':
 		f = request.files['file']
 		
@@ -733,8 +772,6 @@ def upload_file():
 			
 			print("Reading File \n#####\n#####\n#####")
 			filename = secure_filename(f.filename)
-			
-			#insert validation of file
 			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			f = parsefile(filename)
