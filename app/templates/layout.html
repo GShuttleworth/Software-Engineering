@@ -41,28 +41,39 @@
 	<div id="uploadnav" class="overlay">
 		<!-- Overlay content -->
 		<div class="overlay-content">
-			<h1>Static file upload</h1>
+			<h1>Static file</h1>
 			<a href="#" class="closebtn" onclick="closeNav('uploadnav')">Close</a>
-			<form action="/upload" id="uploadform" name="frmupload" method="post" enctype="multipart/form-data">
-				<input type="file" id="file" name="file" />
-				<input type="submit" name='submit_image' value="Submit Comment" onclick='upload();'/>
-			</form>
-			<div class="progress">
-				<div class="bar progress-bar progress-bar-success percent" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div >
+			<a href="#" onclick="processfile()">Proccess last uploaded file</a></br>
+			<a href="#" onclick="loadstatic()">Load last proccessed</a></br>
+			<a href="#" onclick="displayupload()">Upload new file</a></br>
+			<div id="upload-container">
+				<form action="/upload" id="uploadform" name="frmupload" method="post" enctype="multipart/form-data">
+					<input type="file" id="file" name="file" />
+					<input type="submit" name='submit_image' value="Upload" onclick='upload();'/>
+				</form>
+				<div class="progress">
+					<div class="bar progress-bar progress-bar-success percent" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div >
+				</div>
 			</div>
 		</div>
 	</div>
 	<div id="settingsnav" class="overlay">
 		<!-- Overlay content -->
 		<div class="overlay-content">
-			<h1>Settings blad</h1>
+			<h3>Settings</h3>
 			<a href="#" class="closebtn" onclick="closeNav('settingsnav')">Close</a>
-			<table width="100%">
-				<tr>
-					<td>Sound</td>
-					<td><input id="settings-sound" type="checkbox"/><span></span></td>
-				</tr>
-			</table>
+			<div id="settings-container">
+				<table width="100%">
+					<tr>
+						<td>Sound</td>
+						<td><input id="settings-sound" type="checkbox"/><span></span></td>
+					</tr>
+					<tr>
+						<td>Refresh rate</td>
+						<td>TODO</td>
+					</tr>
+				</table>
+			</div>
 			
 		</div>
 	</div>
@@ -96,11 +107,20 @@
             <li>
               <a href=""><i class="fa fa-bar-chart-o fa-fw"></i> Data Source<span class="fa arrow"></span></a>
               <ul class="nav nav-second-level">
-                <li>
-                  <a href="#" id="btn-live">Live Data</a>
+				<li>
+					<a href="" id="btn-live"><i class="fa fa-line-chart fa-fw"></i>
+Live Data<span class="fa arrow"></span></a>
+				  <ul class="nav nav-third-level">
+					  <div id="live-status">Stream status: Loading</div>
+					  <li><a href="#" id="btn-connect"><i class="fa fa-plug fa-fw"></i>
+ Connect</a></li>
+					  <li><a href="#" id="btn-reset"><i class="fa fa-eraser fa-fw"></i>
+						   Reset</a></li>
+				  </ul>
                 </li>
                 <li>
-                  <a href="#" id="btn-historical">Historical Data</a><input type="file" id="data_file" name="file" style="display: none;"/>
+					<a href="#" id="btn-historical"><i class="fa fa-history fa-fw"></i>
+Historical Data</a><input type="file" id="data_file" name="file" style="display: none;"/>
                 </li>
               </ul>
             </li>

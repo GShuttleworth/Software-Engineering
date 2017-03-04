@@ -147,33 +147,6 @@ class Database:
 			return 0
 		return t[0]
 
-	# gets all the anomalies for the table, returns a list of anomaly objects
-	def getAnomalies(self, done):
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"  # shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken=?"
-		params = [done]
-		data = self.query(query, params)
-		rows = data.fetchall()
-		anomalies = []
-		for row in rows:
-			# gonna get complicated
-			# each row needs to do another sql query to get trade and turn into
-			# TradeData
-			table = "trans_live"
-			if(self.state != 1):
-				table = "trans_static"
-			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-				table + " WHERE id=?"
-			params = [row[1]]
-			data = self.query(query, params)
-			t = data.fetchone()
-			trade_1 = mtrade.to_TradeData(t)
-			a = mtrade.Anomaly(row[0], trade_1, row[2])
-			anomalies.append(a)
-		return anomalies
-
 	def addAnomaly(self,tradeid, category):
 		anomalyid = -1
 		table = "anomalies_live"
@@ -213,7 +186,8 @@ class Database:
 			if(avgData == -1):
 				# No averages present
 				self.updateAverage(data.symbol, data.price, data.size, 0)
-				return
+				#return SERIOURSLY WHO WROTE THIS, WHY IS THERE A RETURN HERE
+				return tradeid
 
 			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
 			# Recalculate the averages
@@ -263,7 +237,7 @@ class Database:
 		except:
 			return False
 		return True
-
+		
 	# gets all the anomalies for the table, returns a list of anomaly objects
 	def getAnomalies(self, done):
 		table = "anomalies_live"
@@ -282,7 +256,7 @@ class Database:
 			if(self.state != 1):
 				table = "trans_static"
 			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-					table + " WHERE id=?"
+				table + " WHERE id=?"
 			params = [row[1]]
 			data = self.query(query, params)
 			t = data.fetchone()
@@ -290,7 +264,7 @@ class Database:
 			a = mtrade.Anomaly(row[0], trade_1, row[2])
 			anomalies.append(a)
 		return anomalies
-
+	
 	def getAnomalyById(self, id):
 		# Useful function for the drill down stuff
 		table1 = "anomalies_live"

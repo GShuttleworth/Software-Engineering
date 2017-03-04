@@ -1,11 +1,14 @@
 //global?
 var refreshrate = 2000;
 var sound=false;
+var refresher;
 function live(status) {
 	if(status==true){
-		
+		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Disconnect');
+		$("#live-status").html('Stream status: connected');
 	}else{
-		
+		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Connect');
+		$("#live-status").html('Stream status: disconnected');
 	}
 }
 function mode(status) {
@@ -18,9 +21,26 @@ function mode(status) {
 
 function changerefresh(rate){
 	refreshrate=rate;
-	alert("refresh rate changed to: "+rate);
+	//alert("refresh rate changed to: "+rate);
 }
 
+function toggleconnect(){
+	$.ajax({
+		type : 'POST',
+		url : "/connect",
+		contentType: 'application/json;charset=UTF-8',
+		success: function(d) {
+		success = JSON.parse(d);
+			if(success.change==true){
+			   //alert("toggled");
+			}
+		},
+		error: function(d) {
+			console.log("unable to switch");
+			//error bar here
+		}
+	});
+}
 function togglemode(mode){
 	var data = {"mode":mode};
 	$.ajax({
@@ -60,6 +80,8 @@ function nFormatter(num, digits) {
 
 /* Open */
 function openNav(id) {
+	$(".overlay-content").height(300);
+	$("#upload-container").hide();
 	$("#"+id).show();
 	
 }
@@ -90,7 +112,7 @@ function upload() {
 		},
 		complete: function(xhr) {
 			if(xhr.responseText){
-				alert(xhr.responseText);
+				alert("File uploaded");
 			}
 		}
 	});
@@ -114,11 +136,28 @@ function changecookie(name,value){
 	}
 }
 
+function processfile(){
+	//process the last uploaded file
+	//TODO
+	closeNav("uploadnav");
+}
+function loadstatic(){
+	//load data from static database
+	//TODO
+	closeNav("uploadnav");
+}
+
+function displayupload(){
+	//displays upload container
+	$(".overlay-content").animate({height:400},200);;
+	$("#upload-container").show();
+	
+}
 function loadcookies(){
 	if (!!$.cookie("sound")) {
 		sound=$.cookie("sound");
 		if(sound==true){
-			document.getElementById("settings-sound").checked = sound;
+			document.getElementById("settings-sound").checked = true;
 		}
 		//alert(sound);
 	}
@@ -128,10 +167,10 @@ $(document).ready(function() {
 	init_session();
 	loadcookies();
 	//event listeners
-	$("#btn-live").click(function(e){
+	$("#btn-connect").click(function(e){
 		e.preventDefault();
 		//alert("hi");
-		togglemode(1);
+		toggleconnect();
 	});
 	$("#btn-historical").click(function(e){
 	   e.preventDefault();

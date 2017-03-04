@@ -277,7 +277,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 0.2 #to be adjusted
+		self.rangeVal = 0.4 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	#compare actual vs predicted value
@@ -295,7 +295,7 @@ class AvgOverTimeRegression:
 		self.xVals = np.zeros(numOfSteps)
 		self.yVals = np.zeros(numOfSteps)
 		self.tempXVals = 0
-		self.rangeVal = 0.3
+		self.rangeVal = 0.5 #changed for testing
 		self.coeffList = [0.0, 0.0]
 	
 	# compare actual vs predicted value
@@ -349,7 +349,12 @@ class ProcessorThread(threading.Thread):
 	
 	
 	def timeToInt(self,time):
-		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		val = 0
+		try:
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		except ValueError:
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
+		return val
 	
 	global _numberOfRegressors
 	_numberOfRegressors = 10
@@ -576,8 +581,11 @@ class ProcessorThread(threading.Thread):
 			data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
 			data = data.split('\n') #gets a list where each element is a new trade
 			for x in data:
-				t = mtrade.parse(x)
-				trades.append(t)
+				try:
+					t = mtrade.parse(x)
+					trades.append(t)
+				except IndexError:
+					print("index error") #TODO work out why it does this
 		return trades
 
 #session stuff
@@ -707,7 +715,21 @@ def toggle():
 		else:
 			return json.dumps({"change":False})
 		_mode=1
-	return json.dumps({"change":True,})
+	return json.dumps({"change":True})
+
+#connect/disconnect
+@app.route('/connect', methods=['POST'])
+def toggleconnect():
+	global _mode
+	global _connected
+	if(_mode==1):
+		if(_connected==1):
+			disconnect_stream()
+			return json.dumps({"change":True})
+		if(_connected==0):
+			connect_stream()
+			return json.dumps({"change":True})
+	return json.dumps({"change":False})
 
 @app.route('/reset', methods=['POST'])
 def resetstats():

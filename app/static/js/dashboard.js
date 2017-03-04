@@ -20,10 +20,12 @@ function refresh() {
 		error: function(d) {
 			console.log("server down");
 			//error bar here
+			//make it stop refreshing
+			clearTimeout(refresher);
 		}
 	});
 	//for testing, stop this fucking refreshing
-	setTimeout(refresh, refreshrate); // you could choose not to continue on failure...
+	refresher=setTimeout(refresh, refreshrate); // you could choose not to continue on failure...
 }
 
 function updatedash(anomalycount,tradecount,tradevalue) {
