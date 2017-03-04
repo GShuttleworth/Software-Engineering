@@ -22,6 +22,9 @@
 
   <!-- Custom Fonts -->
   <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  
+  <!-- Our CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -33,9 +36,37 @@
 </head>
 
 <body>
-
+	<!-- Overlay content -->
+	<!-- The overlay -->
+	<div id="uploadnav" class="overlay">
+		<!-- Overlay content -->
+		<div class="overlay-content">
+			<h1>Static file upload</h1>
+			<a href="#" class="closebtn" onclick="closeNav('uploadnav')">Close</a>
+			<form action="/upload" id="uploadform" name="frmupload" method="post" enctype="multipart/form-data">
+				<input type="file" id="file" name="file" />
+				<input type="submit" name='submit_image' value="Submit Comment" onclick='upload();'/>
+			</form>
+			<div class="progress">
+				<div class="bar progress-bar progress-bar-success percent" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div >
+			</div>
+		</div>
+	</div>
+	<div id="settingsnav" class="overlay">
+		<!-- Overlay content -->
+		<div class="overlay-content">
+			<h1>Settings blad</h1>
+			<a href="#" class="closebtn" onclick="closeNav('settingsnav')">Close</a>
+			<table width="100%">
+				<tr>
+					<td>Sound</td>
+					<td><input id="settings-sound" type="checkbox"/><span></span></td>
+				</tr>
+			</table>
+			
+		</div>
+	</div>
   <div id="wrapper">
-
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
       <div class="navbar-header">
@@ -75,26 +106,27 @@
             </li>
 			<!-- pls decorate -->
 			<li>
-				<a href="#" id="btn-reset"><i class="fa fa-eraser fa-fw"></i> Reset stats</a>
+				<a href="#" id="btn-settings"><i class="fa fa-cog fa-fw"></i>Settings</a>
 			</li>
           </ul>
         </div>
       </div>
     </nav>
-
+	
     <div id="page-wrapper">
       <div class="row">
         <div class="col-lg-12">
           <h1 class="page-header">{{ pagename }}</h1>
         </div>
       </div>
-
       {% block body %}{% endblock %}
     </div>
+	
   </div>
-
   <!-- jQuery -->
   <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='jquery/jquery.form.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='jquery/jquery.cookie.js') }}"></script>
 
   <!-- Bootstrap Core JavaScript -->
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

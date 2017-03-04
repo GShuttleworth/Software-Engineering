@@ -1,5 +1,6 @@
 //global?
 var refreshrate = 2000;
+var sound=false;
 function live(status) {
 	if(status==true){
 		
@@ -57,9 +58,75 @@ function nFormatter(num, digits) {
 	return num.toFixed(digits).replace(rx, "$1");
 }
 
+/* Open */
+function openNav(id) {
+	$("#"+id).show();
+	
+}
+
+/* Close */
+function closeNav(id) {
+	$("#"+id).hide();
+}
+
+function upload() {
+	var bar = $('.bar');
+	var percent = $('.percent');
+	$("#uploadform").ajaxForm({
+		beforeSubmit: function() {
+			var percentVal = '0%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		uploadProgress: function(event, position, total, percentComplete) {
+			var percentVal = percentComplete + '%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		success: function() {
+			var percentVal = '100%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		complete: function(xhr) {
+			if(xhr.responseText){
+				alert(xhr.responseText);
+			}
+		}
+	});
+}
+function changecookie(name,value){
+	if (!!$.cookie(name)) {
+		// have cookie
+		$.cookie(name, value);
+	} else {
+		// no cookie
+		$.cookie(
+				 name,
+				 value,
+				 {
+				 // The "expires" option defines how many days you want the cookie active. The default value is a session cookie, meaning the cookie will be deleted when the browser window is closed.
+				 expires: 7,
+				 // The "path" option setting defines where in your site you want the cookie to be active. The default value is the page the cookie was defined on.
+				 path: '/',
+				 }
+		);
+	}
+}
+
+function loadcookies(){
+	if (!!$.cookie("sound")) {
+		sound=$.cookie("sound");
+		if(sound==true){
+			document.getElementById("settings-sound").checked = sound;
+		}
+		//alert(sound);
+	}
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
 	init_session();
+	loadcookies();
 	//event listeners
 	$("#btn-live").click(function(e){
 		e.preventDefault();
@@ -68,10 +135,29 @@ $(document).ready(function() {
 	});
 	$("#btn-historical").click(function(e){
 	   e.preventDefault();
-	   document.getElementById("data_file").click();
+	   openNav("uploadnav");
+	   //document.getElementById("data_file").click();
 	   //alert("hi");
 	   //togglemode(0);
 	   //import file
+	});
+	$("#btn-settings").click(function(e){
+		e.preventDefault();
+		openNav("settingsnav");
+	});
+	$("#settings-sound").change(function() {
+		if($(this).is(':checked')==true){
+			sound=true;
+			//save cookie
+			changecookie("sound",true);
+		}else{
+			sound=false;
+			changecookie("sound",false);
+		}
+	});
+				
+	$("#browse").click(function(e){
+		document.getElementById("data_file").click();
 	});
 	$("#btn-reset").click(function(e){
 		e.preventDefault();
@@ -92,29 +178,5 @@ $(document).ready(function() {
 				}
 			});
 	   }
-});
-	$("input[type=file]").on("change", function(e){
-		var data = new FormData();
-		var file = $("#data_file")[0].files[0];
-		if (confirm("Are you sure you want to upload: " + file.name)) {
-			data.append("file",file);
-			$.ajax({
-				type: 'POST',
-				url: "/upload",
-				data: data,
-				cache: false,
-				processData: false, // Don't process the files
-				async: false,
-				contentType: false,
-				success: function(data, textStatus, jqXHR){
-					//console.log("success");
-					alert("File uploaded");
-					togglemode(0);
-				},
-				error: function(jqXHR, textStatus, errorThrown){
-					console.log("fail");
-				}
-			});
-		 }
 	});
 });

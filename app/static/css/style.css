@@ -1,0 +1,163 @@
+/*https://www.w3schools.com/howto/howto_js_fullscreen_overlay.asp*/
+/* The Overlay (background) */
+.overlay {
+	display: none;
+	/* Height & width depends on how you want to reveal the overlay (see JS below) */
+	height: 100%;
+	width: 100%;
+	position: fixed; /* Stay in place */
+	z-index: 9999; /* Sit on top */
+	left: 0;
+	top: 0;
+	background-color: rgb(0,0,0); /* Black fallback color */
+	background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+	overflow-x: hidden; /* Disable horizontal scroll */
+	transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+	
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+	position: relative;
+	width: 50%;
+	height: 50%;
+	text-align: center; /* Centered text/links */
+	background-color: white;
+	margin: auto;
+	display: inline-block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	position: fixed;
+	padding: 20px;
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+	padding: 8px;
+	text-decoration: none;
+	font-size: 36px;
+	color: #818181;
+	display: block; /* Display block instead of inline */
+	transition: 0.3s; /* Transition effects on hover (color) */
+}
+
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover, .overlay a:focus {
+	color: #f1f1f1;
+}
+
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+	position: absolute;
+	top: 10px;
+	right: 25px;
+	font-size: 20px;
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+	.overlay a {font-size: 20px}
+	.overlay .closebtn {
+		font-size: 40px;
+		top: 15px;
+		right: 35px;
+	}
+}
+
+
+/* colourful checkbox 
+https://codepen.io/yesilfasulye/pen/LmIlw
+*/
+#settingsnav td{
+	border-bottom:1px solid #f6f6f6;
+	padding:5px 10px;
+}
+
+#settingsnav td:nth-child(2){
+	text-align: right;
+	width: 40px;
+}
+
+#settingsnav tr:last-child td{
+	border:none;
+	padding:30px 10px 10px;
+	text-align: center;
+}
+input[type=checkbox]:checked + span {
+	background:#2ecc71;
+}
+
+input[type=checkbox]:checked + span::before{
+	height: 9px;
+	left: 9px;
+	top: 13px;
+	-webkit-transform:rotate(-47deg);
+	transform:rotate(-47deg);
+}
+
+input[type=checkbox]:checked + span::after{
+	height: 15px;
+	right: 11px;
+	top: 8px;
+}
+
+input[type=checkbox] {
+	cursor: pointer;
+	height: 30px;
+	margin:4px 0 0;
+	position: absolute;
+	opacity: 0;
+	width: 30px;
+	z-index: 2;
+}
+
+input[type=checkbox] + span {
+	background: #e74c3c;
+	border-radius: 50%;
+	box-shadow: 0 2px 3px 0 rgba(0,0,0,.1);
+	display: inline-block;
+	height: 30px;
+	margin:4px 0 0;
+	position:relative;
+	width: 30px;
+	transition: all .2s ease;
+}
+
+input[type=checkbox] + span::before, input[type=checkbox] + span::after{
+	background:#fff;
+	content:'';
+	display:block;
+	position:absolute;
+	width:4px;
+	transition: all .2s ease;
+}
+
+input[type=checkbox] + span::before{
+	height:16px;
+	left:13px;
+	top:7px;
+	-webkit-transform:rotate(-45deg);
+	transform:rotate(-45deg);
+}
+
+input[type=checkbox] + span::after{
+	height:16px;
+	right:13px;
+	top:7px;
+	-webkit-transform:rotate(45deg);
+	transform:rotate(45deg);
+}
+
+#settingsnav input[type=submit] {
+	background-color: #2ecc71;
+	border: 0;
+	border-radius: 4px;
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
+	font-size:16px;
+	text-align: center;
+	padding: 12px 20px 14px;
+}

@@ -385,6 +385,10 @@ class ProcessorThread(threading.Thread):
 				global _anomalycounter
 				global _tradevalue
 				
+				#######
+				#anomalies
+				trade_anomaly = []
+		
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
 				#trade is in TradeData format (see trade.py)
@@ -426,8 +430,8 @@ class ProcessorThread(threading.Thread):
 					# print(companyList[symb].priceCoeffList) #debugging
 					if(companyList[symb].priceRegression.detectError(self.timeToInt(t.time), float(t.price))):
 						print("price anomaly") #debugging
-						#add anomaly to db
-						self.new_anomaly(db,tradeid,t,-1)
+						#add price anomaly to category
+						trade_anomaly.append(1)
 
 				#
 				#	VOLUME REGRESSION
@@ -442,7 +446,7 @@ class ProcessorThread(threading.Thread):
 							for company in companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
-									a=1 #lol indent errors TODO REMOVE
+									trade_anomaly.append(2)
 									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
 								
@@ -462,7 +466,7 @@ class ProcessorThread(threading.Thread):
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
-									a=1 #lol indent errors TODO REMOVE
+									trade_anomaly.append(2)
 								company.volumeRegression.xVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression.tempXVals) #TODO what happens where no trade comes in during the whole tick
 								company.volumeRegression.yVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
 								# print(self.tickTimeCntPairs[x][1])
@@ -533,6 +537,26 @@ class ProcessorThread(threading.Thread):
 					if(#traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
 						traderList[t.seller] < float(t.size)*float(t.price)/self.senstivityPerTrader):
 						print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
+						trade_anomaly.append(3)
+				
+				#categorising and adding anomalies
+				#key
+				#1 price spike/trough
+				#2 volume spike/trough
+				#3 suspicious trader activity
+				#calculate category
+				if(len(trade_anomaly)>0):
+					#add anomaly to db
+					cat = -1
+					if((1 in trade_anomaly) & (2 in trade_anomaly)):
+						###possibly pump and dump?
+						a=1
+					if((2 in trade_anomaly) & (3 in trade_anomaly)):
+						###insider information/bear raids?
+						a=1
+					if(1 in trade_anomaly):
+						a=1
+					self.new_anomaly(db,tradeid,t,cat)
 
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
@@ -773,14 +797,17 @@ def upload_file():
 			print("Reading File \n#####\n#####\n#####")
 			filename = secure_filename(f.filename)
 			
-			f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			f = parsefile(filename)
+			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "traders.csv"))
+			
+			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet
+			#f = parsefile(filename)
 			
 			#create another thread to put into queue otherwise will be blocking/delay in return
 			#it should also empty contents of old queue
 
 		else:
 			print("Error with file upload")
+			return "not ok"
 	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
