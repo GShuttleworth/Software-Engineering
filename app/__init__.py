@@ -165,9 +165,11 @@ class StreamThread(threading.Thread):
 			global _connected
 			global _q
 			global _qlock
+
 			#TODO: filter out first line, first line is always [time,buyer,seller,price,size,currency,symbol,sector,bid,ask]
 			data = s.recv(4096)
 			counter=0 #a counter to see how many iterations of no data
+
 			while (_connected):
 				s.settimeout(2) #if no data comes in, s.recv becomes blocking
 				try:
@@ -181,16 +183,9 @@ class StreamThread(threading.Thread):
 				else:
 					if(len(data)>0):
 						#puts new line of data into queue
-						if(_staticlive == 0):	
-							_qlock.acquire()
-							_q.put(data)
-							_qlock.release()
-						elif(_uploaddone == 1):
-							while not(_q.empty()):
-								_qlock.acquire()
-								_q.put(mtrade.to_TradeData(row))
-								_qlock.release()
-							_uploaddone = 0
+						_qlock.acquire()
+						_q.put(data)
+						_qlock.release()
 					counter=0
 			
 			s.close()
@@ -204,6 +199,82 @@ class StreamThread(threading.Thread):
 				print("Stream down, aborting. Please manually reconnect")
 				disconnect_stream()
 
+class StaticFileThread(threading.Thread):
+	def __init__(self,threadID):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = "File parser thread"
+	def run(self):
+		print("Starting file parsing thread")
+		self.prepare()
+		self.parsefile()
+
+	def prepare(self):
+			#needs to clear current queue and reset counters
+			global _tradecounter
+			global _anomalycounter
+			global _tradevalue
+			global _mode
+			global _qlock
+			global _q
+			
+			disconnect_stream()
+			self.dequeue(_q, _qlock)
+			
+			_mode = 0
+			_tradevalue = 0
+			_tradecounter = 0
+			_anomalycounter = 0
+
+	def dequeue(self,q,qlock):
+
+		qlock.acquire()	
+		while (q.qsize()>0):
+			data = q.get()
+		if (q.qsize() == 0):
+			"Queue Cleared"
+		qlock.release()
+
+	def parsefile(self):
+			#read file
+			global _qlock
+			global _q
+			global _mode
+			global _staticlive
+
+			print("Prepared File")
+
+			with open('traders.csv', 'r') as csvfile:
+				
+				reader = csv.reader(csvfile, delimiter = ',')
+		
+				for row in reader:
+					if row[1] == 'buyer':
+						continue
+					else:
+
+						newdatetime = (datetime.today().strftime('%Y-%m-%d') + ' ' + '00:' + row[0] + '00000')
+						row[0] = newdatetime
+						row[1] = str(row[1]) #buyer
+						row[2] = str(row[2]) #seller
+						row[3] = str(row[3]) #price
+						row[4] = str(row[4])
+						row[5] = str(row[5])
+						row[6] = str(row[6]) #symbol
+						row[7] = str(row[7]) #sector
+						row[8] = str(row[8])
+						row[9] = str(row[9])
+
+						print(row)
+
+						_qlock.acquire()
+						_q.put(mtrade.to_TradeData(row))
+						_qlock.release()
+						#time.sleep(0.5)
+				_mode = 1
+				_staticlive = 1
+				#connect_stream()
+
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
@@ -214,9 +285,11 @@ class HandlerThread (threading.Thread):
 		self.eventListener()
 	
 	def eventListener(self):
+		
 		global _running
 		global _qlock
 		global _sessions
+		
 		while(_running):
 			#detects inputs, remove when complete
 			debug=0
@@ -240,6 +313,7 @@ class HandlerThread (threading.Thread):
 			global _connected
 			if(_mode==1 and _connected==0):
 				connect_stream()
+				init_threads()
 			
 			#TODO loop through sessions
 			for key in list(_sessions): #create a copy of list as size will change due to deletion
@@ -377,9 +451,15 @@ class ProcessorThread(threading.Thread):
 		#connect to db
 		db = database.Database()
 		while(_running):
-			trades=self.dequeue(_q,_qlock)
+			
+			trades = self.dequeue(_q,_qlock)
 			for t in trades:
 				#update counts
+				if isinstance(t, mtrade.TradeData):
+					print("This is legit")
+				else:
+					continue
+
 				global _tradecounter
 				global _tradecounterlock
 				global _anomalycounter
@@ -388,7 +468,8 @@ class ProcessorThread(threading.Thread):
 				#######
 				#anomalies
 				trade_anomaly = []
-		
+			
+				print(t)
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
 				#trade is in TradeData format (see trade.py)
@@ -564,20 +645,38 @@ class ProcessorThread(threading.Thread):
 		db.close()
 
 	def dequeue(self,q,qlock):
+		
+		global _staticlive
+
 		trades=[]
 		data = ""
-		qlock.acquire()
-		if(q.qsize()>0):
-			data = q.get()
-		qlock.release()
-		if(len(data)>0): #TODO do a better check
-			#converts byte to string
-			data = str(data.decode("utf-8"))
-			data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
-			data = data.split('\n') #gets a list where each element is a new trade
-			for x in data:
-				t = mtrade.parse(x)
-				trades.append(t)
+		
+		if (_staticlive == 0):
+			qlock.acquire()
+			if(q.qsize()>0):
+				data = q.get()
+			qlock.release()
+
+			if(len(data)>0): #TODO do a better check
+				#converts byte to string
+				data = str(data.decode("utf-8"))
+				data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
+				data = data.split('\n') #gets a list where each element is a new trade
+				for x in data:
+					print(x)
+					t = mtrade.parse(x)
+					trades.append(t)
+		else:
+			qlock.acquire()	
+			if(q.qsize()>0):
+				data = q.get()
+			qlock.release()
+
+			trades.append(data)
+
+			if(q.qsize() == 0):
+				_staticlive = 0
+
 		return trades
 
 #session stuff
@@ -734,48 +833,6 @@ def init_session():
 	_sessions[id] = sessiondata
 	return "ok"
 
-def prepare():
-		#needs to clear current queue and reset counters
-		global _tradecounter
-		global _anomalycounter
-		global _tradevalue
-		global _mode
-		_mode = 0
-		#disconnect_stream()
-		_tradecounter = 0
-		_anomalycounter = 0
-		_tradevalue = 0
-
-def parsefile(file):
-		#read file
-		global _qlock
-		global _q
-		global _staticlive
-
-		_staticlive = 1
-		prepare()
-
-		with open(file, 'r') as csvfile:
-			
-			reader = csv.reader(csvfile, delimiter = ',')
-
-			while not _q.empty():
-			    try:
-			    	_q.get()
-			    except Empty:
-			        continue
-
-			for row in reader:
-				if row[0] == 'time':
-					continue
-				else:
-					print(row[0], row[1], row[2], row[3],row[4], row[5], row[6], row[7], row[8], row[9])
-					#time.sleep(0.5)
-			_uploaddone = 1
-
-		_staticlive = 0
-		#connect_stream()
-
 ALLOWED_EXTENSIONS = set(['csv'])
 
 def allowed_file(filename):
@@ -785,7 +842,12 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
 	
+	global _mode
+	global _threads
+	global _threadID
+
 	if request.method == 'POST':
+		print("Requesting File")
 		f = request.files['file']
 		
 		if f.filename == '':
@@ -798,16 +860,24 @@ def upload_file():
 			filename = secure_filename(f.filename)
 			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "traders.csv"))
+			_mode = 0
 			
-			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet
-			#f = parsefile(filename)
+			print("Starting thread")
+			tstatic = StaticFileThread(_threadID)
 			
+			tstatic.start()
+			_threads.append(tstatic)
+			_threadID += 1
+			
+			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet			
+
 			#create another thread to put into queue otherwise will be blocking/delay in return
 			#it should also empty contents of old queue
 
 		else:
 			print("Error with file upload")
 			return "not ok"
+
 	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
