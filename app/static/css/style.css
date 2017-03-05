@@ -1,4 +1,21 @@
 /*https://www.w3schools.com/howto/howto_js_fullscreen_overlay.asp*/
+#upload-container {
+	display:none;
+}
+
+#settings-container{
+	text-align: left;
+	display: inline-block;
+	font-size: 15px;
+	width: 250px;
+}
+#live-status{
+	text-align:center;
+}
+.nav .slideout-menu:hover > ul li{
+	position: relative;
+	left: 400px;
+}
 /* The Overlay (background) */
 .overlay {
 	display: none;
@@ -20,7 +37,7 @@
 .overlay-content {
 	position: relative;
 	width: 50%;
-	height: 50%;
+	height: 300px;
 	text-align: center; /* Centered text/links */
 	background-color: white;
 	margin: auto;
@@ -37,7 +54,7 @@
 .overlay a {
 	padding: 8px;
 	text-decoration: none;
-	font-size: 36px;
+	font-size: 20px;
 	color: #818181;
 	display: block; /* Display block instead of inline */
 	transition: 0.3s; /* Transition effects on hover (color) */
@@ -78,13 +95,14 @@ https://codepen.io/yesilfasulye/pen/LmIlw
 #settingsnav td:nth-child(2){
 	text-align: right;
 	width: 40px;
+	height: 50px;
 }
-
+/*
 #settingsnav tr:last-child td{
 	border:none;
 	padding:30px 10px 10px;
 	text-align: center;
-}
+}*/
 input[type=checkbox]:checked + span {
 	background:#2ecc71;
 }

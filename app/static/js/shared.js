@@ -1,11 +1,14 @@
 //global?
 var refreshrate = 2000;
 var sound=false;
+var refresher;
 function live(status) {
 	if(status==true){
-		
+		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Disconnect');
+		$("#live-status").html('Stream status: connected');
 	}else{
-		
+		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Connect');
+		$("#live-status").html('Stream status: disconnected');
 	}
 }
 function mode(status) {
@@ -18,9 +21,26 @@ function mode(status) {
 
 function changerefresh(rate){
 	refreshrate=rate;
-	alert("refresh rate changed to: "+rate);
+	//alert("refresh rate changed to: "+rate);
 }
 
+function toggleconnect(){
+	$.ajax({
+		type : 'POST',
+		url : "/connect",
+		contentType: 'application/json;charset=UTF-8',
+		success: function(d) {
+		success = JSON.parse(d);
+			if(success.change==true){
+			   //alert("toggled");
+			}
+		},
+		error: function(d) {
+			console.log("unable to switch");
+			//error bar here
+		}
+	});
+}
 function togglemode(mode){
 	var data = {"mode":mode};
 	$.ajax({
@@ -42,6 +62,7 @@ function togglemode(mode){
 }
 function nFormatter(num, digits) {
 	//http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
+	num=parseFloat(num);
 	var si = [
 			  { value: 1E18, symbol: "E" },
 			  { value: 1E15, symbol: "P" },
@@ -60,6 +81,8 @@ function nFormatter(num, digits) {
 
 /* Open */
 function openNav(id) {
+	$(".overlay-content").height(300);
+	$("#upload-container").hide();
 	$("#"+id).show();
 	
 }
@@ -90,7 +113,7 @@ function upload() {
 		},
 		complete: function(xhr) {
 			if(xhr.responseText){
-				alert(xhr.responseText);
+				alert("File uploaded");
 			}
 		}
 	});
@@ -108,19 +131,40 @@ function changecookie(name,value){
 				 // The "expires" option defines how many days you want the cookie active. The default value is a session cookie, meaning the cookie will be deleted when the browser window is closed.
 				 expires: 7,
 				 // The "path" option setting defines where in your site you want the cookie to be active. The default value is the page the cookie was defined on.
-				 path: '/',
+				 path: '/'
 				 }
 		);
 	}
 }
 
+function processfile(){
+	//process the last uploaded file
+	//TODO
+	closeNav("uploadnav");
+}
+function loadstatic(){
+	//load data from static database
+	//TODO
+	closeNav("uploadnav");
+}
+
+function displayupload(){
+	//displays upload container
+	$(".overlay-content").animate({height:400},200);;
+	$("#upload-container").show();
+	
+}
 function loadcookies(){
+//load user cookie settings
 	if (!!$.cookie("sound")) {
-		sound=$.cookie("sound");
+		sound = ($.cookie("sound")=='true');
 		if(sound==true){
-			document.getElementById("settings-sound").checked = sound;
+			document.getElementById("settings-sound").checked = true;
 		}
-		//alert(sound);
+	}
+	if (!!$.cookie("refresh")) {
+		refreshrate=$.cookie("refresh");
+		$('select option[value='+refreshrate/1000+']').attr("selected",true);
 	}
 }
 $(document).ready(function() {
@@ -128,10 +172,10 @@ $(document).ready(function() {
 	init_session();
 	loadcookies();
 	//event listeners
-	$("#btn-live").click(function(e){
+	$("#btn-connect").click(function(e){
 		e.preventDefault();
 		//alert("hi");
-		togglemode(1);
+		toggleconnect();
 	});
 	$("#btn-historical").click(function(e){
 	   e.preventDefault();
@@ -155,6 +199,13 @@ $(document).ready(function() {
 			changecookie("sound",false);
 		}
 	});
+	$("#settings-refresh").change(function() {
+		changecookie("refresh",$("#settings-refresh").val()*1000);
+		changerefresh($("#settings-refresh").val()*1000);
+		
+		clearTimeout(refresher);
+		refresh();
+	});
 				
 	$("#browse").click(function(e){
 		document.getElementById("data_file").click();
@@ -169,6 +220,8 @@ $(document).ready(function() {
 				   //TODO optimise user perception
 				   if(data=="ok"){
 					   alert("Counters reset");
+					   //remove stuff/redirect since no anomalies will exist
+					   window.location.replace("/index");
 				   }else{
 					   alert("Failed");
 				   }

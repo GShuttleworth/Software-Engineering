@@ -32,6 +32,7 @@ import csv
 _mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
+_autoconnect = 1 #if the system should try to reconnect
 _staticlive = 0 #1 if a file has been uploaded
 _q = queue.Queue() #queue for data stream
 _qlock = threading.Lock() #mutex lock for queue
@@ -92,7 +93,7 @@ def load_data():
 	db = database.Database()
 	_tradecounter = int(db.tradecount())
 	_anomalycounter = int(db.anomalycount())
-	_tradevalue = db.tradevalue()
+	_tradevalue = float(db.tradevalue())
 
 def init_threads():
 	#create threads
@@ -311,7 +312,7 @@ class HandlerThread (threading.Thread):
 			#automatically reconnect
 			global _mode
 			global _connected
-			if(_mode==1 and _connected==0):
+			if(_mode==1 and _connected==0 and _autoconnect==1):
 				connect_stream()
 				init_threads()
 			
@@ -351,7 +352,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 0.2 #to be adjusted
+		self.rangeVal = 0.4 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	#compare actual vs predicted value
@@ -369,7 +370,7 @@ class AvgOverTimeRegression:
 		self.xVals = np.zeros(numOfSteps)
 		self.yVals = np.zeros(numOfSteps)
 		self.tempXVals = 0
-		self.rangeVal = 0.3
+		self.rangeVal = 0.5 #changed for testing
 		self.coeffList = [0.0, 0.0]
 	
 	# compare actual vs predicted value
@@ -413,7 +414,6 @@ class ProcessorThread(threading.Thread):
 		
 		self.processing() #currently doing live data
 	
-	
 	def setupCompanyData(self,t):
 		companyList[t.symbol] = StockData(t.symbol, self.stepNumOfStepsPairs)
 		for x in range(_numOfStepVariants):
@@ -423,7 +423,12 @@ class ProcessorThread(threading.Thread):
 	
 	
 	def timeToInt(self,time):
-		return datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		val = 0
+		try:
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		except ValueError:
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
+		return val
 	
 	global _numberOfRegressors
 	_numberOfRegressors = 10
@@ -528,6 +533,7 @@ class ProcessorThread(threading.Thread):
 								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									trade_anomaly.append(2)
+									print(str(t.time)+" volume anomaly")
 									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
 								
@@ -617,7 +623,7 @@ class ProcessorThread(threading.Thread):
 					traderList[t.seller] = traderList[t.seller]*0.9 + 0.1*float(t.size)*float(t.price)
 					if(#traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
 						traderList[t.seller] < float(t.size)*float(t.price)/self.senstivityPerTrader):
-						print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
+						#print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
 						trade_anomaly.append(3)
 				
 				#categorising and adding anomalies
@@ -636,8 +642,10 @@ class ProcessorThread(threading.Thread):
 						###insider information/bear raids?
 						a=1
 					if(1 in trade_anomaly):
-						a=1
-					self.new_anomaly(db,tradeid,t,cat)
+						cat=1
+					if(3 not in trade_anomaly):
+						#move this out, in here for sake of testing and trader is overly sensitive
+						self.new_anomaly(db,tradeid,t,cat)
 
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
@@ -663,9 +671,11 @@ class ProcessorThread(threading.Thread):
 				data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
 				data = data.split('\n') #gets a list where each element is a new trade
 				for x in data:
-					print(x)
-					t = mtrade.parse(x)
-					trades.append(t)
+					try:
+						t = mtrade.parse(x)
+						trades.append(t)
+					except IndexError:
+						print("index error") #TODO work out why it does this
 		else:
 			qlock.acquire()	
 			if(q.qsize()>0):
@@ -806,7 +816,24 @@ def toggle():
 		else:
 			return json.dumps({"change":False})
 		_mode=1
-	return json.dumps({"change":True,})
+	return json.dumps({"change":True})
+
+#connect/disconnect
+@app.route('/connect', methods=['POST'])
+def toggleconnect():
+	global _mode
+	global _connected
+	global _autoconnect
+	if(_mode==1):
+		if(_connected==1):
+			disconnect_stream()
+			_autoconnect=0
+			return json.dumps({"change":True})
+		if(_connected==0):
+			connect_stream()
+			_autoconnect=1
+			return json.dumps({"change":True})
+	return json.dumps({"change":False})
 
 @app.route('/reset', methods=['POST'])
 def resetstats():
@@ -899,5 +926,6 @@ def init_data():
 		anomaly['action'] = x.trade.symbol
 		anomalies.append(anomaly)
 	#make into json
-	data["anomalies"] = anomalies
+	if(len(anomalies)>0):
+		data["anomalies"] = anomalies
 	return json.dumps(data)
