@@ -32,6 +32,7 @@ import csv
 _mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
+_autoconnect = 1 #if the system should try to reconnect
 _staticlive = 0 #1 if a file has been uploaded
 _q = queue.Queue() #queue for data stream
 _qlock = threading.Lock() #mutex lock for queue
@@ -238,7 +239,7 @@ class HandlerThread (threading.Thread):
 			#automatically reconnect
 			global _mode
 			global _connected
-			if(_mode==1 and _connected==0):
+			if(_mode==1 and _connected==0 and _autoconnect==1):
 				connect_stream()
 			
 			#TODO loop through sessions
@@ -559,8 +560,10 @@ class ProcessorThread(threading.Thread):
 						###insider information/bear raids?
 						a=1
 					if(1 in trade_anomaly):
-						a=1
-					self.new_anomaly(db,tradeid,t,cat)
+						cat=1
+					if(3 not in trade_anomaly):
+						#move this out, in here for sake of testing and trader is overly sensitive
+						self.new_anomaly(db,tradeid,t,cat)
 
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
@@ -721,12 +724,15 @@ def toggle():
 def toggleconnect():
 	global _mode
 	global _connected
+	global _autoconnect
 	if(_mode==1):
 		if(_connected==1):
 			disconnect_stream()
+			_autoconnect=0
 			return json.dumps({"change":True})
 		if(_connected==0):
 			connect_stream()
+			_autoconnect=1
 			return json.dumps({"change":True})
 	return json.dumps({"change":False})
 
@@ -850,5 +856,6 @@ def init_data():
 		anomaly['action'] = x.trade.symbol
 		anomalies.append(anomaly)
 	#make into json
-	data["anomalies"] = anomalies
+	if(len(anomalies)>0):
+		data["anomalies"] = anomalies
 	return json.dumps(data)

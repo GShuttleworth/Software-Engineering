@@ -201,7 +201,10 @@ $(document).ready(function() {
 	});
 	$("#settings-refresh").change(function() {
 		changecookie("refresh",$("#settings-refresh").val()*1000);
-		changerefresh($("#settings-refresh").val()*1000)
+		changerefresh($("#settings-refresh").val()*1000);
+		
+		clearTimeout(refresher);
+		refresh();
 	});
 				
 	$("#browse").click(function(e){
