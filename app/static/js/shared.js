@@ -220,6 +220,8 @@ $(document).ready(function() {
 				   //TODO optimise user perception
 				   if(data=="ok"){
 					   alert("Counters reset");
+					   //remove stuff/redirect since no anomalies will exist
+					   window.location.replace("/index");
 				   }else{
 					   alert("Failed");
 				   }

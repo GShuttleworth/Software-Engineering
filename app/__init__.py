@@ -452,6 +452,7 @@ class ProcessorThread(threading.Thread):
 								if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempXVals))
 									and np.all(company.volumeRegression.coeffList > [0.0, 0.0])):
 									trade_anomaly.append(2)
+									print(str(t.time)+" volume anomaly")
 									#print("volume anomaly for x=", sum(company.volumeRegression.tempXVals), " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 									#print("expected x=", company.volumeRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+(self.stepNumOfStepsPairs[x][0]/2), " +/- ", company.volumeRegression.rangeVal) #debugging
 								
@@ -541,7 +542,7 @@ class ProcessorThread(threading.Thread):
 					traderList[t.seller] = traderList[t.seller]*0.9 + 0.1*float(t.size)*float(t.price)
 					if(#traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
 						traderList[t.seller] < float(t.size)*float(t.price)/self.senstivityPerTrader):
-						print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
+						#print("trader val error", float(t.size)*float(t.price), "expected ", traderList[t.seller])
 						trade_anomaly.append(3)
 				
 				#categorising and adding anomalies
