@@ -460,9 +460,7 @@ class ProcessorThread(threading.Thread):
 			trades = self.dequeue(_q,_qlock)
 			for t in trades:
 				#update counts
-				if isinstance(t, mtrade.TradeData):
-					print("This is legit")
-				else:
+				if (not isinstance(t, mtrade.TradeData)):
 					continue
 
 				global _tradecounter
@@ -474,7 +472,7 @@ class ProcessorThread(threading.Thread):
 				#anomalies
 				trade_anomaly = []
 			
-				print(t)
+				#print(t)
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
 				#trade is in TradeData format (see trade.py)
