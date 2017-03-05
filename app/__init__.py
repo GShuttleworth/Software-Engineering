@@ -92,7 +92,7 @@ def load_data():
 	db = database.Database()
 	_tradecounter = int(db.tradecount())
 	_anomalycounter = int(db.anomalycount())
-	_tradevalue = db.tradevalue()
+	_tradevalue = float(db.tradevalue())
 
 def init_threads():
 	#create threads
@@ -338,7 +338,6 @@ class ProcessorThread(threading.Thread):
 		traderList = {}
 		
 		self.processing() #currently doing live data
-	
 	
 	def setupCompanyData(self,t):
 		companyList[t.symbol] = StockData(t.symbol, self.stepNumOfStepsPairs)

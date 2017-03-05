@@ -62,6 +62,7 @@ function togglemode(mode){
 }
 function nFormatter(num, digits) {
 	//http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
+	num=parseFloat(num);
 	var si = [
 			  { value: 1E18, symbol: "E" },
 			  { value: 1E15, symbol: "P" },
@@ -130,7 +131,7 @@ function changecookie(name,value){
 				 // The "expires" option defines how many days you want the cookie active. The default value is a session cookie, meaning the cookie will be deleted when the browser window is closed.
 				 expires: 7,
 				 // The "path" option setting defines where in your site you want the cookie to be active. The default value is the page the cookie was defined on.
-				 path: '/',
+				 path: '/'
 				 }
 		);
 	}
@@ -154,12 +155,16 @@ function displayupload(){
 	
 }
 function loadcookies(){
+//load user cookie settings
 	if (!!$.cookie("sound")) {
-		sound=$.cookie("sound");
+		sound = ($.cookie("sound")=='true');
 		if(sound==true){
 			document.getElementById("settings-sound").checked = true;
 		}
-		//alert(sound);
+	}
+	if (!!$.cookie("refresh")) {
+		refreshrate=$.cookie("refresh");
+		$('select option[value='+refreshrate/1000+']').attr("selected",true);
 	}
 }
 $(document).ready(function() {
@@ -193,6 +198,10 @@ $(document).ready(function() {
 			sound=false;
 			changecookie("sound",false);
 		}
+	});
+	$("#settings-refresh").change(function() {
+		changecookie("refresh",$("#settings-refresh").val()*1000);
+		changerefresh($("#settings-refresh").val()*1000)
 	});
 				
 	$("#browse").click(function(e){
