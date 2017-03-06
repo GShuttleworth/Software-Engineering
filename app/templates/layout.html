@@ -5,8 +5,8 @@
 
   <!-- Favicon -->
   <link rel="icon"
-      type="image/png"
-      href="{{ url_for('static', filename='images/favicon-industry.ico') }}">
+  type="image/png"
+  href="{{ url_for('static', filename='images/favicon-industry.ico') }}">
 
 
   <meta charset="utf-8">
@@ -32,8 +32,8 @@
   <!-- Our CSS -->
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.css') }}">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.css') }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,66 +45,93 @@
 </head>
 
 <body>
-	<!-- Overlay content -->
-	<!-- The overlay -->
-	<div id="uploadnav" class="overlay">
-		<!-- Overlay content -->
-		<div class="overlay-content">
-			<h1>Static File Dashboard</h1><br>
-			<a href="#" class="closebtn" onclick="closeNav('uploadnav')">Close</a>
-			<a href="#" onclick="processfile()">Process last uploaded file</a></br>
-			<a href="#" onclick="loadstatic()">Load last proccessed</a></br>
-			<a href="#" onclick="displayupload()">Upload new file</a></br>
-			<div id="upload-container">
-				<form action="/upload" id="uploadform" name="frmupload" method="post" enctype="multipart/form-data">
-					<input type="file" id="file" name="file" />
-					<input type="submit" name='submit_image' value="Upload" onclick='upload();'/>
-				</form>
-				<div class="progress">
-					<div class="bar progress-bar progress-bar-success percent" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div >
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="settingsnav" class="overlay">
-		<!-- Overlay content -->
-		<div class="overlay-content">
-			<h3>Settings</h3>
-			<a href="#" class="closebtn" onclick="closeNav('settingsnav')">Close</a>
-			<div id="settings-container">
-				<table width="100%">
-					<tr>
-						<td>Sound</td>
-						<td><input id="settings-sound" type="checkbox"/><span></span></td>
-					</tr>
-					<tr>
-						<td>Refresh rate</td>
-						<td>
-							<select id="settings-refresh">
-								<option value="0.5">0.5 second</option>
-								<option value="1">1 second</option>
-								<option selected="selected" value="2">2 seconds</option>
-								<option value="3">3 seconds</option>
-								<option value="5">5 seconds</option>
-								<option value="10">10 seconds</option>
-								<option value="30">30 seconds</option>
-								<option value="60">60 seconds</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Anomaly sensitivity?
-						</td>
-						<td>
-							TODO
-						</td>
-					</tr>
-				</table>
-			</div>
+  <!-- Overlay content -->
+  <!-- The File Upload Popup -->
+  <!-- Modal -->
+  <div id="fileUploadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-		</div>
-	</div>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Static File Dashboard</h4>
+        </div>
+        <div class="modal-body">
+          <a href="#" onclick="processfile()">Process last uploaded file</a></br>
+          <a href="#" onclick="loadstatic()">Load last proccessed</a></br>
+          <a href="#" onclick="displayupload()">Upload new file</a></br>
+          <div id="upload-container">
+            <form action="/upload" id="uploadform" name="frmupload" method="post" enctype="multipart/form-data">
+              <input type="file" id="file" name="file" />
+              <input type="submit" name='submit_image' value="Upload" onclick='upload();'/>
+            </form>
+            <div class="progress">
+              <div class="bar progress-bar progress-bar-success percent" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div >
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!-- Settings Popup -->
+
+<!-- Modal -->
+<div id="settingsModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <div id="settings-container">
+          <table width="100%">
+            <tr>
+              <td>Sound</td>
+              <td><input id="settings-sound" type="checkbox"/><span></span></td>
+            </tr>
+            <tr>
+              <td>Refresh rate</td>
+              <td>
+                <select id="settings-refresh">
+                  <option value="0.5">0.5 second</option>
+                  <option value="1">1 second</option>
+                  <option selected="selected" value="2">2 seconds</option>
+                  <option value="3">3 seconds</option>
+                  <option value="5">5 seconds</option>
+                  <option value="10">10 seconds</option>
+                  <option value="30">30 seconds</option>
+                  <option value="60">60 seconds</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Anomaly sensitivity?
+              </td>
+              <td>
+                TODO
+              </td>
+            </tr>
+          </table>
+        </div>      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <div id="wrapper">
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -135,69 +162,69 @@
             <li>
               <a href=""><i class="fa fa-bar-chart-o fa-fw"></i> Data Source<span class="fa arrow"></span></a>
               <ul class="nav nav-second-level">
-				<li>
-					<a href="" id="btn-live"><i class="fa fa-line-chart fa-fw"></i>
-Live Data<span class="fa arrow"></span></a>
-				  <ul class="nav nav-third-level">
-					  <div id="live-status">Stream status: Loading</div>
-					  <li><a href="#" id="btn-connect"><i class="fa fa-plug fa-fw"></i>
- Connect</a></li>
-					  <li><a href="#" id="btn-reset"><i class="fa fa-eraser fa-fw"></i>
-						   Reset</a></li>
-				  </ul>
-                </li>
                 <li>
-					<a href="#" id="btn-historical"><i class="fa fa-history fa-fw"></i>
-Historical Data</a><input type="file" id="data_file" name="file" style="display: none;"/>
-                </li>
-              </ul>
-            </li>
-			<!-- pls decorate -->
-			<li>
-				<a href="#" id="btn-settings"><i class="fa fa-cog fa-fw"></i>Settings</a>
-			</li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+                  <a href="" id="btn-live"><i class="fa fa-line-chart fa-fw"></i>
+                    Live Data<span class="fa arrow"></span></a>
+                    <ul class="nav nav-third-level">
+                      <div id="live-status">Stream status: Loading</div>
+                      <li><a href="#" id="btn-connect"><i class="fa fa-plug fa-fw"></i>
+                        Connect</a></li>
+                        <li><a href="#" id="btn-reset"><i class="fa fa-eraser fa-fw"></i>
+                          Reset</a></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="modal" data-target="#fileUploadModal"><i class="fa fa-history fa-fw"></i>
+                          Historical Data</a><input type="file" id="data_file" name="file" style="display: none;"/>
+                        </li>
+                      </ul>
+                    </li>
+                    <!-- pls decorate -->
+                    <li>
+                      <a href="#" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog fa-fw"></i>Settings</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
 
-    <div id="page-wrapper">
-      <div class="row">
-        <div class="col-lg-12">
-          <h1 class="page-header">{{ pagename }}</h1>
-        </div>
-      </div>
-      {% block body %}{% endblock %}
-    </div>
+            <div id="page-wrapper">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h1 class="page-header">{{ pagename }}</h1>
+                </div>
+              </div>
+              {% block body %}{% endblock %}
+            </div>
 
-  </div>
-  <!-- jQuery -->
-  <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='jquery/jquery.form.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='jquery/jquery.cookie.js') }}"></script>
+          </div>
+          <!-- jQuery -->
+          <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
+          <script src="{{ url_for('static', filename='jquery/jquery.form.min.js') }}"></script>
+          <script src="{{ url_for('static', filename='jquery/jquery.cookie.js') }}"></script>
 
-  <!-- Bootstrap Core JavaScript -->
-  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+          <!-- Bootstrap Core JavaScript -->
+          <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
-  <!-- Metis Menu Plugin JavaScript -->
-  <script src="{{ url_for('static', filename='metisMenu/metisMenu.min.js') }}"></script>
+          <!-- Metis Menu Plugin JavaScript -->
+          <script src="{{ url_for('static', filename='metisMenu/metisMenu.min.js') }}"></script>
 
-  <!-- Custom Theme JavaScript -->
-  <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
+          <!-- Custom Theme JavaScript -->
+          <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
 
-  <!-- Datatables JS -->
-  <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
+          <!-- Datatables JS -->
+          <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
 
-  <!-- DateJS (formatting timestamps for humans) -->
-  <script type="text/javascript" src="{{ url_for('static', filename='js/moment.js') }}"></script>
+          <!-- DateJS (formatting timestamps for humans) -->
+          <script type="text/javascript" src="{{ url_for('static', filename='js/moment.js') }}"></script>
 
-  <!-- Front end scripts import page scripts then shared scripts -->
-  {% block scripts %}{% endblock %}
-  <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
+          <!-- Front end scripts import page scripts then shared scripts -->
+          {% block scripts %}{% endblock %}
+          <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
 
-  <!-- Alerts -->
-  <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js"></script>
+          <!-- Alerts -->
+          <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js"></script>
 
-</body>
+        </body>
 
-</html>
+        </html>
