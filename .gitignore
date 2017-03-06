@@ -4,3 +4,5 @@ database.db
 *.db
 
 *.pyc
+
+app/__pycache__/database.cpython-36.pyc
