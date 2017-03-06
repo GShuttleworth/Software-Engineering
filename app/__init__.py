@@ -235,7 +235,7 @@ class StaticFileThread(threading.Thread):
 			
 			#Storing values for upon return of queue
 			_tradevaluestore = _tradevalue
-			_anomalycounter = _anomalycounterstore
+			_anomalycounterstore = _anomalycounter
 			_tradecounterstore = _tradecounter
 
 			#Resetting values
