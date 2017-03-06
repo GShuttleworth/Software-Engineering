@@ -253,7 +253,7 @@ class Database:
 	def addAnomaly(self, tradeid, category, state):
 		anomalyid = -1
 		table = "anomalies_live"
-		if(sstate != 1):
+		if(state != 1):
 			table = "anomalies_static"
 
 		query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
