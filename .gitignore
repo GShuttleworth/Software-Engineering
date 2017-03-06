@@ -2,3 +2,5 @@
 database.db
 
 *.db
+
+*.pyc
