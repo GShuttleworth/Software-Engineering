@@ -194,6 +194,10 @@ Historical Data</a><input type="file" id="data_file" name="file" style="display:
   <!-- Front end scripts import page scripts then shared scripts -->
   {% block scripts %}{% endblock %}
   <script src="{{ url_for('static', filename='js/shared.js') }}"></script>
+
+  <!-- Alerts -->
+  <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js"></script>
+
 </body>
 
 </html>
