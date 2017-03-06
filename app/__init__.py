@@ -34,15 +34,26 @@ _running = 0 #overall program status
 _connected = 0 #connection to stream status
 _autoconnect = 1 #if the system should try to reconnect
 _staticlive = 0 #1 if a file has been uploaded
+
+#Queue declarations
 _q = queue.Queue() #queue for data stream
+_staticq = queue.Queue() #queue for static data
+
+#Thread declarations
 _qlock = threading.Lock() #mutex lock for queue
 _threads = []
 _threadID = 1
 
+#Global counters for anomaly detection
 _anomalycounter = 0
 _tradecounter = 0
 _tradecounterlock = threading.Lock()
 _tradevalue = 0
+
+#Stores for when parsing static data
+_anomalycounterstore = 0
+_tradecounterstore = 0
+_tradevaluestore = 0
 
 _sessions = {} #associative array/dictionary to store all the instances of ui
 _sessionslock = threading.Lock()
@@ -215,31 +226,28 @@ class StaticFileThread(threading.Thread):
 			global _tradecounter
 			global _anomalycounter
 			global _tradevalue
+			global _tradecounterstore
+			global _anomalycounterstore
+			global _tradevaluestore
 			global _mode
-			global _qlock
-			global _q
 			
 			disconnect_stream()
-			self.dequeue(_q, _qlock)
 			
+			#Storing values for upon return of queue
+			_tradevaluestore = _tradevalue
+			_anomalycounter = _anomalycounterstore
+			_tradecounterstore = _tradecounter
+
+			#Resetting values
 			_mode = 0
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
 
-	def dequeue(self,q,qlock):
-
-		qlock.acquire()	
-		while (q.qsize()>0):
-			data = q.get()
-		if (q.qsize() == 0):
-			"Queue Cleared"
-		qlock.release()
-
 	def parsefile(self):
 			#read file
 			global _qlock
-			global _q
+			global _staticq
 			global _mode
 			global _staticlive
 
@@ -266,10 +274,10 @@ class StaticFileThread(threading.Thread):
 						row[8] = str(row[8])
 						row[9] = str(row[9])
 
-						print(row)
+						#print(row)
 
 						_qlock.acquire()
-						_q.put(mtrade.to_TradeData(row))
+						_staticq.put(mtrade.to_TradeData(row))
 						_qlock.release()
 						#time.sleep(0.5)
 				_mode = 1
@@ -423,11 +431,11 @@ class ProcessorThread(threading.Thread):
 	
 	
 	def timeToInt(self,time):
-		val = 0
-		try:
-			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
-		except ValueError:
-			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
+		#val = 0
+		# try:
+		val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		# except ValueError:
+		# 	val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
 		return val
 	
 	global _numberOfRegressors
@@ -448,18 +456,43 @@ class ProcessorThread(threading.Thread):
 			_sessions[key].put(newAnomaly)
 		_sessionslock.release
 	
+	def refreshVals(self):
+		global _tradecounter
+		global _anomalycounter
+		global _tradevalue
+		global _anomalycounterstore
+		global _tradecounterstore
+		global _tradevaluestore
+
+		_tradecounter = _tradecounterstore
+		_anomalycounter = _anomalycounterstore
+		_tradevalue = _tradevaluestore
+
 	def processing(self):
-		#state is processing static/live
+		#State is processing static/live
 		global _qlock
 		global _running
 		global _q
-		#connect to db
+		global _staticq
+		global _staticlive
+		it_count = 0
+
+		#Connect to db
 		db = database.Database()
 		while(_running):
 			
-			trades = self.dequeue(_q,_qlock)
+			if (_staticq.qsize() > 0):
+				trades = self.dequeue(_staticq, _qlock)
+				it_count += 1
+			else:	
+				_staticlive = 0
+				if (it_count > 0):	
+					self.refreshVals()
+					it_count = 0
+				trades = self.dequeue(_q,_qlock)
+
 			for t in trades:
-				#update counts
+				#Update counts
 				if (not isinstance(t, mtrade.TradeData)):
 					continue
 
@@ -673,7 +706,8 @@ class ProcessorThread(threading.Thread):
 						t = mtrade.parse(x)
 						trades.append(t)
 					except IndexError:
-						print("index error") #TODO work out why it does this
+						print("Index Error") #TODO work out why it does this
+		
 		else:
 			qlock.acquire()	
 			if(q.qsize()>0):
