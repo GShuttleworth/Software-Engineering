@@ -87,7 +87,7 @@ class Database:
 			if(avgData == -1):
 				# No averages present
 				self.updateAverage(data.symbol, data.price, data.size, 0)
-				return
+				return tradeid
 
 			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
 			# Recalculate the averages
@@ -102,26 +102,6 @@ class Database:
 			return tradeid
 		else:
 			return -1
-
-	def getTransactions(self, q):
-		data = self.query(q)
-		transactions = []
-		for row in data:
-			transactions.append(mtrade.TradeData(row[0], row[1], row[2], row[3], row[
-								4], row[5], row[6], row[7], row[8], row[9]))
-
-		return transactions
-
-	def clear(self, date):
-		# delete all entries with the same date
-		table = "trans_live"
-		if(self.state == 1):
-			table = "trans_static"
-
-		query = "DELETE FROM " + table + " WHERE time=?"
-		params = [date]
-		self.action(query, params)
-		return 0
 
 	def anomalycount(self):
 		table = "anomalies_live"
@@ -146,18 +126,6 @@ class Database:
 		if(not t[0]):
 			return 0
 		return t[0]
-
-	def addAnomaly(self,tradeid, category):
-		anomalyid = -1
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"
-
-		query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
-		params = [tradeid, category]
-		self.action(query, params)
-		anomalyid=self.c.lastrowid
-		return anomalyid
 
 	def getAveragePrice(self, sym):
 		return self.getAverage(sym)[1]

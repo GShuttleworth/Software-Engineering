@@ -33,7 +33,6 @@ _mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
 _autoconnect = 1 #if the system should try to reconnect
-_staticlive = 0 #1 if a file has been uploaded
 
 #Queue declarations
 _q = queue.Queue() #queue for data stream
@@ -260,8 +259,8 @@ class StaticFileThread(threading.Thread):
 						continue
 					else:
 
-						newdatetime = (datetime.today().strftime('%Y-%m-%d') + ' ' + '00:' + row[0] + '00000')
-						row[0] = newdatetime
+						#newdatetime = (datetime.today().strftime('%Y-%m-%d') + ' ' + row[0])
+						row[0] = str(row[0])
 						row[1] = str(row[1]) #buyer
 						row[2] = str(row[2]) #seller
 						row[3] = str(row[3]) #price
@@ -359,11 +358,15 @@ class ProcessorThread(threading.Thread):
 	
 	
 	def timeToInt(self,time):
-		#val = 0
-		# try:
-		val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
-		# except ValueError:
-		# 	val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
+		val = 0
+		try:
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
+		except ValueError:
+			try: 
+				val = datetime.strptime(time, "%Y-%m-%d %H:%M.%-S").timestamp() #For static files
+			except ValueError:
+			 	val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
+		
 		return val
 	
 	global _numberOfRegressors
@@ -415,7 +418,6 @@ class ProcessorThread(threading.Thread):
 				trades = self.dequeue(_staticq, _qlock)
 				it_count += 1
 			else:	
-				_staticlive = 0
 				if (it_count > 0):	
 					self.refreshVals()
 					it_count = 0
@@ -476,7 +478,6 @@ class ProcessorThread(threading.Thread):
 
 	def dequeue(self,q,qlock):
 		
-		global _staticlive
 		global _mode
 
 		trades=[]
