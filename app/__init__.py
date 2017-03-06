@@ -248,8 +248,6 @@ class StaticFileThread(threading.Thread):
 			#read file
 			global _qlock
 			global _staticq
-			global _mode
-			global _staticlive
 
 			print("Prepared File")
 
@@ -274,15 +272,9 @@ class StaticFileThread(threading.Thread):
 						row[8] = str(row[8])
 						row[9] = str(row[9])
 
-						#print(row)
-
 						_qlock.acquire()
 						_staticq.put(mtrade.to_TradeData(row))
 						_qlock.release()
-						#time.sleep(0.5)
-				_mode = 1
-				_staticlive = 1
-				#connect_stream()
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -322,7 +314,7 @@ class HandlerThread (threading.Thread):
 			global _connected
 			if(_mode==1 and _connected==0 and _autoconnect==1):
 				connect_stream()
-				init_threads()
+				#init_threads()
 			
 			#TODO loop through sessions
 			for key in list(_sessions): #create a copy of list as size will change due to deletion
@@ -381,8 +373,10 @@ class ProcessorThread(threading.Thread):
 		global _sessionslock
 		global _anomalycounter
 		global _sessions
+		global _mode
+
 		anomalyid = -1
-		anomalyid = db.addAnomaly(tradeid, category)
+		anomalyid = db.addAnomaly(tradeid, category, state, _mode)
 		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
 		#doSomething with the anomaly
 		_anomalycounter+=1
@@ -410,14 +404,14 @@ class ProcessorThread(threading.Thread):
 		global _running
 		global _q
 		global _staticq
-		global _staticlive
+		global _mode
 		it_count = 0
 
 		#Connect to db
 		db = database.Database()
 		while(_running):
 			
-			if (_staticq.qsize() > 0):
+			if (_mode == 0):
 				trades = self.dequeue(_staticq, _qlock)
 				it_count += 1
 			else:	
@@ -444,7 +438,7 @@ class ProcessorThread(threading.Thread):
 				#trade is in TradeData format (see trade.py)
 				
 				#dump to db
-				tradeid = db.addTransaction(t)
+				tradeid = db.addTransaction(t, _mode)
 				if(tradeid==-1):
 					#error has occurred TODO insert better handler
 					print("Error adding trade")
@@ -471,37 +465,40 @@ class ProcessorThread(threading.Thread):
 						cat=1
 					if(3 not in trade_anomaly):
 						#move this out, in here for sake of testing and trader is overly sensitive
-						self.new_anomaly(db,tradeid,t,cat)
-
+						if (_mode == 1):
+							self.new_anomaly(db,tradeid,t,cat)
+						else:
+							self.new_anomaly(db,tradeid,t,cat)
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
-		time.sleep(0.01) #good for cpu
+		#time.sleep(0.01) #good for cpu
 		db.close()
 
 	def dequeue(self,q,qlock):
 		
 		global _staticlive
+		global _mode
 
 		trades=[]
 		data = ""
 		
-		if (_staticlive == 0):
-			qlock.acquire()
-			if(q.qsize()>0):
-				data = q.get()
-			qlock.release()
+		if (_mode == 1):
+				qlock.acquire()
+				if(q.qsize()>0):
+					data = q.get()
+				qlock.release()
 
-			if(len(data)>0): #TODO do a better check
-				#converts byte to string
-				data = str(data.decode("utf-8"))
-				data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
-				data = data.split('\n') #gets a list where each element is a new trade
-				for x in data:
-					try:
-						t = mtrade.parse(x)
-						trades.append(t)
-					except IndexError:
-						print("Index Error") #TODO work out why it does this
+				if(len(data)>0): #TODO do a better check
+					#converts byte to string
+					data = str(data.decode("utf-8"))
+					data = data[:-2] #removes \r\n at the end, TODO what if it doesn't have \r\n?
+					data = data.split('\n') #gets a list where each element is a new trade
+					for x in data:
+						try:
+							t = mtrade.parse(x)
+							trades.append(t)
+						except IndexError:
+							print("Index Error") #TODO work out why it does this
 		
 		else:
 			qlock.acquire()	
@@ -510,9 +507,6 @@ class ProcessorThread(threading.Thread):
 			qlock.release()
 
 			trades.append(data)
-
-			if(q.qsize() == 0):
-				_staticlive = 0
 
 		return trades
 

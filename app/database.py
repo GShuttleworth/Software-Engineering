@@ -69,10 +69,10 @@ class Database:
 			params = [sym, price, vol, 0]
 			updated = self.action(query, params)
 
-	def addTransaction(self,data):
+	def addTransaction(self,data, state):
 		if(isinstance(data, mtrade.TradeData)):
 			query = ""
-			if(self.state == 1):
+			if(state == 1):
 				query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			else:
 				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -168,41 +168,6 @@ class Database:
 	#		params = [sym, price, vol, 0]
 	#		updated = self.action(query, params)
 
-	def addTransaction(self, data):
-		if(isinstance(data, mtrade.TradeData)):
-			query = ""
-			if(self.state == 1):
-				query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-			else:
-				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-			tradeid = -1
-			params = (data.time, data.buyer, data.seller, data.price, data.size,
-					  data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
-			self.action(query, params)
-
-			tradeid = self.c.lastrowid
-			# Update the averages tables
-			avgData = self.getAverage(data.symbol)
-			if(avgData == -1):
-				# No averages present
-				self.updateAverage(data.symbol, data.price, data.size, 0)
-				#return SERIOURSLY WHO WROTE THIS, WHY IS THERE A RETURN HERE
-				return tradeid
-
-			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
-			# Recalculate the averages
-			avgPrice *= numTrades
-			avgVolume *= numTrades
-			avgPrice += float(data.price)
-			avgVolume += int(data.size)
-			numTrades += 1
-			avgPrice /= numTrades
-			avgVolume /= numTrades
-			self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
-			return tradeid
-		else:
-			return -1
-
 	def getTransactions(self, q):
 		data = self.query(q)
 		transactions = []
@@ -285,10 +250,10 @@ class Database:
 		trade = mtrade.to_TradeData(t)
 		return mtrade.Anomaly(row[0], trade, row[2])
 
-	def addAnomaly(self, tradeid, category):
+	def addAnomaly(self, tradeid, category, state):
 		anomalyid = -1
 		table = "anomalies_live"
-		if(self.state != 1):
+		if(sstate != 1):
 			table = "anomalies_static"
 
 		query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
