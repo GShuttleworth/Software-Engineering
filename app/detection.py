@@ -166,7 +166,7 @@ class Detection:
 							and np.all(company.frequencyRegression.coeffList > [0.0, 0.0]) and np.all(company.volumeRegression.coeffList != [-1.0, -1.0])):
 							# print("frequency anomaly for x=", company.frequencyRegression.tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 							# print("expected x=", self.companyList[symb].frequencyRegression.coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.frequencyRegression.coeffList[1], " +/- ", self.companyList[symb].frequencyRegression.rangeVal) #debugging
-							a=1
+							trade_anomaly.append(4)
 
 						if(np.all(company.frequencyRegression.coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
 							company.frequencyRegression.updateCoeffs()
@@ -188,8 +188,8 @@ class Detection:
 							and np.all(company.frequencyRegression.coeffList > [0.0, 0.0]) and np.all(company.volumeRegression.coeffList != [-1.0, -1.0])):
 							# print("frequency anomaly for x=", company.frequencyRegression.tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 							# print("expected x=", self.companyList[symb].frequencyRegression.coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+company.frequencyRegression.coeffList[1], " +/- ", self.companyList[symb].frequencyRegression.rangeVal) #debugging
-							a=1
-							
+							trade_anomaly.append(4)
+
 						company.frequencyRegression.yVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression.tempYVals #TODO what happens where no trade comes in during the whole tick
 						company.frequencyRegression.xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
 						company.frequencyRegression.tempYVals = 0
@@ -274,7 +274,7 @@ class AvgOverTimeRegression:
 		self.xVals = np.zeros(numOfSteps)
 		self.yVals = np.zeros(numOfSteps)
 		self.tempYVals = 0
-		self.rangeVal = 0.2 #changed for testing
+		self.rangeVal = 0.4 #changed for testing
 		self.coeffList = [0.0, 0.0]
 
 	# compare actual vs predicted value
@@ -289,6 +289,7 @@ class VolumeRegression(AvgOverTimeRegression):
 	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
 		super().__init__(stepNumOfStepsPairsIndex, numOfSteps)
 		self.tempYVals = []
+		self.rangeVal = 0.5 #changed for testing
 
 
 def timeToInt(time):
