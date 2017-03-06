@@ -59,40 +59,14 @@ function loadanomalies(){
 function anomalyHTML(id,date,time,type,action){
 
 	// Make date human readable
-	// numOfMiliseconds = moment.duration(time.substring(9,15));
-	// var humanTime = numOfMiliseconds.hours() + numOfMiliseconds.minutes();
-
 	var humanTime = time.substring(0,8);
 	var humanDate = moment(date).format('DD-MM-YYYY');
 
-
+	// Init Datatable
 	var table = $('#table-anomaly').DataTable();
 	// Construct HMTL for table row
-	var row = "<tr><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><a href='/stock/"+action+"/anomaly/"+id+"'<button type='button' class='btn btn-primary'>View</button></a>";
+	var row = "<tr><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a><a href='TODO'><button type='button' class='btn btn-success'>Dismiss</button></a></div>";
 	table.row.add( $(row)[0] ).draw();
-
-
-
-
-
-
-
-// 	// generates html for anomaly specified (just adds to html table)
-// 	var table = document.getElementById("table-anomaly");
-// 	var rowCount = table.rows.length;
-// 	var row = table.insertRow(rowCount);
-// 	var cell_id = row.insertCell(0);
-// 	var cell_date = row.insertCell(1);
-// 	var cell_time = row.insertCell(2);
-// 	var cell_type = row.insertCell(3);
-// 	var cell_action = row.insertCell(4);
-// 	cell_id.innerHTML = id;
-// 	cell_date.innerHTML = date;
-// 	cell_time.innerHTML = time;
-// 	// convert type int to something appropriate
-//
-// 	cell_type.innerHTML = convert_type(type);
-// 	cell_action.innerHTML = '<a href="/stock/'+action+'/anomaly/'+id+'"><button type="button" class="btn btn-primary">Action</button></a>';
 }
 
 function convert_type(t){

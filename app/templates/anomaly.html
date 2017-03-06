@@ -2,36 +2,40 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
+    <button type='button' class='btn btn-success pull-right'>Dismiss Anomaly</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
     <div class="panel panel-default">
       <div class="panel-heading"> Information</div>
-
       <div class="panel-body">
         <strong>Sugested Anomaly Type:</strong> {{ anomalyType }}<br />
         <strong>Range:</strong> {{ anomalyStartTimestamp }} - {{ anomalyEndTimestamp }} <br />
         <strong>Anomaly Certainty</strong> {{ certantyPercentage }}% <br />
       </div>
     </div>
-   </div>
+  </div>
 
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">Price</div>
-        <div class="panel-body">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Price</div>
+      <div class="panel-body">
 
-          <div id="price_chart" style="style="min-height: 500px""></div>
-        </div>
+        <div id="price_chart" style="style="min-height: 500px""></div>
       </div>
     </div>
+  </div>
 
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">Volume</div>
-        <div class="panel-body">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Volume</div>
+      <div class="panel-body">
 
-          <div id="volume_chart" style="style="min-height: 500px""></div>
-        </div>
+        <div id="volume_chart" style="style="min-height: 500px""></div>
       </div>
     </div>
+  </div>
 
 </div>
 <div class="row">
@@ -90,10 +94,10 @@ google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
-		  ['Time', 'Price'],
-		  {%- for trade in trades %}
-		  ['{{ trade.time }}', {{ trade.price }}]{%- if not loop.last %},{% endif %}
-		  {%- endfor %}
+    ['Time', 'Price'],
+    {%- for trade in trades %}
+    ['{{ trade.time }}', {{ trade.price }}]{%- if not loop.last %},{% endif %}
+    {%- endfor %}
   ]);
 
   var options = {
@@ -101,7 +105,7 @@ function drawChart() {
     legend: { position: 'bottom' },
     chartArea: { height: "40%", width: "90%" },
     series: {
-	7: { pointShape: {type: 'star'}}
+      7: { pointShape: {type: 'star'}}
     }
   };
 
@@ -117,10 +121,10 @@ google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
-		  ['Time', 'Volume'],
-		  {%- for trade in trades %}
-		  ['{{ trade.time }}', {{ trade.size }}]{%- if not loop.last %},{% endif %}
-		  {%- endfor %}
+    ['Time', 'Volume'],
+    {%- for trade in trades %}
+    ['{{ trade.time }}', {{ trade.size }}]{%- if not loop.last %},{% endif %}
+    {%- endfor %}
   ]);
 
   var options = {
