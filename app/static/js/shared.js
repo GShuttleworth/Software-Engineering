@@ -5,17 +5,17 @@ var refresher;
 function live(status) {
 	if(status==true){
 		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Disconnect');
-		$("#live-status").html('Stream status: connected');
+		$("#live-status").html('Stream Status: Connected');
 	}else{
 		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Connect');
-		$("#live-status").html('Stream status: disconnected');
+		$("#live-status").html('Stream Status: Disconnected');
 	}
 }
 function mode(status) {
-	if(status==1){
-		$('#live').html('Live Data');
+	if(status==true){
+		$('#live').html('Viewing: Live Data');
 	}else{
-		$('#live').html('Historical Data');
+		$('#live').html('Viewing: Historical Data');
 	}
 }
 
@@ -84,7 +84,7 @@ function openNav(id) {
 	$(".overlay-content").height(300);
 	$("#upload-container").hide();
 	$("#"+id).show();
-	
+
 }
 
 /* Close */
@@ -152,7 +152,7 @@ function displayupload(){
 	//displays upload container
 	$(".overlay-content").animate({height:400},200);;
 	$("#upload-container").show();
-	
+
 }
 function loadcookies(){
 //load user cookie settings
@@ -202,11 +202,11 @@ $(document).ready(function() {
 	$("#settings-refresh").change(function() {
 		changecookie("refresh",$("#settings-refresh").val()*1000);
 		changerefresh($("#settings-refresh").val()*1000);
-		
+
 		clearTimeout(refresher);
 		refresh();
 	});
-				
+
 	$("#browse").click(function(e){
 		document.getElementById("data_file").click();
 	});

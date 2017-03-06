@@ -147,6 +147,9 @@
 
       <ul class="nav navbar-top-links navbar-right">
         <li class="">
+          <h3><span class="label label-info" id="live-status">Loading...</span></h3>
+        </li>
+        <li class="">
           <h3><span class="label label-danger" id="live">Loading...</span></h3>
         </li>
 
@@ -159,29 +162,28 @@
             <li>
               <a href="{{ url_for('index') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
-            <li>
-              <a href=""><i class="fa fa-bar-chart-o fa-fw"></i> Data Source<span class="fa arrow"></span></a>
+            <li class="linkPointer">
+              <a><i class="fa fa-bar-chart-o fa-fw"></i> Data Source<span class="fa arrow"></span></a>
               <ul class="nav nav-second-level">
-                <li>
-                  <a href="" id="btn-live"><i class="fa fa-line-chart fa-fw"></i>
+                <li class="linkPointer">
+                  <a id="btn-live"><i class="fa fa-line-chart fa-fw"></i>
                     Live Data<span class="fa arrow"></span></a>
                     <ul class="nav nav-third-level">
-                      <div id="live-status">Stream status: Loading</div>
-                      <li><a href="#" id="btn-connect"><i class="fa fa-plug fa-fw"></i>
+                      <li class="linkPointer"><a href="" id="btn-connect"><i class="fa fa-plug fa-fw"></i>
                         Connect</a></li>
-                        <li><a href="#" id="btn-reset"><i class="fa fa-eraser fa-fw"></i>
+                        <li class="linkPointer"><a href="" id="btn-reset"><i class="fa fa-eraser fa-fw"></i>
                           Reset</a></li>
                         </ul>
                       </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#fileUploadModal"><i class="fa fa-history fa-fw"></i>
+                      <li class="linkPointer">
+                        <a href="" data-toggle="modal" data-target="#fileUploadModal"><i class="fa fa-history fa-fw"></i>
                           Historical Data</a><input type="file" id="data_file" name="file" style="display: none;"/>
                         </li>
                       </ul>
                     </li>
                     <!-- pls decorate -->
-                    <li>
-                      <a href="#" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog fa-fw"></i>Settings</a>
+                    <li class="linkPointer">
+                      <a href="" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog fa-fw"></i>Settings</a>
                     </li>
                   </ul>
                 </div>
