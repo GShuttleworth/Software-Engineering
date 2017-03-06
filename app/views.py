@@ -35,10 +35,10 @@ def anomaly(symbol, id):
         t.time = t.time[10:19]
     db.close() # Close quickly to prevent any issues
     pagename = "Anomaly Information for " + symbol
-    anomalyType = "Pump and Dump"
-    anomalyStartTimestamp = "timestamp"
-    anomalyEndTimestamp = "timestamp"
-    certantyPercentage = "52"
+    anomalyType = "TODO"
+    anomalyStartTimestamp = "TODO"
+    anomalyEndTimestamp = "TODO"
+    certantyPercentage = "TODO"
     time = baseTrade.time
     buyer = baseTrade.buyer
     seller = baseTrade.seller
