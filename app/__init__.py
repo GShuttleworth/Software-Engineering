@@ -663,9 +663,10 @@ def toggleconnect():
 
 @app.route('/reset', methods=['POST'])
 def resetstats():
+	global _mode
 	#for resetting current stats and db?
 	db = database.Database()
-	success=db.clearall()
+	success=db.clearall(_mode)
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter
