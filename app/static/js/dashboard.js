@@ -15,6 +15,9 @@ function refresh() {
 				if(parseInt(anomaly.type)!=0){
 					//create htmls for each
 					anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
+					alertify.logPosition("top right");
+					alertify.success("New Anomaly Detected");
+					beep();
 				}else if(parseInt(anomaly.type)==0){
 					//make sure it actually does exist
 					anomalyHTMLremove(anomaly.id);
@@ -91,9 +94,6 @@ function anomalyHTML(id,date,time,type,action){
 	// Construct HMTL for table row
 	var row = "<tr id='tbl-row-"+id+"'><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a> <a href='#'><button type='button' class='btn btn-success' onclick='dismiss("+id+")'>Dismiss</button></a></div>";
 	table.row.add( $(row)[0] ).draw();
-	alertify.logPosition("top right");
-	alertify.success("New Anomaly Detected");
-	beep();
 }
 
 function cleartable(){

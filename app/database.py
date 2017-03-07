@@ -156,14 +156,18 @@ class Database:
 		self.action(query, params)
 		return 1
 	
-	def clearall(self):
+	def clearall(self,state):
 		#delete all entries from trades and anomalies
 		try:
 			table = "trans_live"
+			if(state==0):
+				table = "static_live"
 			query = "DELETE FROM " + table
 			params = []
 			self.action(query, params)
-			table = "anomalies_live"
+			table = "trans_static"
+			if(state==0):
+				table = "anomalies_static"
 			query = "DELETE FROM " + table
 			params = []
 			self.action(query, params)

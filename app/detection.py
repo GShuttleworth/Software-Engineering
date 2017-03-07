@@ -23,16 +23,17 @@ class Detection:
 	_numberOfRegressors = 10
 
 	def __init__(self):		
-		#setup company data, one-off at the beginning
-		self.companyList = {}
+		self.reset()
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepNumOfStepsPairs)
-
+		
+	def reset(self):
+		#setup company data, one-off at the beginning
+		self.companyList = {}
 		#rolling average for all traders
 		#(exponential moving average should make it very computationally efficient)
 		self.traderList = {}
-		
-
+	
 	def setupCompanyData(self, t):
 		self.companyList[t.symbol] = StockData(t.symbol, self.stepNumOfStepsPairs)
 		for x in range(self.numOfStepVariants):

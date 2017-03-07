@@ -69,6 +69,7 @@ def init_app():
 	app = Flask(__name__)
 	global _running
 	global _threads
+	global _mode
 	
 	def interrupt():
 		global _running
@@ -93,7 +94,7 @@ def init_app():
 	app.secret_key = str(uuid.uuid4())
 	app.config['UPLOAD_FOLDER'] = ''
 	
-	load_data()
+	load_data(_mode)
 	init_threads()
 	
 	#on exit
@@ -102,12 +103,13 @@ def init_app():
 	signal.signal(signal.SIGINT, signal_handler)
 	return app
 
-def load_data():
+def load_data(mode):
 	#loads data from db
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter 
         
+	dbm.mode = mode
 	db = database.Database()
 
 	_tradecounter = int(db.tradecount())
@@ -247,9 +249,10 @@ class StaticFileThread(threading.Thread):
 			self.databaseReset()
 
 	def databaseReset(self):
-		
+		global _mode
+		dbm.mode = _mode
 		db = database.Database()
-		db.clearall()
+		db.clearall(_mode)
 
 	def parsefile(self):
 			#read file
@@ -364,17 +367,12 @@ class ProcessorThread(threading.Thread):
 
 		self.processing() #currently doing live data
 	
-	
 	def timeToInt(self,time):
 		val = 0
 		try:
 			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 		except ValueError:
-			try: 
-				val = datetime.strptime(time, "%Y-%m-%d %H:%M.%-S").timestamp() #For static files
-			except ValueError:
-			 	val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
-		
+			val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
 		return val
 	
 	global _numberOfRegressors
@@ -401,7 +399,6 @@ class ProcessorThread(threading.Thread):
 		global _tradecounter
 		global _anomalycounter
 		global _tradevalue
-
 		_tradecounter = 0
 		_anomalycounter = 0
 		_tradevalue = 0
@@ -414,11 +411,20 @@ class ProcessorThread(threading.Thread):
 		global _staticq
 		global _mode
 		it_count = 0
+		previousmode = 0
 
 		db = database.Database(_mode)
-
 		while(_running):
-			
+			if(previousmode!=_mode):
+				#change in mode since last iteration
+				#reset machine learning
+				detection.reset()
+				if(_mode==1):
+					#load from config
+					#TODO
+					a=1
+		
+			previousmode=_mode
 			if (_mode == 0):
 				trades = self.dequeue(_staticq, _qlock)
 				it_count += 1
@@ -438,8 +444,6 @@ class ProcessorThread(threading.Thread):
 				global _anomalycounter
 				global _tradevalue
 				
-			
-				#print(t)
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
 				#trade is in TradeData format (see trade.py)
@@ -482,12 +486,9 @@ class ProcessorThread(threading.Thread):
 		db.close()
 
 	def dequeue(self,q,qlock):
-		
 		global _mode
-
 		trades=[]
 		data = ""
-		
 		if (_mode == 1):
 				qlock.acquire()
 				if(q.qsize()>0):
@@ -505,15 +506,12 @@ class ProcessorThread(threading.Thread):
 							trades.append(t)
 						except IndexError:
 							print("Index Error") #TODO work out why it does this
-		
 		else:
 			qlock.acquire()	
 			if(q.qsize()>0):
 				data = q.get()
 			qlock.release()
-
 			trades.append(data)
-
 		return trades
 
 #session stuff
@@ -752,7 +750,7 @@ def init_data():
 	#get data in db
 	global _mode
 	db = database.Database(_mode)
-	a = db.getAnomalies(0)
+	a = db.getAnomalies(_mode)
 	#db.close()
 	data = {}
 	#TODO
@@ -795,6 +793,6 @@ def process_live():
 	global _mode
 	if(_mode==0):
 		_mode=1
-		load_data()
+		load_data(_mode)
 		connect_stream()
 	return "ok"
