@@ -28,11 +28,19 @@ import time #for testing, may need for timed reconnection
 import os
 import csv
 
+class databaseMode: # Used to pass info to other files
+    def __init__(self, mode):
+        self.mode = mode
+
 #global declarations and variables
+global _mode
 _mode = 1 #1 live, 0 = static
 _running = 0 #overall program status
 _connected = 0 #connection to stream status
 _autoconnect = 1 #if the system should try to reconnect
+
+global dbm
+dbm = databaseMode(_mode)
 
 #Queue declarations
 _q = queue.Queue() #queue for data stream
@@ -98,9 +106,10 @@ def load_data():
 	#loads data from db
 	global _tradevalue
 	global _tradecounter
-	global _anomalycounter
-
+	global _anomalycounter 
+        
 	db = database.Database()
+
 	_tradecounter = int(db.tradecount())
 	_anomalycounter = int(db.anomalycount())
 	_tradevalue = float(db.tradevalue())
@@ -406,8 +415,8 @@ class ProcessorThread(threading.Thread):
 		global _mode
 		it_count = 0
 
-		#Connect to db
-		db = database.Database()
+		db = database.Database(_mode)
+
 		while(_running):
 			
 			if (_mode == 0):
@@ -691,6 +700,7 @@ def upload_file():
 	global _mode
 	global _threads
 	global _threadID
+	global dbm
 
 	if request.method == 'POST':
 		print("Requesting File")
@@ -706,6 +716,13 @@ def upload_file():
 			filename = secure_filename(f.filename)
 			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "trades.csv"))
+			_mode = 0
+			dbm.mode = _mode
+			tstatic = StaticFileThread(_threadID)
+			
+			tstatic.start()
+			_threads.append(tstatic)
+			_threadID += 1
 			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet			
 
 			#create another thread to put into queue otherwise will be blocking/delay in return
@@ -733,9 +750,10 @@ def delete_anomaly():
 @app.route('/getanomalies', methods=['POST'])
 def init_data():
 	#get data in db
-	db = database.Database()
+	global _mode
+	db = database.Database(_mode)
 	a = db.getAnomalies(0)
-	db.close()
+	#db.close()
 	data = {}
 	#TODO
 	anomalies = []
@@ -753,6 +771,7 @@ def init_data():
 		data["anomalies"] = anomalies
 	return json.dumps(data)
 
+<<<<<<< HEAD
 @app.route('/static', methods=['POST'])
 def process_static():
 	global _threads
@@ -780,3 +799,5 @@ def process_live():
 		load_data()
 		connect_stream()
 	return "ok"
+=======
+>>>>>>> origin/master
