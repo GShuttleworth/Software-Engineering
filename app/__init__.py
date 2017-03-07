@@ -116,6 +116,8 @@ def load_data(mode):
 	_anomalycounter = int(db.anomalycount())
 	_tradevalue = float(db.tradevalue())
 
+	db.close()
+
 def init_threads():
 	#create threads
 	global _threads
@@ -477,10 +479,11 @@ class ProcessorThread(threading.Thread):
 						cat=1
 					if(3 not in trade_anomaly):
 						#move this out, in here for sake of testing and trader is overly sensitive
-						if (_mode == 1):
-							self.new_anomaly(db,tradeid,t,cat)
-						else:
-							self.new_anomaly(db,tradeid,t,cat)
+						a=1
+					if(_mode == 1):
+						self.new_anomaly(db,tradeid,t,cat)
+					else:
+						self.new_anomaly(db,tradeid,t,cat)
 		
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
@@ -665,8 +668,9 @@ def toggleconnect():
 @app.route('/reset', methods=['POST'])
 def resetstats():
 	#for resetting current stats and db?
+	global _mode
 	db = database.Database()
-	success=db.clearall()
+	success=db.clearall(_mode)
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter
@@ -695,38 +699,17 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-	
 	global _mode
 	global _threads
 	global _threadID
-	global dbm
-
 	if request.method == 'POST':
-		print("Requesting File")
 		f = request.files['file']
-		
 		if f.filename == '':
 	            flash('No selected file')
 	            return "not ok"
-
 		if f and allowed_file(f.filename):
-			
-			print("Reading File")
 			filename = secure_filename(f.filename)
-			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "trades.csv"))
-			_mode = 0
-			dbm.mode = _mode
-			tstatic = StaticFileThread(_threadID)
-			
-			tstatic.start()
-			_threads.append(tstatic)
-			_threadID += 1
-			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet			
-
-			#create another thread to put into queue otherwise will be blocking/delay in return
-			#it should also empty contents of old queue
-
 		else:
 			print("Error with file upload")
 			return "not ok"
@@ -751,7 +734,7 @@ def init_data():
 	#get data in db
 	global _mode
 	db = database.Database(_mode)
-	a = db.getAnomalies(_mode)
+	a = db.getAnomalies(0)
 	#db.close()
 	data = {}
 	#TODO
@@ -775,6 +758,8 @@ def process_static():
 	global _threads
 	global _threadID
 	global _mode
+	global _sessions
+	
 	#check file exists
 	exists=os.path.exists("trades.csv")
 	if(exists):
@@ -792,6 +777,8 @@ def process_static():
 @app.route('/live', methods=['POST'])
 def process_live():
 	global _mode
+	global _sessions
+	#TODO improve sessions
 	if(_mode==0):
 		_mode=1
 		load_data(_mode)
