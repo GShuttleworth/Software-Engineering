@@ -234,23 +234,20 @@ class StaticFileThread(threading.Thread):
 			global _tradecounter
 			global _anomalycounter
 			global _tradevalue
-			global _tradecounterstore
-			global _anomalycounterstore
-			global _tradevaluestore
 			global _mode
 			
 			disconnect_stream()
-			
-			#Storing values for upon return of queue
-			_tradevaluestore = _tradevalue
-			_anomalycounterstore = _anomalycounter
-			_tradecounterstore = _tradecounter
 
 			#Resetting values
 			_mode = 0
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
+
+	def databaseReset(self):
+		
+		db = database.Database()
+		db.clearall()
 
 	def parsefile(self):
 			#read file
@@ -268,7 +265,6 @@ class StaticFileThread(threading.Thread):
 						continue
 					else:
 
-						#newdatetime = (datetime.today().strftime('%Y-%m-%d') + ' ' + row[0])
 						row[0] = str(row[0])
 						row[1] = str(row[1]) #buyer
 						row[2] = str(row[2]) #seller
@@ -283,6 +279,9 @@ class StaticFileThread(threading.Thread):
 						_qlock.acquire()
 						_staticq.put(mtrade.to_TradeData(row))
 						_qlock.release()
+
+			print("Resetting Data")
+			self.databaseReset()
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -388,7 +387,7 @@ class ProcessorThread(threading.Thread):
 		global _mode
 
 		anomalyid = -1
-		anomalyid = db.addAnomaly(tradeid, category, state, _mode)
+		anomalyid = db.addAnomaly(tradeid, category, _mode)
 		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
 		#doSomething with the anomaly
 		_anomalycounter+=1
@@ -402,13 +401,10 @@ class ProcessorThread(threading.Thread):
 		global _tradecounter
 		global _anomalycounter
 		global _tradevalue
-		global _anomalycounterstore
-		global _tradecounterstore
-		global _tradevaluestore
 
-		_tradecounter = _tradecounterstore
-		_anomalycounter = _anomalycounterstore
-		_tradevalue = _tradevaluestore
+		_tradecounter = 0
+		_anomalycounter = 0
+		_tradevalue = 0
 
 	def processing(self):
 		#State is processing static/live
@@ -427,9 +423,9 @@ class ProcessorThread(threading.Thread):
 				trades = self.dequeue(_staticq, _qlock)
 				it_count += 1
 			else:	
-				if (it_count > 0):	
+				if (it_count > 0):
+					it_count = 0	
 					self.refreshVals()
-					it_count = 0
 				trades = self.dequeue(_q,_qlock)
 
 			for t in trades:
@@ -715,7 +711,7 @@ def upload_file():
 
 		if f and allowed_file(f.filename):
 			
-			print("Reading File \n#####\n#####\n#####")
+			print("Reading File")
 			filename = secure_filename(f.filename)
 			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "traders.csv"))
@@ -735,6 +731,11 @@ def upload_file():
 		else:
 			print("Error with file upload")
 			return "not ok"
+
+	return "ok"
+
+@app.route('/deleteanomaly', methods=['POST'])
+def delete_anomaly():
 
 	return "ok"
 
