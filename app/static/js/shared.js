@@ -15,9 +15,11 @@ function live(status) {
 function mode(status) {
 	if(status==true){
 		$('#live').html('Viewing: Live Data');
+		$("#live-status").show();
 		sysmode=1;
 	}else{
 		$('#live').html('Viewing: Historical Data');
+		$("#live-status").hide();
 		sysmode=0;
 	}
 }
@@ -149,8 +151,10 @@ function processfile(){
 			if(d=="ok"){
 				alert("Processing");
 				//reset htmls
+				clearTimeout(refresher);
 				cleartable();
 				closeNav("uploadnav");
+				refresh();
 			}else{
 				alert("No file uploaded");
 			}
@@ -192,14 +196,15 @@ function processlive(){
 		success: function(d) {
 			if(d=="ok"){
 				//reset htmls
+				clearTimeout(refresher); //stop refreshing
 				cleartable();
 				loadanomalies();
+				refresh();
 			}
 		},
 		error: function(d) {
-
 		}
-		});
+	});
 }
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
@@ -214,7 +219,6 @@ $(document).ready(function() {
 			processlive();
 		 }
 	});
-
 	$("#btn-connect").click(function(e){
 		e.preventDefault();
 		toggleconnect();
@@ -240,7 +244,6 @@ $(document).ready(function() {
 	$("#settings-refresh").change(function() {
 		changecookie("refresh",$("#settings-refresh").val()*1000);
 		changerefresh($("#settings-refresh").val()*1000);
-
 		clearTimeout(refresher);
 		refresh();
 	});
