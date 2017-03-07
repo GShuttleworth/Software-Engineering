@@ -5,7 +5,7 @@ import sys
 sys.path.append(".")
 from app import mtrade
 from app import database
-
+from app import dbm
 
 @app.route('/')
 @app.route('/index')
@@ -26,8 +26,11 @@ def index():
 @app.route('/stock', methods=['GET', 'POST'])
 @app.route('/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
 def anomaly(symbol, id):
-    # Create database instance
-    db = database.Database()
+    # Create database instancea
+    global dbm
+    print("state is " + str(dbm.mode))
+    db = database.Database(dbm.mode)
+    print("state is" + str(db.state))
     anomaly = db.getAnomalyById(id)
     baseTrade = anomaly.trade
     trades = db.getTradesForDrillDown(baseTrade.symbol, id)
