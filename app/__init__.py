@@ -725,6 +725,11 @@ def upload_file():
 
 	return "ok"
 
+@app.route('/deleteanomaly', methods=['POST'])
+def delete_anomaly():
+
+	return "ok"
+
 @app.route('/getanomalies', methods=['POST'])
 def init_data():
 	#get data in db

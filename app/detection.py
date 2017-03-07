@@ -82,7 +82,7 @@ class Detection:
 				if(self.tickTimeCntPairs[x][1] >= self.stepNumOfStepsPairs[x][1]):	#if the number of ticks exceeded maximum (i.e. it's time to upadte the line fit)
 					
 					self.tickTimeCntPairs[x][1] = 0
-					print(self.tickTimeCntPairs[x][1])
+					#print(self.tickTimeCntPairs[x][1])
 
 					for company in self.companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 						if (company.volumeRegression.detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression.tempYVals))
@@ -117,7 +117,7 @@ class Detection:
 					self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
 
 				else:
-					print(self.tickTimeCntPairs[x][1])
+					#print(self.tickTimeCntPairs[x][1])
 
 					for company in self.companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
 						# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
