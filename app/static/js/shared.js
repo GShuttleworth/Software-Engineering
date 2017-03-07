@@ -2,6 +2,7 @@
 var refreshrate = 2000;
 var sound=false;
 var refresher;
+var sysmode;
 function live(status) {
 	if(status==true){
 		$("#btn-connect").html('<i class="fa fa-plug fa-fw"></i> Disconnect');
@@ -14,8 +15,10 @@ function live(status) {
 function mode(status) {
 	if(status==true){
 		$('#live').html('Viewing: Live Data');
+		sysmode=1;
 	}else{
 		$('#live').html('Viewing: Historical Data');
+		sysmode=0;
 	}
 }
 
@@ -139,8 +142,23 @@ function changecookie(name,value){
 
 function processfile(){
 	//process the last uploaded file
-	//TODO
-	closeNav("uploadnav");
+	$.ajax({
+		type : 'POST',
+		url : "/static",
+		success: function(d) {
+			if(d=="ok"){
+				alert("Processing");
+				//reset htmls
+				cleartable();
+				closeNav("uploadnav");
+			}else{
+				alert("No file uploaded");
+			}
+		},
+		error: function(d) {
+
+		}
+	});
 }
 function loadstatic(){
 	//load data from static database
@@ -167,23 +185,43 @@ function loadcookies(){
 		$('select option[value='+refreshrate/1000+']').attr("selected",true);
 	}
 }
+function processlive(){
+	$.ajax({
+		type : 'POST',
+		url : "/live",
+		success: function(d) {
+			if(d=="ok"){
+				//reset htmls
+				cleartable();
+				loadanomalies();
+			}
+		},
+		error: function(d) {
+
+		}
+		});
+}
 $(document).ready(function() {
 	// run the first time; all subsequent calls will take care of themselves
 	init_session();
 	loadcookies();
 	//event listeners
+	$("#btn-live").click(function(e){
+		//if is already live do nothing
+		e.preventDefault();
+		 if(sysmode==0){
+			//toggle
+			processlive();
+		 }
+	});
+
 	$("#btn-connect").click(function(e){
 		e.preventDefault();
-		//alert("hi");
 		toggleconnect();
 	});
 	$("#btn-historical").click(function(e){
 	   e.preventDefault();
 	   openNav("uploadnav");
-	   //document.getElementById("data_file").click();
-	   //alert("hi");
-	   //togglemode(0);
-	   //import file
 	});
 	$("#btn-settings").click(function(e){
 		e.preventDefault();
@@ -221,7 +259,7 @@ $(document).ready(function() {
 				   if(data=="ok"){
 					   alert("Counters reset");
 					   //remove stuff/redirect since no anomalies will exist
-					   window.location.replace("/index");
+					   cleartable();
 				   }else{
 					   alert("Failed");
 				   }

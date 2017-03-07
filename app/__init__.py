@@ -234,6 +234,8 @@ class StaticFileThread(threading.Thread):
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
+			print("Resetting Data")
+			self.databaseReset()
 
 	def databaseReset(self):
 		
@@ -247,7 +249,7 @@ class StaticFileThread(threading.Thread):
 
 			print("Prepared File")
 
-			with open('traders.csv', 'r') as csvfile:
+			with open('trades.csv', 'r') as csvfile:
 				
 				reader = csv.reader(csvfile, delimiter = ',')
 		
@@ -271,8 +273,6 @@ class StaticFileThread(threading.Thread):
 						_staticq.put(mtrade.to_TradeData(row))
 						_qlock.release()
 
-			print("Resetting Data")
-			self.databaseReset()
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -581,13 +581,14 @@ def getdata():
 			while not sessiondata.empty():
 				x = sessiondata.get()
 				#TODO
-				temp = x.trade.time.split()
 				anomaly = {}
 				anomaly['id'] = x.id
 				anomaly['type'] = x.category
-				anomaly['date'] = temp[0]
-				anomaly['time'] = temp[1]
-				anomaly['action'] = x.trade.symbol
+				if(x.trade is not None):
+					temp = x.trade.time.split()
+					anomaly['date'] = temp[0]
+					anomaly['time'] = temp[1]
+					anomaly['action'] = x.trade.symbol
 				anomalies.append(anomaly)
 		except KeyError:
 			# Key is not present, no sessions for user
@@ -704,16 +705,7 @@ def upload_file():
 			print("Reading File")
 			filename = secure_filename(f.filename)
 			
-			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "traders.csv"))
-			_mode = 0
-			
-			print("Starting thread")
-			tstatic = StaticFileThread(_threadID)
-			
-			tstatic.start()
-			_threads.append(tstatic)
-			_threadID += 1
-			
+			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "trades.csv"))
 			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet			
 
 			#create another thread to put into queue otherwise will be blocking/delay in return
@@ -725,9 +717,17 @@ def upload_file():
 
 	return "ok"
 
-@app.route('/deleteanomaly', methods=['POST'])
+@app.route('/dismiss', methods=['POST'])
 def delete_anomaly():
-
+	global _sessions
+	global _sessionslock
+	anomalyid = int(request.data)
+	success = 0 #update state in db
+	_sessionslock.acquire
+	for key in _sessions:
+		if(_sessions[key]!=session['id']):
+			_sessions[key].put(mtrade.Anomaly(anomalyid, None, 0))
+	_sessionslock.release
 	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
@@ -752,3 +752,31 @@ def init_data():
 	if(len(anomalies)>0):
 		data["anomalies"] = anomalies
 	return json.dumps(data)
+
+@app.route('/static', methods=['POST'])
+def process_static():
+	global _threads
+	global _threadID
+	global _mode
+	#check file exists
+	exists=os.path.exists("trades.csv")
+	if(exists):
+		_mode = 0
+		
+		print("Starting thread")
+		tstatic = StaticFileThread(_threadID)
+
+		tstatic.start()
+		_threads.append(tstatic)
+		_threadID += 1
+		return "ok"
+	return "fail"
+
+@app.route('/live', methods=['POST'])
+def process_live():
+	global _mode
+	if(_mode==0):
+		_mode=1
+		load_data()
+		connect_stream()
+	return "ok"

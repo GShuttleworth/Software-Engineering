@@ -12,11 +12,13 @@ function refresh() {
 			//update anomalies
 			for(var i in data.anomalies){
 				var anomaly = data.anomalies[i];
-				//create htmls for each
-				anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
-				alertify.logPosition("top right");
-				alertify.success("New Anomaly Detected");
-				beep();
+				if(parseInt(anomaly.type)!=0){
+					//create htmls for each
+					anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
+				}else if(parseInt(anomaly.type)==0){
+					//make sure it actually does exist
+					anomalyHTMLremove(anomaly.id);
+				}
 			}
 		},
 		error: function(d) {
@@ -56,6 +58,28 @@ function loadanomalies(){
 	});
 }
 
+function dismiss(id){
+	$.ajax({
+		type : 'POST',
+		url : "/dismiss",
+		data : JSON.stringify(id),
+		contentType: 'application/json;charset=UTF-8',
+		success: function(d) {
+		   //just dismiss here because quicker?
+		   anomalyHTMLremove(anomaly.id);
+		},
+		error: function(d) {
+		
+		}
+   });
+}
+function anomalyHTMLremove(id){
+	var table = $('#table-anomaly').DataTable();
+	table.row($("#tbl-row-"+id)).remove().draw();
+	
+	alertify.logPosition("top right");
+	alertify.error('Anomaly Dismissed');
+}
 function anomalyHTML(id,date,time,type,action){
 
 	// Make date human readable
@@ -65,10 +89,18 @@ function anomalyHTML(id,date,time,type,action){
 	// Init Datatable
 	var table = $('#table-anomaly').DataTable();
 	// Construct HMTL for table row
-	var row = "<tr><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a><a href='TODO'><button type='button' class='btn btn-success'>Dismiss</button></a></div>";
+	var row = "<tr id='tbl-row-"+id+"'><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a> <a href='#'><button type='button' class='btn btn-success' onclick='dismiss("+id+")'>Dismiss</button></a></div>";
 	table.row.add( $(row)[0] ).draw();
+	alertify.logPosition("top right");
+	alertify.success("New Anomaly Detected");
+	beep();
 }
 
+function cleartable(){
+	var table = $('#table-anomaly').DataTable();
+ 
+	table.clear().draw();
+}
 function convert_type(t){
 	var type="Unknown";
 	switch(t){
