@@ -261,31 +261,32 @@ class StaticFileThread(threading.Thread):
 
 			print("Prepared File")
 
-			with open('trades.csv', 'r') as csvfile:
-				
-				reader = csv.reader(csvfile, delimiter = ',')
-		
-				for row in reader:
-					if row[1] == 'buyer':
-						continue
-					else:
+			try:
+				with open('trades.csv', 'r') as csvfile:
+					
+					reader = csv.reader(csvfile, delimiter = ',')
+					for row in reader:
+						if row[1] == 'buyer':
+							continue
+						else:
 
-						row[0] = str(row[0])
-						row[1] = str(row[1]) #buyer
-						row[2] = str(row[2]) #seller
-						row[3] = str(row[3]) #price
-						row[4] = str(row[4])
-						row[5] = str(row[5])
-						row[6] = str(row[6]) #symbol
-						row[7] = str(row[7]) #sector
-						row[8] = str(row[8])
-						row[9] = str(row[9])
+							row[0] = str(row[0])
+							row[1] = str(row[1]) #buyer
+							row[2] = str(row[2]) #seller
+							row[3] = str(row[3]) #price
+							row[4] = str(row[4])
+							row[5] = str(row[5])
+							row[6] = str(row[6]) #symbol
+							row[7] = str(row[7]) #sector
+							row[8] = str(row[8])
+							row[9] = str(row[9])
 
-						_qlock.acquire()
-						_staticq.put(mtrade.to_TradeData(row))
-						_qlock.release()
-
-
+							_qlock.acquire()
+							_staticq.put(mtrade.to_TradeData(row))
+							_qlock.release()
+			except KeyboardInterrupt:
+				pass
+					
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
