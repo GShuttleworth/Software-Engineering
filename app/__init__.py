@@ -771,7 +771,6 @@ def init_data():
 		data["anomalies"] = anomalies
 	return json.dumps(data)
 
-<<<<<<< HEAD
 @app.route('/static', methods=['POST'])
 def process_static():
 	global _threads
@@ -799,5 +798,3 @@ def process_live():
 		load_data()
 		connect_stream()
 	return "ok"
-=======
->>>>>>> origin/master
