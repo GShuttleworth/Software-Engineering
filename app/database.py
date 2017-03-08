@@ -188,7 +188,7 @@ class Database:
 		if(self.state != 1):
 			atable = "anomalies_static"
 			ttable = "trans_static"
-		query = "SELECT id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " NATURAL JOIN " +ttable+" WHERE actiontaken=?"
+		query = "SELECT " +atable+".id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " JOIN "+ttable+" ON "+ttable+ ".id="+atable+".tradeid WHERE actiontaken=?"
 		params = [done]
 		data = self.query(query, params)
 		rows = data.fetchall()
@@ -206,7 +206,7 @@ class Database:
 		if(self.state != 1):
 			table1 = "anomalies_static"
 			tabel2 = "trans_static"
-		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " NATURAL JOIN "+table2+" WHERE id=?"
+		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+"id=?"
 		params = [id]
 		data = self.query(query, params)
 		t = data.fetchone()

@@ -55,7 +55,7 @@ def anomaly(symbol, id):
 	sector = baseTrade.sector
 	bid = baseTrade.bidPrice
 	ask = baseTrade.askPrice
-
+	date = convert_date(time).strftime("%A, %d %B %Y")
 	rangetime = convert_date(time)
 	first = convert_date(trades[0].time)
 	last = convert_date(trades[len(trades)-1].time)

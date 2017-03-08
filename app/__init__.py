@@ -112,8 +112,8 @@ def load_data(mode):
 	dbm.mode = mode
 	db = database.Database()
 	trades = db.tradedetails(mode)
-	_tradecounter = int(db.tradecount(mode))
-	_anomalycounter = int(trades[1])
+	_tradecounter = int(trades[1])
+	_anomalycounter = int(db.anomalycount(mode))
 	if(trades[0] is not None):
 		_tradevalue = float(trades[0])
 	else:
@@ -242,14 +242,17 @@ class StaticFileThread(threading.Thread):
 			global _anomalycounter
 			global _tradevalue
 			global _mode
+			global _tradecounterlock
 			
 			disconnect_stream()
 
 			#Resetting values
+			_tradecounterlock.acquire()
 			_mode = 0
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
+			_tradecounterlock.release()
 			print("Resetting Data")
 			self.databaseReset()
 
@@ -443,7 +446,7 @@ class ProcessorThread(threading.Thread):
 					it_count = 0	
 					self.refreshVals()
 				trades = self.dequeue(_q,_qlock)
-
+			_tradecounterlock.acquire() #critical section big is fine because only '/reset' can change
 			for t in trades:
 				#Update counts
 				if (not isinstance(t, mtrade.TradeData)):
@@ -486,7 +489,7 @@ class ProcessorThread(threading.Thread):
 						self.new_anomaly(db,tradeid,t,cat)
 					else:
 						self.new_anomaly(db,tradeid,t,cat)
-		
+			_tradecounterlock.release()
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
 		db.close()
@@ -602,6 +605,7 @@ def getdata():
 					anomaly['date'] = temp[0]
 					anomaly['time'] = temp[1]
 					anomaly['action'] = x.trade.symbol
+					anomaly['sector'] = x.trade.sector
 				anomalies.append(anomaly)
 		except KeyError:
 			# Key is not present, no sessions for user
@@ -676,12 +680,16 @@ def resetstats():
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter
+	global _tradecounterlock
 	
 	if(success):
+		_tradecounterlock.acquire()
 		_tradevalue = 0
 		_tradecounter = 0
 		_anomalycounter = 0
+		_tradecounterlock.release()
 		#reset machine learning
+		print("reset")
 		return "ok"
 	return "fail"
 	
@@ -750,6 +758,7 @@ def init_data():
 		anomaly['date'] = temp[0]
 		anomaly['time'] = temp[1]
 		anomaly['action'] = x.trade.symbol
+		anomaly['sector'] = x.trade.sector
 		anomalies.append(anomaly)
 	#make into json
 	if(len(anomalies)>0):
