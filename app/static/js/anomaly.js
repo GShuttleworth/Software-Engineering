@@ -20,3 +20,11 @@ function refresh() {
 function init_session(){
 	refresh()
 }
+
+$(document).ready(function() {
+	$(".panel-heading").click(function(){
+		  var btnId = $(this).data('id');
+		  jQuery('.panel-body[data-id=' + btnId + ']').slideToggle( "slow", function(){});
+	});
+});
+
