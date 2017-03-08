@@ -1,4 +1,4 @@
-import sqlite3
+import mysql.connector
 from app import mtrade
 from os.path import isfile, getsize
 import os
@@ -7,18 +7,9 @@ import os
 class Database:
 
 	def __init__(self, state=1):
-		# check to see if db exists
-		# if it doesn't then create it using schema
-		filename = "database.db"
-		if(not isfile(filename) or getsize(filename) < 100):
-			# creating database
-			self.conn = sqlite3.connect(filename)
-			self.c = self.conn.cursor()
-			with open('schema.sql') as fp:
-				self.c.executescript(fp.read())  # or con.executescript
-		else:
-			self.conn = sqlite3.connect(filename)
-			self.c = self.conn.cursor()
+		# Assumes schema is already implemented
+		self.conn = mysql.connector.connect(user='root', password='andypandy', host='127.0.0.1', database='cs261')
+		self.c = self.conn.cursor(buffered=True)
 		self.state = state  # Default is 1 (live)
 
 	# General purpose functions
@@ -27,6 +18,7 @@ class Database:
 		return self.c.execute(query, params)
 
 	def action(self, query, params):
+		#print("Making insertion")
 		# for update, insert, etc
 		self.c.execute(query, params)
 		self.conn.commit()
@@ -45,37 +37,40 @@ class Database:
 		table = "averages_live"
 		if(self.state != 1):
 			table = "averages_static"
-		query = "SELECT * FROM " + table + " WHERE symbol=?"
+		query = "SELECT * FROM " + table + " WHERE symbol='%s'"
 		params = [sym]
 		data = self.query(query, params)
 		# should only return 1 row right, if it exists
-		avg_exists = data.fetchone()
-		if(avg_exists != None):
-			return avg_exists
-		return -1
+		try:
+			avg_exists = data.fetchone()
+		except AttributeError:
+			return -1
+		return avg_exists
+
 
 	def updateAverage(self, sym, price, vol, num):
 		table = "averages_live"
 		if(self.state != 1):
 			table = "averages_static"
 		query = "UPDATE " + table + \
-				" SET averagePrice=?, averageVolume=?, numTrades=? WHERE symbol=?"
+				" SET averagePrice='%s', averageVolume='%s', numTrades='%s' WHERE symbol='%s'"
 		params = [price, vol, num, sym]
 		updated = self.action(query, params)
 		#print("Total number of rows updated :", updated)
 		if(updated == 0):  # check to see if it was updated
 			# add row
-			query = "INSERT INTO " + table + " VALUES (?,?,?,?)"
+			query = "INSERT INTO " + table + " VALUES ('%s','%s','%s','%s')"
 			params = [sym, price, vol, 0]
 			updated = self.action(query, params)
 
 	def addTransaction(self,data, state):
 		if(isinstance(data, mtrade.TradeData)):
+			print("Adding a transaction")
 			query = ""
 			if(state == 1):
-				query = "INSERT INTO trans_live VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+				query = """INSERT INTO trans_live VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"""
 			else:
-				query = "INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+				query = "INSERT INTO trans_static VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
 			tradeid=-1
 			params = (data.time, data.buyer, data.seller, data.price, data.size,
 			data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
@@ -115,15 +110,19 @@ class Database:
 		query = "SELECT COUNT(*) FROM " + table
 		params =[]
 		data = self.query(query, params)
-		t = data.fetchone()
+		try:
+			t = data.fetchone()
+		except AttributeError:
+			return 0
 		return t[0]
 
 	def tradevalue(self):
 		query = "SELECT SUM(price * volume) FROM trans_live"
 		params = []
 		data = self.query(query, params)
-		t = data.fetchone()
-		if(not t[0]):
+		try:
+			t = data.fetchone()
+		except AttributeError:
 			return 0
 		return t[0]
 
@@ -132,7 +131,7 @@ class Database:
 
 	#def getAverageVolume(self, sym):
 	#	return self.getAverage(sym)[2]
-	#		query = "INSERT INTO " + table + " VALUES (?,?,?,?)"
+	#		query = "INSERT INTO " + table + " VALUES ('%s','%s','%s','%s')"
 	#		params = [sym, price, vol, 0]
 	#		updated = self.action(query, params)
 
@@ -151,7 +150,7 @@ class Database:
 		if(self.state == 1):
 			table = "trans_static"
 
-		query = "DELETE FROM " + table + " WHERE time=?"
+		query = "DELETE FROM " + table + " WHERE time='%s'"
 		params = [date]
 		self.action(query, params)
 		return 1
@@ -180,10 +179,13 @@ class Database:
 		table = "anomalies_live"
 		if(self.state != 1):
 			table = "anomalies_static"  # shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken=?"
+		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken='%s'"
 		params = [done]
 		data = self.query(query, params)
-		rows = data.fetchall()
+		try:
+			rows = data.fetchall()
+		except AttributeError:
+			rows = []
 		anomalies = []
 		for row in rows:
 			# gonna get complicated
@@ -193,7 +195,7 @@ class Database:
 			if(self.state != 1):
 				table = "trans_static"
 			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-				table + " WHERE id=?"
+				table + " WHERE id='%s'"
 			params = [row[1]]
 			data = self.query(query, params)
 			t = data.fetchone()
@@ -209,13 +211,14 @@ class Database:
 		if(self.state != 1):
 			table1 = "anomalies_static"
 			tabel2 = "trans_static"
-		query = "SELECT * FROM " + table1 + " WHERE id=?"
+		query = "SELECT * FROM " + table1 + " WHERE id='%s'"
+		print(id)
 		params = [id]
 		result = self.query(query, params)
+		#print("Row count: " + str(result.rowcount()))
 		row = result.fetchone()  # Only one result per id
-		# Get the relevant trade
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table2 + " WHERE id=?"
+			table2 + " WHERE id='%s'"
 		params = [row[1]]
 		data = self.query(query, params)
 		t = data.fetchone()
@@ -228,7 +231,7 @@ class Database:
 		if(state != 1):
 			table = "anomalies_static"
 
-		query = "INSERT INTO " + table + " VALUES(NULL, ?, ?, 0)"
+		query = "INSERT INTO " + table + " VALUES(NULL, '%s', '%s', 0)"
 		params = [tradeid, category]
 		self.action(query, params)
 		anomalyid = self.c.lastrowid
@@ -246,7 +249,7 @@ class Database:
 		table = "anomalies_live"
 		if(self.state != 1):
 			table = "anomalies_static"
-		query = "SELECT tradeid FROM " + table + " WHERE id=?"
+		query = "SELECT tradeid FROM " + table + " WHERE id='%s'"
 		params = [id]
 		tradeId = self.query(query, params).fetchone()[0]
 		table = "trans_live"
@@ -254,7 +257,7 @@ class Database:
 			table = "trans_static"
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id<=?) ORDER BY datetime(time) DESC LIMIT 8"
+			table + " WHERE(symbol='%s' and id<='%s') ORDER BY datetime(time) DESC LIMIT 8"
 		params = [sym, tradeId]
 		rows = self.query(query, params)
 		trades = []
@@ -267,7 +270,7 @@ class Database:
 		trades = trades[::-1] # Reverses the order of the trades, as they are currently in descending, not ascending order
 		#print(trades)
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id>?) ORDER BY datetime(time) ASC LIMIT 7"
+			table + " WHERE(symbol='%s' and id>'%s') ORDER BY datetime(time) ASC LIMIT 7"
 		params = [sym, tradeId]
 		results = self.query(query, params)
 		for res in results: 
