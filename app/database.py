@@ -166,7 +166,7 @@ class Database:
 			query = "DELETE FROM " + table
 			params = []
 			self.action(query, params)
-			table = "trans_static"
+			table = "anomalies_live"
 			if(state==0):
 				table = "anomalies_static"
 			query = "DELETE FROM " + table
