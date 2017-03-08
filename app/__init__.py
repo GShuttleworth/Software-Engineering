@@ -417,8 +417,13 @@ class ProcessorThread(threading.Thread):
 
 		db = database.Database(_mode)
 		while(_running):
-			if(previousmode!=_mode):
-				#change in mode since last iteration
+			global _tradecounter
+			global _tradecounterlock
+			global _anomalycounter
+			global _tradevalue
+			
+			if(previousmode!=_mode or _tradecounter==0):
+				#change in mode since last iteration or if it got reset
 				#reset machine learning
 				detection.reset()
 				if(_mode==1):
@@ -440,11 +445,6 @@ class ProcessorThread(threading.Thread):
 				#Update counts
 				if (not isinstance(t, mtrade.TradeData)):
 					continue
-
-				global _tradecounter
-				global _tradecounterlock
-				global _anomalycounter
-				global _tradevalue
 				
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
@@ -678,6 +678,7 @@ def resetstats():
 		_tradevalue = 0
 		_tradecounter = 0
 		_anomalycounter = 0
+		#reset machine learning
 		return "ok"
 	return "fail"
 	

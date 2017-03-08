@@ -100,27 +100,42 @@
 <script type="text/javascript">
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
-
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['Time', 'Price'],
-    {%- for trade in trades %}
-    ['{{ trade.time }}', {{ trade.price }}]{%- if not loop.last %},{% endif %}
-    {%- endfor %}
-  ]);
-
-  var options = {
-    title: 'Prices of most recent trades',
-    legend: { position: 'bottom' },
-    chartArea: { height: "40%", width: "90%" },
-    series: {
-      7: { pointShape: {type: 'star'}}
-    }
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('price_chart'));
-
-  chart.draw(data, options);
+function drawChart(){
+	var data = ([
+				 {%- for trade in trades %}
+				 [Date.parse('{{ trade.time }}'), {{ trade.price }}]{%- if not loop.last %},{% endif %}
+				 {%- endfor %}]);
+	var chart = Highcharts.chart('price_chart',{
+					 chart: {
+						 zoomType: 'x'
+					 },
+					 title: {
+						 text: 'Price per trade in the past TODO'
+					 },
+					 subtitle: {
+						 text: document.ontouchstart === undefined ?
+						 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+					 },
+					 xAxis: {
+						 type: 'datetime',
+						 tickInterval: 3600 * 1000
+					 },
+					 yAxis: {
+						 title: {
+							 text: 'Stock price'
+						 }
+					 },
+					 legend: {
+						 enabled: false
+					 },
+					 series: [{
+						  type: 'area',
+						  name: 'price',
+						  //pointInterval:  3600 * 1000,
+						  //pointStart: Date.UTC(2006, 0, 01, 0, 0, 0, 0),
+						  data: data
+					  }]
+				});
 }
 </script>
 <!-- Volume Graph -->

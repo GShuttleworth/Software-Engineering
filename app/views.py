@@ -28,14 +28,15 @@ def index():
 def anomaly(symbol, id):
     # Create database instancea
     global dbm
-    print("state is " + str(dbm.mode))
+    #print("state is " + str(dbm.mode))
     db = database.Database(dbm.mode)
-    print("state is" + str(db.state))
+	#print("state is" + str(db.state))
     anomaly = db.getAnomalyById(id)
+	
     baseTrade = anomaly.trade
-    trades = db.getTradesForDrillDown(baseTrade.symbol, id)
-    for t in trades:
-        t.time = t.time[10:19]
+    trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time)
+    #??for t in trades:
+    #    t.time = t.time[10:19]
     db.close() # Close quickly to prevent any issues
     pagename = "Anomaly Information for " + symbol
     anomalyType = "TODO"

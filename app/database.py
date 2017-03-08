@@ -3,6 +3,7 @@ from app import mtrade
 from os.path import isfile, getsize
 import os
 
+from datetime import datetime, timedelta
 
 class Database:
 
@@ -209,18 +210,13 @@ class Database:
 		if(self.state != 1):
 			table1 = "anomalies_static"
 			tabel2 = "trans_static"
-		query = "SELECT * FROM " + table1 + " WHERE id=?"
+		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " NATURAL JOIN "+table2+" WHERE id=?"
 		params = [id]
-		result = self.query(query, params)
-		row = result.fetchone()  # Only one result per id
-		# Get the relevant trade
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table2 + " WHERE id=?"
-		params = [row[1]]
 		data = self.query(query, params)
 		t = data.fetchone()
-		trade = mtrade.to_TradeData(t)
-		return mtrade.Anomaly(row[0], trade, row[2])
+		category=t[0]
+		trade = mtrade.to_TradeData(t[1:]) #remove category
+		return mtrade.Anomaly(id, trade, category)
 
 	def addAnomaly(self, tradeid, category, state):
 		anomalyid = -1
@@ -240,39 +236,26 @@ class Database:
 	def getAverageVolume(self, sym):
 		return self.getAverage(sym)[2]
 
-	def getTradesForDrillDown(self, sym, id):
+	def getTradesForDrillDown(self, sym, time):
 		# Return set of recent trades before and after anomaly
 		# Get trade id
-		table = "anomalies_live"
+		ttable = "trans_live"
 		if(self.state != 1):
-			table = "anomalies_static"
-		query = "SELECT tradeid FROM " + table + " WHERE id=?"
-		params = [id]
-		tradeId = self.query(query, params).fetchone()[0]
-		table = "trans_live"
-		if(self.state != 1):
-			table = "trans_static"
+			ttable = "trans_static"
+		try:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+		except ValueError:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+		upper = time + timedelta(hours=12) #create an upper and lower boundary frame TODO change if necessary
+		lower = time - timedelta(hours=12)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id<=?) ORDER BY datetime(time) DESC LIMIT 8"
-		params = [sym, tradeId]
+			ttable + " WHERE(symbol=? AND datetime(time) BETWEEN datetime(?) AND datetime(?)) ORDER BY datetime(time) DESC"
+		params = [sym, lower, upper]
 		rows = self.query(query, params)
 		trades = []
-		for row in rows: 
+		for row in rows:
 			trade = mtrade.to_TradeData(row)
 			trades.append(trade)
-			#print(trades)
-
-		#print(trades)
-		trades = trades[::-1] # Reverses the order of the trades, as they are currently in descending, not ascending order
-		#print(trades)
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id>?) ORDER BY datetime(time) ASC LIMIT 7"
-		params = [sym, tradeId]
-		results = self.query(query, params)
-		for res in results: 
-			trade = mtrade.to_TradeData(res)
-			trades.append(trade)
-			#print(trades)
 
 		return trades
