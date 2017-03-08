@@ -106,16 +106,16 @@ function convert_type(t){
 	var type="Unknown";
 	switch(t){
 		case 1:
-			type="Fat finger"
-			break;
-		case 2:
-			type="Bear raids"
-			break;
-		case 3:
 			type="Price spike"
 			break;
-		case 4:
+		case 2:
 			type="Volume spike"
+			break;
+		case 3:
+			type="Suspicious trader activity"
+			break;
+		case 4:
+			type="Potential pump and dump"
 			break;
 	}
 	return type;

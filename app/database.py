@@ -182,10 +182,10 @@ class Database:
 		return True
 		
 	# gets all the anomalies for the table, returns a list of anomaly objects
-	def getAnomalies(self, done):
+	def getAnomalies(self, done,state):
 		atable = "anomalies_live"
 		ttable = "trans_live"
-		if(self.state != 1):
+		if(state != 1):
 			atable = "anomalies_static"
 			ttable = "trans_static"
 		query = "SELECT " +atable+".id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " JOIN "+ttable+" ON "+ttable+ ".id="+atable+".tradeid WHERE actiontaken=?"
@@ -199,11 +199,11 @@ class Database:
 			anomalies.append(a)
 		return anomalies
 	
-	def getAnomalyById(self, id):
+	def getAnomalyById(self, id,state):
 		# Useful function for the drill down stuff
 		table1 = "anomalies_live"
 		table2 = "trans_live"
-		if(self.state != 1):
+		if(state != 1):
 			table1 = "anomalies_static"
 			tabel2 = "trans_static"
 		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+".id=?"
@@ -232,11 +232,11 @@ class Database:
 	def getAverageVolume(self, sym):
 		return self.getAverage(sym)[2]
 
-	def getTradesForDrillDown(self, sym, time):
+	def getTradesForDrillDown(self, sym, time,state):
 		# Return set of recent trades before and after anomaly
 		# Get trade id
 		ttable = "trans_live"
-		if(self.state != 1):
+		if(state != 1):
 			ttable = "trans_static"
 		try:
 			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")

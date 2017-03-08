@@ -29,17 +29,33 @@ def index():
 @app.route('/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
 def anomaly(symbol, id):
 	# Create database instancea
-	global dbm
-	#print("state is " + str(dbm.mode))
-	db = database.Database(dbm.mode)
-	#print("state is" + str(db.state))
-	anomaly = db.getAnomalyById(id)
+	db = database.Database()
+	state=1
+	anomaly = db.getAnomalyById(id,state)
 
 	baseTrade = anomaly.trade
-	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time)
+	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)
 	#??for t in trades:
 	#    t.time = t.time[10:19]
 	db.close() # Close quickly to prevent any issues
+	return anomaly_template(trades)
+
+@app.route('/stock', methods=['GET', 'POST'])
+@app.route('/static/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
+	# Create database instancea
+def static_anomaly(symbol,id):
+	db = database.Database()
+	state=0
+	anomaly = db.getAnomalyById(id,state)
+
+	baseTrade = anomaly.trade
+	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)
+	#??for t in trades:
+	#    t.time = t.time[10:19]
+	db.close() # Close quickly to prevent any issues
+	return anomaly_template(trades)
+
+def anomaly_template(trades):
 	pagename = "Anomaly Information for " + symbol
 	anomalyType = "TODO"
 	anomalyStartTimestamp = "TODO"

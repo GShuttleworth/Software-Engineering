@@ -470,25 +470,30 @@ class ProcessorThread(threading.Thread):
 				#1 price spike/trough
 				#2 volume spike/trough
 				#3 suspicious trader activity
+				#4 potential pump and dump
 				#calculate category
 				if(len(trade_anomaly)>0):
 					#add anomaly to db
 					cat = -1
-					if((1 in trade_anomaly) & (2 in trade_anomaly)):
-						###possibly pump and dump?
-						a=1
-					if((2 in trade_anomaly) & (3 in trade_anomaly)):
-						###insider information/bear raids?
-						a=1
 					if(1 in trade_anomaly):
 						cat=1
+					if(2 in trade_anomaly):
+						cat=2
+					if((1 in trade_anomaly) & (2 in trade_anomaly)):
+						###possibly pump and dump?
+						cat=4
+					if((3 in trade_anomaly)) and ((1 in trade_anomaly) or (2 in trade_anomaly)):
+						###insider information/bear raids?
+						####TODO
+						cat=3
 					if(3 not in trade_anomaly):
 						#move this out, in here for sake of testing and trader is overly sensitive
 						a=1
-					if(_mode == 1):
-						self.new_anomaly(db,tradeid,t,cat)
-					else:
-						self.new_anomaly(db,tradeid,t,cat)
+					if(cat>0):
+						if(_mode == 1):
+							self.new_anomaly(db,tradeid,t,cat)
+						else:
+							self.new_anomaly(db,tradeid,t,cat)
 			_tradecounterlock.release()
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
@@ -745,7 +750,7 @@ def init_data():
 	#get data in db
 	global _mode
 	db = database.Database(_mode)
-	a = db.getAnomalies(0)
+	a = db.getAnomalies(0,_mode)
 	#db.close()
 	data = {}
 	#TODO
