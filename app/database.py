@@ -178,28 +178,19 @@ class Database:
 		
 	# gets all the anomalies for the table, returns a list of anomaly objects
 	def getAnomalies(self, done):
-		table = "anomalies_live"
+		atable = "anomalies_live"
+		ttable = "trans_live"
 		if(self.state != 1):
-			table = "anomalies_static"  # shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken=?"
+			atable = "anomalies_static"
+			ttable = "trans_static"
+		query = "SELECT id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " NATURAL JOIN " +ttable+" WHERE actiontaken=?"
 		params = [done]
 		data = self.query(query, params)
 		rows = data.fetchall()
 		anomalies = []
 		for row in rows:
-			# gonna get complicated
-			# each row needs to do another sql query to get trade and turn into
-			# TradeData
-			table = "trans_live"
-			if(self.state != 1):
-				table = "trans_static"
-			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-				table + " WHERE id=?"
-			params = [row[1]]
-			data = self.query(query, params)
-			t = data.fetchone()
-			trade_1 = mtrade.to_TradeData(t)
-			a = mtrade.Anomaly(row[0], trade_1, row[2])
+			t = mtrade.to_TradeData(row[3:])
+			a = mtrade.Anomaly(row[0], t, row[2])
 			anomalies.append(a)
 		return anomalies
 	
@@ -250,7 +241,7 @@ class Database:
 		lower = time - timedelta(hours=12)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			ttable + " WHERE(symbol=? AND datetime(time) BETWEEN datetime(?) AND datetime(?)) ORDER BY datetime(time) DESC"
+			ttable + " WHERE(symbol=? AND datetime(time) BETWEEN datetime(?) AND datetime(?)) ORDER BY datetime(time) ASC"
 		params = [sym, lower, upper]
 		rows = self.query(query, params)
 		trades = []

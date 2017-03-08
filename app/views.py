@@ -7,6 +7,8 @@ from app import mtrade
 from app import database
 from app import dbm
 
+from datetime import datetime, timedelta
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -26,34 +28,41 @@ def index():
 @app.route('/stock', methods=['GET', 'POST'])
 @app.route('/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
 def anomaly(symbol, id):
-    # Create database instancea
-    global dbm
-    #print("state is " + str(dbm.mode))
-    db = database.Database(dbm.mode)
+	# Create database instancea
+	global dbm
+	#print("state is " + str(dbm.mode))
+	db = database.Database(dbm.mode)
 	#print("state is" + str(db.state))
-    anomaly = db.getAnomalyById(id)
+	anomaly = db.getAnomalyById(id)
+
+	baseTrade = anomaly.trade
+	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time)
+	#??for t in trades:
+	#    t.time = t.time[10:19]
+	db.close() # Close quickly to prevent any issues
+	pagename = "Anomaly Information for " + symbol
+	anomalyType = "TODO"
+	anomalyStartTimestamp = "TODO"
+	anomalyEndTimestamp = "TODO"
+	certantyPercentage = "TODO"
+	time = baseTrade.time
+	buyer = baseTrade.buyer
+	seller = baseTrade.seller
+	price = baseTrade.price
+	size = baseTrade.size
+	currency = baseTrade.currency
+	symbol = baseTrade.symbol
+	sector = baseTrade.sector
+	bid = baseTrade.bidPrice
+	ask = baseTrade.askPrice
 	
-    baseTrade = anomaly.trade
-    trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time)
-    #??for t in trades:
-    #    t.time = t.time[10:19]
-    db.close() # Close quickly to prevent any issues
-    pagename = "Anomaly Information for " + symbol
-    anomalyType = "TODO"
-    anomalyStartTimestamp = "TODO"
-    anomalyEndTimestamp = "TODO"
-    certantyPercentage = "TODO"
-    time = baseTrade.time
-    buyer = baseTrade.buyer
-    seller = baseTrade.seller
-    price = baseTrade.price
-    size = baseTrade.size
-    currency = baseTrade.currency
-    symbol = baseTrade.symbol
-    sector = baseTrade.sector
-    bid = baseTrade.bidPrice
-    ask = baseTrade.askPrice
-    return render_template('anomaly.html', **locals())
+	try:
+		rangetime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+	except ValueError:
+		rangetime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+	min = rangetime - timedelta(minutes=30) #create an upper and lower boundary frame TODO change if necessary
+	max = rangetime + timedelta(minutes=30)
+	return render_template('anomaly.html', **locals())
 
 
 @app.route('/', methods=['POST'])
