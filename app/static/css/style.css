@@ -1,3 +1,8 @@
+.alertify-logs{
+	z-index: 1000;
+}
+.a-panel-heading { cursor: pointer; }
+
 #live-status{
 	text-align:center;
 }

@@ -3,6 +3,7 @@ from app import mtrade
 from os.path import isfile, getsize
 import os
 
+from datetime import datetime, timedelta
 
 class Database:
 
@@ -103,29 +104,34 @@ class Database:
 		else:
 			return -1
 
-	def anomalycount(self):
+	def anomalycount(self,state):
 		table = "anomalies_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "anomalies_static"
+		return self.getcount(table,state)
 
-	def tradecount(self):
+	def tradecount(self,state):
 		table = "trans_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "trans_static"
+		return self.getcount(table,state)
 
-	def getcount(self, table):
+	def getcount(self, table,state):
 		query = "SELECT COUNT(*) FROM " + table
 		params =[]
 		data = self.query(query, params)
 		t = data.fetchone()
 		return t[0]
 
-	def tradevalue(self):
-		query = "SELECT SUM(price * volume) FROM trans_live"
+	def tradedetails(self,state):
+		table = "trans_live"
+		if(state!=1):
+			table = "trans_static"
+		query = "SELECT SUM(price * volume),COUNT(*) FROM "+table
 		params = []
 		data = self.query(query, params)
 		t = data.fetchone()
-		if(not t[0]):
-			return 0
-		return t[0]
+		return t
 
 	def getAveragePrice(self, sym):
 		return self.getAverage(sym)[1]
@@ -165,7 +171,7 @@ class Database:
 			query = "DELETE FROM " + table
 			params = []
 			self.action(query, params)
-			table = "trans_static"
+			table = "anomalies_live"
 			if(state==0):
 				table = "anomalies_static"
 			query = "DELETE FROM " + table
@@ -176,51 +182,37 @@ class Database:
 		return True
 		
 	# gets all the anomalies for the table, returns a list of anomaly objects
-	def getAnomalies(self, done):
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"  # shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken=?"
+	def getAnomalies(self, done,state):
+		atable = "anomalies_live"
+		ttable = "trans_live"
+		if(state != 1):
+			atable = "anomalies_static"
+			ttable = "trans_static"
+		query = "SELECT " +atable+".id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " JOIN "+ttable+" ON "+ttable+ ".id="+atable+".tradeid WHERE actiontaken=?"
 		params = [done]
 		data = self.query(query, params)
 		rows = data.fetchall()
 		anomalies = []
 		for row in rows:
-			# gonna get complicated
-			# each row needs to do another sql query to get trade and turn into
-			# TradeData
-			table = "trans_live"
-			if(self.state != 1):
-				table = "trans_static"
-			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-				table + " WHERE id=?"
-			params = [row[1]]
-			data = self.query(query, params)
-			t = data.fetchone()
-			trade_1 = mtrade.to_TradeData(t)
-			a = mtrade.Anomaly(row[0], trade_1, row[2])
+			t = mtrade.to_TradeData(row[3:])
+			a = mtrade.Anomaly(row[0], t, row[2])
 			anomalies.append(a)
 		return anomalies
 	
-	def getAnomalyById(self, id):
+	def getAnomalyById(self, id,state):
 		# Useful function for the drill down stuff
 		table1 = "anomalies_live"
 		table2 = "trans_live"
-		if(self.state != 1):
+		if(state != 1):
 			table1 = "anomalies_static"
-			tabel2 = "trans_static"
-		query = "SELECT * FROM " + table1 + " WHERE id=?"
+			table2 = "trans_static"
+		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+".id=?"
 		params = [id]
-		result = self.query(query, params)
-		row = result.fetchone()  # Only one result per id
-		# Get the relevant trade
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table2 + " WHERE id=?"
-		params = [row[1]]
 		data = self.query(query, params)
 		t = data.fetchone()
-		trade = mtrade.to_TradeData(t)
-		return mtrade.Anomaly(row[0], trade, row[2])
+		category=t[0]
+		trade = mtrade.to_TradeData(t[1:]) #remove category
+		return mtrade.Anomaly(id, trade, category)
 
 	def addAnomaly(self, tradeid, category, state):
 		anomalyid = -1
@@ -240,39 +232,26 @@ class Database:
 	def getAverageVolume(self, sym):
 		return self.getAverage(sym)[2]
 
-	def getTradesForDrillDown(self, sym, id):
+	def getTradesForDrillDown(self, sym, time,state):
 		# Return set of recent trades before and after anomaly
 		# Get trade id
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"
-		query = "SELECT tradeid FROM " + table + " WHERE id=?"
-		params = [id]
-		tradeId = self.query(query, params).fetchone()[0]
-		table = "trans_live"
-		if(self.state != 1):
-			table = "trans_static"
+		ttable = "trans_live"
+		if(state != 1):
+			ttable = "trans_static"
+		try:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+		except ValueError:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+		upper = time + timedelta(hours=12) #create an upper and lower boundary frame TODO change if necessary
+		lower = time - timedelta(hours=12)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id<=?) ORDER BY datetime(time) DESC LIMIT 8"
-		params = [sym, tradeId]
+			ttable + " WHERE(symbol=? AND datetime(time) BETWEEN datetime(?) AND datetime(?)) ORDER BY datetime(time) ASC"
+		params = [sym, lower, upper]
 		rows = self.query(query, params)
 		trades = []
-		for row in rows: 
+		for row in rows:
 			trade = mtrade.to_TradeData(row)
 			trades.append(trade)
-			#print(trades)
-
-		#print(trades)
-		trades = trades[::-1] # Reverses the order of the trades, as they are currently in descending, not ascending order
-		#print(trades)
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol=? and id>?) ORDER BY datetime(time) ASC LIMIT 7"
-		params = [sym, tradeId]
-		results = self.query(query, params)
-		for res in results: 
-			trade = mtrade.to_TradeData(res)
-			trades.append(trade)
-			#print(trades)
 
 		return trades

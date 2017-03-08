@@ -14,9 +14,10 @@ function refresh() {
 				var anomaly = data.anomalies[i];
 				if(parseInt(anomaly.type)!=0){
 					//create htmls for each
-					anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
+					anomalyHTML(data.mode,anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action,anomaly.sector);
 					alertify.logPosition("top right");
-					alertify.success("New Anomaly Detected");
+					var notification = alertify.success("New Anomaly Detected");
+					notification.ondismiss = function(){window.location = "/stock/"+anomaly.action+"/anomaly/"+anomaly.id; return true;}; //this doesn't work
 					beep();
 				}else if(parseInt(anomaly.type)==0){
 					//make sure it actually does exist
@@ -51,7 +52,7 @@ function loadanomalies(){
 		   for(var i in data.anomalies){
 			   var anomaly = data.anomalies[i];
 			   //create htmls for each
-			   anomalyHTML(anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action);
+			   anomalyHTML(data.mode,anomaly.id,anomaly.date,anomaly.time,anomaly.type,anomaly.action,anomaly.sector);
 		   }
 		},
 		error: function(d) {
@@ -83,16 +84,19 @@ function anomalyHTMLremove(id){
 	alertify.logPosition("top right");
 	alertify.error('Anomaly Dismissed');
 }
-function anomalyHTML(id,date,time,type,action){
+function anomalyHTML(mode,id,date,time,type,action,sector){
 
 	// Make date human readable
 	var humanTime = time.substring(0,8);
 	var humanDate = moment(date).format('DD-MM-YYYY');
-
+	var static = "";
+	if(mode==0){
+		static = "/static";
+	}
 	// Init Datatable
 	var table = $('#table-anomaly').DataTable();
 	// Construct HMTL for table row
-	var row = "<tr id='tbl-row-"+id+"'><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a> <a href='#'><button type='button' class='btn btn-success' onclick='dismiss("+id+")'>Dismiss</button></a></div>";
+	var row = "<tr id='tbl-row-"+id+"'><td>"+id+"</td><td>"+humanDate+"</td><td>"+humanTime+"</td><td>"+action+"</td><td>"+sector+"</td><td>"+convert_type(type)+"</td><td><div class='btn-group' role='group' aria-label=''...''><a href='"+static+"/stock/"+action+"/anomaly/"+id+"'><button type='button' class='btn btn-primary'>View</button></a> <a href='#'><button type='button' class='btn btn-success' onclick='dismiss("+id+")'>Dismiss</button></a></div>";
 	table.row.add( $(row)[0] ).draw();
 }
 
@@ -105,16 +109,16 @@ function convert_type(t){
 	var type="Unknown";
 	switch(t){
 		case 1:
-			type="Fat finger"
-			break;
-		case 2:
-			type="Bear raids"
-			break;
-		case 3:
 			type="Price spike"
 			break;
-		case 4:
+		case 2:
 			type="Volume spike"
+			break;
+		case 3:
+			type="Suspicious trader activity"
+			break;
+		case 4:
+			type="Potential pump and dump"
 			break;
 	}
 	return type;

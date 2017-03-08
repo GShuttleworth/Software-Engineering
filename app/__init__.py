@@ -111,10 +111,15 @@ def load_data(mode):
         
 	dbm.mode = mode
 	db = database.Database()
+	trades = db.tradedetails(mode)
+	_tradecounter = int(trades[1])
+	_anomalycounter = int(db.anomalycount(mode))
+	if(trades[0] is not None):
+		_tradevalue = float(trades[0])
+	else:
+		_tradevalue = float(0)
 
-	_tradecounter = int(db.tradecount())
-	_anomalycounter = int(db.anomalycount())
-	_tradevalue = float(db.tradevalue())
+	db.close()
 
 def init_threads():
 	#create threads
@@ -237,14 +242,17 @@ class StaticFileThread(threading.Thread):
 			global _anomalycounter
 			global _tradevalue
 			global _mode
+			global _tradecounterlock
 			
 			disconnect_stream()
 
 			#Resetting values
+			_tradecounterlock.acquire()
 			_mode = 0
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
+			_tradecounterlock.release()
 			print("Resetting Data")
 			self.databaseReset()
 
@@ -415,8 +423,13 @@ class ProcessorThread(threading.Thread):
 
 		db = database.Database(_mode)
 		while(_running):
-			if(previousmode!=_mode):
-				#change in mode since last iteration
+			global _tradecounter
+			global _tradecounterlock
+			global _anomalycounter
+			global _tradevalue
+			
+			if(previousmode!=_mode or _tradecounter==0):
+				#change in mode since last iteration or if it got reset
 				#reset machine learning
 				detection.reset()
 				if(_mode==1):
@@ -433,16 +446,11 @@ class ProcessorThread(threading.Thread):
 					it_count = 0	
 					self.refreshVals()
 				trades = self.dequeue(_q,_qlock)
-
+			_tradecounterlock.acquire() #critical section big is fine because only '/reset' can change
 			for t in trades:
 				#Update counts
 				if (not isinstance(t, mtrade.TradeData)):
 					continue
-
-				global _tradecounter
-				global _tradecounterlock
-				global _anomalycounter
-				global _tradevalue
 				
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
@@ -462,25 +470,31 @@ class ProcessorThread(threading.Thread):
 				#1 price spike/trough
 				#2 volume spike/trough
 				#3 suspicious trader activity
+				#4 potential pump and dump
 				#calculate category
 				if(len(trade_anomaly)>0):
 					#add anomaly to db
 					cat = -1
-					if((1 in trade_anomaly) & (2 in trade_anomaly)):
-						###possibly pump and dump?
-						a=1
-					if((2 in trade_anomaly) & (3 in trade_anomaly)):
-						###insider information/bear raids?
-						a=1
 					if(1 in trade_anomaly):
 						cat=1
+					if(2 in trade_anomaly):
+						cat=2
+					if((1 in trade_anomaly) & (2 in trade_anomaly)):
+						###possibly pump and dump?
+						cat=4
+					if((3 in trade_anomaly)) and ((1 in trade_anomaly) or (2 in trade_anomaly)):
+						###insider information/bear raids?
+						####TODO
+						cat=3
 					if(3 not in trade_anomaly):
 						#move this out, in here for sake of testing and trader is overly sensitive
-						if (_mode == 1):
+						a=1
+					if(cat>0):
+						if(_mode == 1):
 							self.new_anomaly(db,tradeid,t,cat)
 						else:
 							self.new_anomaly(db,tradeid,t,cat)
-		
+			_tradecounterlock.release()
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
 		db.close()
@@ -596,6 +610,7 @@ def getdata():
 					anomaly['date'] = temp[0]
 					anomaly['time'] = temp[1]
 					anomaly['action'] = x.trade.symbol
+					anomaly['sector'] = x.trade.sector
 				anomalies.append(anomaly)
 		except KeyError:
 			# Key is not present, no sessions for user
@@ -665,16 +680,22 @@ def toggleconnect():
 def resetstats():
 	global _mode
 	#for resetting current stats and db?
+	global _mode
 	db = database.Database()
 	success=db.clearall(_mode)
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter
+	global _tradecounterlock
 	
 	if(success):
+		_tradecounterlock.acquire()
 		_tradevalue = 0
 		_tradecounter = 0
 		_anomalycounter = 0
+		_tradecounterlock.release()
+		#reset machine learning
+		print("reset")
 		return "ok"
 	return "fail"
 	
@@ -695,38 +716,17 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-	
 	global _mode
 	global _threads
 	global _threadID
-	global dbm
-
 	if request.method == 'POST':
-		print("Requesting File")
 		f = request.files['file']
-		
 		if f.filename == '':
 	            flash('No selected file')
 	            return "not ok"
-
 		if f and allowed_file(f.filename):
-			
-			print("Reading File")
 			filename = secure_filename(f.filename)
-			
 			f.save(os.path.join(app.config['UPLOAD_FOLDER'], "trades.csv"))
-			_mode = 0
-			dbm.mode = _mode
-			tstatic = StaticFileThread(_threadID)
-			
-			tstatic.start()
-			_threads.append(tstatic)
-			_threadID += 1
-			#DO NOT DO PROCESSING IN THIS MAIN THREAD@@@@@ NOT EVEN READINGtet			
-
-			#create another thread to put into queue otherwise will be blocking/delay in return
-			#it should also empty contents of old queue
-
 		else:
 			print("Error with file upload")
 			return "not ok"
@@ -751,7 +751,7 @@ def init_data():
 	#get data in db
 	global _mode
 	db = database.Database(_mode)
-	a = db.getAnomalies(_mode)
+	a = db.getAnomalies(0,_mode)
 	#db.close()
 	data = {}
 	#TODO
@@ -764,17 +764,29 @@ def init_data():
 		anomaly['date'] = temp[0]
 		anomaly['time'] = temp[1]
 		anomaly['action'] = x.trade.symbol
+		anomaly['sector'] = x.trade.sector
 		anomalies.append(anomaly)
 	#make into json
 	if(len(anomalies)>0):
 		data["anomalies"] = anomalies
+	data["mode"] = _mode
 	return json.dumps(data)
+
+@app.route('/loadstatic',methods=['POST'])
+def loadstatic():
+	global _mode
+	_mode = 0
+	load_data(_mode)
+	#return init_data()
+	return "ok"
 
 @app.route('/static', methods=['POST'])
 def process_static():
 	global _threads
 	global _threadID
 	global _mode
+	global _sessions
+	
 	#check file exists
 	exists=os.path.exists("trades.csv")
 	if(exists):
@@ -792,6 +804,8 @@ def process_static():
 @app.route('/live', methods=['POST'])
 def process_live():
 	global _mode
+	global _sessions
+	#TODO improve sessions
 	if(_mode==0):
 		_mode=1
 		load_data(_mode)
