@@ -166,8 +166,18 @@ function processfile(){
 }
 function loadstatic(){
 	//load data from static database
-	//TODO
-	closeNav("uploadnav");
+	$.ajax({
+		   type : 'POST',
+		   url : "/loadstatic",
+		   success: function(d) {
+				closeNav("uploadnav");
+				window.location = "/";
+		   },
+		   error: function(d) {
+		   
+		   }
+   });
+
 }
 
 function displayupload(){

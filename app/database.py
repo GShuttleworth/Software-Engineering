@@ -205,7 +205,7 @@ class Database:
 		table2 = "trans_live"
 		if(state != 1):
 			table1 = "anomalies_static"
-			tabel2 = "trans_static"
+			table2 = "trans_static"
 		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+".id=?"
 		params = [id]
 		data = self.query(query, params)

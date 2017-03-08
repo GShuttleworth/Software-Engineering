@@ -768,7 +768,16 @@ def init_data():
 	#make into json
 	if(len(anomalies)>0):
 		data["anomalies"] = anomalies
+	data["mode"] = _mode
 	return json.dumps(data)
+
+@app.route('/loadstatic',methods=['POST'])
+def loadstatic():
+	global _mode
+	_mode = 0
+	load_data(_mode)
+	#return init_data()
+	return "ok"
 
 @app.route('/static', methods=['POST'])
 def process_static():
