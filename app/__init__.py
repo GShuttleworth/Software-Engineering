@@ -111,10 +111,13 @@ def load_data(mode):
         
 	dbm.mode = mode
 	db = database.Database()
-
-	_tradecounter = int(db.tradecount())
-	_anomalycounter = int(db.anomalycount())
-	_tradevalue = float(db.tradevalue())
+	trades = db.tradedetails(mode)
+	_tradecounter = int(db.tradecount(mode))
+	_anomalycounter = int(trades[1])
+	if(trades[0] is not None):
+		_tradevalue = float(trades[0])
+	else:
+		_tradevalue = float(0)
 
 	db.close()
 

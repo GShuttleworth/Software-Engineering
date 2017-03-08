@@ -104,29 +104,34 @@ class Database:
 		else:
 			return -1
 
-	def anomalycount(self):
+	def anomalycount(self,state):
 		table = "anomalies_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "anomalies_static"
+		return self.getcount(table,state)
 
-	def tradecount(self):
+	def tradecount(self,state):
 		table = "trans_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "trans_static"
+		return self.getcount(table,state)
 
-	def getcount(self, table):
+	def getcount(self, table,state):
 		query = "SELECT COUNT(*) FROM " + table
 		params =[]
 		data = self.query(query, params)
 		t = data.fetchone()
 		return t[0]
 
-	def tradevalue(self):
-		query = "SELECT SUM(price * volume) FROM trans_live"
+	def tradedetails(self,state):
+		table = "trans_live"
+		if(state!=1):
+			table = "trans_static"
+		query = "SELECT SUM(price * volume),COUNT(*) FROM "+table
 		params = []
 		data = self.query(query, params)
 		t = data.fetchone()
-		if(not t[0]):
-			return 0
-		return t[0]
+		return t
 
 	def getAveragePrice(self, sym):
 		return self.getAverage(sym)[1]

@@ -39,7 +39,7 @@
 
   <div class="col-md-12">
     <div class="panel panel-default">
-      <div class="panel-heading">Price</div>
+      <div class="panel-heading">TODO</div>
       <div class="panel-body">
 
         <div id="container" style="width:100%; height:400px;"></div>
@@ -96,50 +96,51 @@
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<!-- Price Graph -->
+<!-- Renders graph based on inputs -->
 <script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-function drawChart(){
-	//TODO work on markers
-	var data = ([
-				 {%- for trade in trades %}
-				 {%- if trade.time == time and trade.price == price  %}
-					{x:Date.parse('{{ time }}'),y:{{ price }},marker: {fillColor: 'red',lineWidth: 2,radius:10, enabled:true} }
-				 {% else %}
-					[Date.parse('{{ trade.time }}'),{{ trade.price }}]
-				 {% endif %}
-					{%- if not loop.last %},{% endif %}
-				 {%- endfor %}]);
-	var chart = Highcharts.chart('price_chart',{
-					 chart: {
-						 zoomType: 'x'
+	function renderchart(data,id,heading,ylabel,pointlabel){
+		var chart = Highcharts.stockChart(id,{
+				 chart: {
+					 zoomType: 'x'
+				 },
+				 title: {
+					 text: heading
+				 },
+				 subtitle: {
+					 text: document.ontouchstart === undefined ?
+					 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+				 },
+				 xAxis: {
+					 type: 'datetime',
+					 scrollbar: {
+						 enabled: true,
+						 showFull: false
 					 },
+				 },
+				 yAxis: {
 					 title: {
-						 text: 'Price per trade in the past 24 hours'
+						 text: ylabel
 					 },
-					 subtitle: {
-						 text: document.ontouchstart === undefined ?
-						 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+					 opposite: false,
+					 
+				 },
+				 legend: {
+					 enabled: false
+				 },
+				 rangeSelector: {
+					 selected: 1,
+					 inputEnabled: false,
+					 buttonTheme: {
+						 visibility: 'hidden'
 					 },
-					 xAxis: {
-						 type: 'datetime'
-					 },
-					 yAxis: {
-						 title: {
-							 text: 'Stock price'
-						 }
-					 },
-					 legend: {
-						 enabled: false
-					 },
-					 rangeSelector: {
-						 selected: 1
-					 },
-					 plotOptions: {
-						 area: {
-							 fillColor: {
-								 linearGradient: {
+					 labelStyle: {
+						 visibility: 'hidden'
+					 }
+				 },
+				 plotOptions: {
+					 area: {
+						 fillColor: {
+							 linearGradient: {
 								 x1: 0,
 								 y1: 0,
 								 x2: 0,
@@ -149,88 +150,69 @@ function drawChart(){
 									 [0, Highcharts.getOptions().colors[0]],
 									 [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
 									 ]
-							 },
-							 marker: {
-								 radius: 2
-							 },
-							 lineWidth: 1,
-							 states: {
-								 hover: {
-									 lineWidth: 1
-								 }
-							 },
-							 threshold: null
-						 }
-					 },
-					 series: [{
-						  type: 'area',
-						  name: 'price',
+						 },
+						 marker: {
+							 radius: 2
+						 },
+						 lineWidth: 1,
+						 states: {
+							 hover: {
+								 lineWidth: 1
+							 }
+						 },
+						 threshold: null
+					 }
+				 },
+				 series: [{
+						  //type: 'area', //put back in if you want graph filled
+						  name: pointlabel,
 						  data: data
-					  }]
-				});
-				chart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
-	chart.showResetZoom();
-}
+						  }]
+				 });
+		return chart;
+	}
 </script>
-<!-- Volume Graph -->
 <script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-    ['Time', 'Volume'],
-    {%- for trade in trades %}
-    ['{{ trade.time }}', {{ trade.size }}]{%- if not loop.last %},{% endif %}
-    {%- endfor %}
-  ]);
-
-  var options = {
-    title: 'Volume of most recent trades',
-    legend: { position: 'bottom' },
-    chartArea: { height: "40%", width: "90%" }
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('volume_chart'));
-
-  chart.draw(data, options);
-}
-</script>
-
-<script>
 $(function () {
-    var myChart = Highcharts.chart('container', {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Fruit Consumption'
-        },
-        xAxis: {
-            categories: ['Apples', 'Bananas', 'Oranges']
-        },
-        yAxis: {
-            title: {
-                text: 'Fruit eaten'
-            }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }, {
-            name: 'John',
-            data: [5, 7, 3]
-        }]
-    });
+	var pricedata = ([
+	{%- for trade in trades %}
+		//price
+		 {%- if trade.time == time and trade.price == price  %}
+			{x:Date.parse('{{ time }}'),y:{{ price }},marker: {fillColor: 'red',lineWidth: 2,radius:5, enabled:true} }
+		 {% else %}
+			[Date.parse('{{ trade.time }}'),{{ trade.price }}]
+		 {% endif %}
+		{%- if not loop.last %},{% endif %}
+	{%- endfor %}]);
+  //volume
+	var volumedata = ([
+		{%- for trade in trades %}
+			{%- if trade.time == time and trade.size == size  %}
+				{x:Date.parse('{{ time }}'),y:{{ size }},marker: {fillColor: 'red',lineWidth: 2,radius:5, enabled:true} }
+			{% else %}
+				[Date.parse('{{ trade.time }}'),{{ trade.size }}]
+			{% endif %}
+			{%- if not loop.last %},{% endif %}
+		{%- endfor %}]);
+
+	//draw price chart
+	var pchart = renderchart(pricedata,'price_chart','Price per trade','Stock price','price');
+	
+	pchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
+	pchart.showResetZoom();
+	//draw volume chart
+	var vchart = renderchart(volumedata,'volume_chart','Volume per trade','Volume','size');
+
+	vchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
+	vchart.showResetZoom();
+
 });
-
-</script>
-
-
 </script>
 {% endblock %}
 
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/anomaly.js') }}"></script>
+<!-- HighCharts -->
+<script src="{{ url_for('static', filename='Highstock-5.0.7/code/highstock.js') }}"></script>
 {% endblock %}
