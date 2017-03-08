@@ -40,7 +40,6 @@ def anomaly(symbol, id):
 	db.close() # Close quickly to prevent any issues
 	return anomaly_template(trades,baseTrade,symbol,id)
 
-@app.route('/static', methods=['GET', 'POST'])
 @app.route('/static/stock', methods=['GET', 'POST'])
 @app.route('/static/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
 	# Create database instance
