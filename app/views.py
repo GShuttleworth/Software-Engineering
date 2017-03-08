@@ -38,7 +38,7 @@ def anomaly(symbol, id):
 	#??for t in trades:
 	#    t.time = t.time[10:19]
 	db.close() # Close quickly to prevent any issues
-	return anomaly_template(trades)
+	return anomaly_template(trades,baseTrade,symbol,id)
 
 @app.route('/stock', methods=['GET', 'POST'])
 @app.route('/static/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
@@ -53,9 +53,9 @@ def static_anomaly(symbol,id):
 	#??for t in trades:
 	#    t.time = t.time[10:19]
 	db.close() # Close quickly to prevent any issues
-	return anomaly_template(trades)
+	return anomaly_template(trades,baseTrade,symbol,id)
 
-def anomaly_template(trades):
+def anomaly_template(trades,baseTrade,symbol,id):
 	pagename = "Anomaly Information for " + symbol
 	anomalyType = "TODO"
 	anomalyStartTimestamp = "TODO"
