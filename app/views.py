@@ -55,16 +55,20 @@ def anomaly(symbol, id):
 	sector = baseTrade.sector
 	bid = baseTrade.bidPrice
 	ask = baseTrade.askPrice
-	
-	try:
-		rangetime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-	except ValueError:
-		rangetime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-	min = rangetime - timedelta(minutes=30) #create an upper and lower boundary frame TODO change if necessary
-	max = rangetime + timedelta(minutes=30)
+
+	rangetime = convert_date(time)
+	first = convert_date(trades[0].time)
+	last = convert_date(trades[len(trades)-1].time)
+	lower = max(first,rangetime - timedelta(minutes=15)) #create an upper and lower boundary frame TODO change if necessary
+	upper = min(last,rangetime + timedelta(minutes=15))
 	return render_template('anomaly.html', **locals())
 
-
+def convert_date(time):
+	try:
+		time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+	except ValueError:
+		time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+	return time
 @app.route('/', methods=['POST'])
 def my_form_post():
     pagename = "Home"

@@ -101,10 +101,11 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 function drawChart(){
+	//TODO work on markers
 	var data = ([
 				 {%- for trade in trades %}
-				 {%- if "{{ trade.time }}" == "{{ time }}" and "{{ trade.price }}" == "{{ price }}"  %}
-					[{y:{{ time }}, x:{{ price }}, color: 'red'}]
+				 {%- if trade.time == time and trade.price == price  %}
+					{x:Date.parse('{{ time }}'),y:{{ price }},marker: {fillColor: 'red',lineWidth: 2,radius:10, enabled:true} }
 				 {% else %}
 					[Date.parse('{{ trade.time }}'),{{ trade.price }}]
 				 {% endif %}
@@ -167,7 +168,7 @@ function drawChart(){
 						  data: data
 					  }]
 				});
-				chart.xAxis[0].setExtremes(Date.parse('{{ min }}'),Date.parse('{{ max }}'));
+				chart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
 	chart.showResetZoom();
 }
 </script>
