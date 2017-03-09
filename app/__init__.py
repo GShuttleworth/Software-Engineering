@@ -403,11 +403,11 @@ class HandlerThread (threading.Thread):
 					break
 
 class ProcessorThread(threading.Thread):
+	
 
-	stepNumOfStepsPairs = [[20, 6]]
-	tickTimeCntPairs = [[0,0]]
-
-	senstivityPerTrader = 5
+	###############################
+	global _sensitivity
+    	###############################
 
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
