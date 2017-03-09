@@ -33,7 +33,7 @@ class Detection:
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
-		print("setup")
+		#print("setup")
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepLength)
 		#rolling average for all traders
@@ -96,7 +96,7 @@ class Detection:
 					
 					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, 9, 3)):
 						print("vol error for ", lastVol, " expected ", self.companyList[symb].volumeAvg)
-						trdae_anomaly(2)
+						trade_anomaly(2)
 				else:
 					self.companyList[symb].currCnt[x] += 1
 
