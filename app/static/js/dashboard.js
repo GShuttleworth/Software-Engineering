@@ -147,7 +147,7 @@ $(document).ready(function() {
 	//load anomalies
 	$('#table-anomaly').DataTable( {
 		"columnDefs": [
-    { "orderable": false, "targets": 4 }
+    { "orderable": false, "targets": 6 }
   ]
 	});
 	loadanomalies();
