@@ -31,3 +31,27 @@ ok if you really want
 download numpy.zip from github
 extract and move to same directory as python script
 cba to mess with python export path
+
+MySQL Installation
+
+Make sure to download MySQL Community server 5.7.17 (fo windows)
+or if Linux
+sudo apt-get update
+sudo apt-get insatll mysql-server
+
+This will ask you to set up a password - remember it
+
+sudo service mysql start - start the server
+mysql -u root -h localhost -p <-- Get in database
+--Then type--
+create database cs261
+quit
+--Put schema in--
+mysql -u root -h localhost -p cs261 < schema.sql
+--Done, database is ready--
+
+--to get connector--
+sudo python3.6 -m pip install mysql-connector
+
+-- and everything should work perfectly --
+
