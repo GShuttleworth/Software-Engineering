@@ -94,7 +94,7 @@ class Detection:
 
 				#if a minimum numbers of passes required to generate a prediction has passed return an anomlay if detected
 				if(self.companyList[symb].currCnt[x]>0):
-					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, self.frequencySensitivity, int(self.frequencySensitivity/3)):
+					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, self.frequencySensitivity, int(self.frequencySensitivity/3))):
 						print("freq error for ", lastFreq, " expected ", self.companyList[symb].frequencyAvg)
 						trade_anomaly.append(4)
 					
