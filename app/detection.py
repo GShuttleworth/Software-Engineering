@@ -92,8 +92,8 @@ class Detection:
 							trade_anomaly.append(2)
 
 							# print(str(t.time)+" volume anomaly")
-							# print("volume anomaly for y=", sum(company.volumeRegression.tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
-							# print("expected y=", company.volumeRegression.coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression.coeffList[1], " +/- ", company.volumeRegression.rangeVal) #debugging#
+							print("volume anomaly for y=", sum(company.volumeRegression.tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							print("expected y=", company.volumeRegression.coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression.coeffList[1], " +/- ", company.volumeRegression.rangeVal) #debugging#
 							# print("coeff is ", company.volumeRegression.coeffList)
 						# else:
 							# print(str(t.time)+" NO volume anomaly")

@@ -53,7 +53,7 @@ create table anomalies_static (
 	tradeid integer UNIQUE,
 	category integer,
 	actiontaken integer DEFAULT 0, /* whether the anomaly has been dealt with */
-	FOREIGN KEY(tradeid) REFERENCES trans_live(id) ON DELETE CASCADE
+	FOREIGN KEY(tradeid) REFERENCES trans_static(id) ON DELETE CASCADE
 );
 
 -- Tables for averages

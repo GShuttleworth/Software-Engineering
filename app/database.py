@@ -3,27 +3,36 @@ from app import mtrade
 from os.path import isfile, getsize
 import os
 
+from datetime import datetime, timedelta
 
 class Database:
 
 	def __init__(self, state=1):
-		# Assumes schema is already implemented
+		# check to see if db exists
+		# if it doesn't then create it using schema
 		self.conn = mysql.connector.connect(user='root', password='andypandy', host='127.0.0.1', database='cs261')
-		self.c = self.conn.cursor(buffered=True)
+		self.c = self.conn.cursor()
 		self.state = state  # Default is 1 (live)
+		self.currentId = 0
+		self.startId = 0
 
 	# General purpose functions
 	def query(self, query, params):
 		# for basic queries
-		return self.c.execute(query, params)
+		self.c.execute(query, params)
+		return self.c.fetchall()
 
 	def action(self, query, params):
-		#print("Making insertion")
 		# for update, insert, etc
-		self.c.execute(query, params)
-		self.conn.commit()
-		return self.c.rowcount
-
+		if(self.state == 1):
+			self.c.execute(query, params)
+			self.conn.commit()
+			return self.c.rowcount
+		else:
+			self.c.execute(i[0], i[1])
+			self.conn.commit()
+			return self.c.rowcount
+	
 	def changeState(self, state):
 		# Change between live and static
 		if(state == 1 or state == 0):
@@ -37,43 +46,47 @@ class Database:
 		table = "averages_live"
 		if(self.state != 1):
 			table = "averages_static"
-		query = "SELECT * FROM " + table + " WHERE symbol='%s'"
+		query = "SELECT * FROM " + table + " WHERE symbol=%s"
 		params = [sym]
 		data = self.query(query, params)
-		# should only return 1 row right, if it exists
-		try:
-			avg_exists = data.fetchone()
-		except AttributeError:
+		if(len(data) < 1):
 			return -1
-		return avg_exists
-
+		# should only return 1 row right, if it exists
+		avg_exists = data[0]
+		if(avg_exists != None):
+			return avg_exists
+		return -1
 
 	def updateAverage(self, sym, price, vol, num):
 		table = "averages_live"
 		if(self.state != 1):
 			table = "averages_static"
 		query = "UPDATE " + table + \
-				" SET averagePrice='%s', averageVolume='%s', numTrades='%s' WHERE symbol='%s'"
+				" SET averagePrice=%s, averageVolume=%s, numTrades=%s WHERE symbol=%s"
 		params = [price, vol, num, sym]
 		updated = self.action(query, params)
 		#print("Total number of rows updated :", updated)
 		if(updated == 0):  # check to see if it was updated
 			# add row
-			query = "INSERT INTO " + table + " VALUES ('%s','%s','%s','%s')"
+			query = "insert INTO " + table + " VALUES (%s,%s,%s,%s)"
 			params = [sym, price, vol, 0]
 			updated = self.action(query, params)
 
+	def getFirstId(self):
+		self.startId = self.query("select * from trans_static limit 1", [])[0][0] - 1 # Minus one so corresponding for correct trade
+		print("first id is " + str(self.startId))
+
 	def addTransaction(self,data, state):
 		if(isinstance(data, mtrade.TradeData)):
-			print("Adding a transaction")
 			query = ""
 			if(state == 1):
-				query = """INSERT INTO trans_live VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"""
+				query = "insert INTO trans_live VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 			else:
-				query = "INSERT INTO trans_static VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
+				return data.id
+				
 			tradeid=-1
 			params = (data.time, data.buyer, data.seller, data.price, data.size,
-			data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
+			data.currency, data.symbol, data.sector, float(data.bidPrice), float(data.askPrice))
 			self.action(query, params)
 
 			tradeid=self.c.lastrowid
@@ -98,45 +111,46 @@ class Database:
 		else:
 			return -1
 
-	def anomalycount(self):
+	def anomalycount(self,state):
 		table = "anomalies_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "anomalies_static"
+		return self.getcount(table,state)
 
-	def tradecount(self):
+	def tradecount(self,state):
 		table = "trans_live"
-		return self.getcount(table)
+		if(state!=1):
+			table = "trans_static"
+		return self.getcount(table,state)
 
-	def getcount(self, table):
+	def getcount(self, table,state):
 		query = "SELECT COUNT(*) FROM " + table
 		params =[]
 		data = self.query(query, params)
-		try:
-			t = data.fetchone()
-		except AttributeError:
-			return 0
+		t = data[0]
 		return t[0]
 
-	def tradevalue(self):
-		query = "SELECT SUM(price * volume) FROM trans_live"
+	def tradedetails(self,state):
+		table = "trans_live"
+		if(state!=1):
+			table = "trans_static"
+		query = "SELECT SUM(price * volume),COUNT(*) FROM "+table
 		params = []
 		data = self.query(query, params)
-		try:
-			t = data.fetchone()
-		except AttributeError:
-			return 0
-		return t[0]
+		t = data[0]
+		return t
 
 	def getAveragePrice(self, sym):
 		return self.getAverage(sym)[1]
 
 	#def getAverageVolume(self, sym):
 	#	return self.getAverage(sym)[2]
-	#		query = "INSERT INTO " + table + " VALUES ('%s','%s','%s','%s')"
+	#		query = "insert INTO " + table + " VALUES (%s,%s,%s,%s)"
 	#		params = [sym, price, vol, 0]
 	#		updated = self.action(query, params)
 
 	def getTransactions(self, q):
-		data = self.query(q)
+		data = self.query(q, [])
 		transactions = []
 		for row in data:
 			transactions.append(mtrade.TradeData(row[0], row[1], row[2], row[3], row[
@@ -150,7 +164,7 @@ class Database:
 		if(self.state == 1):
 			table = "trans_static"
 
-		query = "DELETE FROM " + table + " WHERE time='%s'"
+		query = "DELETE FROM " + table + " WHERE time=%s"
 		params = [date]
 		self.action(query, params)
 		return 1
@@ -160,11 +174,11 @@ class Database:
 		try:
 			table = "trans_live"
 			if(state==0):
-				table = "static_live"
+				table = "trans_static"
 			query = "DELETE FROM " + table
 			params = []
 			self.action(query, params)
-			table = "trans_static"
+			table = "anomalies_live"
 			if(state==0):
 				table = "anomalies_static"
 			query = "DELETE FROM " + table
@@ -175,64 +189,52 @@ class Database:
 		return True
 		
 	# gets all the anomalies for the table, returns a list of anomaly objects
-	def getAnomalies(self, done):
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"  # shouldn't exist but for the sake of it
-		query = "SELECT id,tradeid,category FROM " + table + " WHERE actiontaken='%s'"
+	def getAnomalies(self, done,state):
+		atable = "anomalies_live"
+		ttable = "trans_live"
+		if(state != 1):
+			atable = "anomalies_static"
+			ttable = "trans_static"
+		query = "SELECT " +atable+".id,tradeid,category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + atable + " JOIN "+ttable+" ON "+ttable+ ".id="+atable+".tradeid WHERE actiontaken=%s"
 		params = [done]
-		data = self.query(query, params)
-		try:
-			rows = data.fetchall()
-		except AttributeError:
-			rows = []
+		rows = self.query(query, params)
 		anomalies = []
 		for row in rows:
-			# gonna get complicated
-			# each row needs to do another sql query to get trade and turn into
-			# TradeData
-			table = "trans_live"
-			if(self.state != 1):
-				table = "trans_static"
-			query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-				table + " WHERE id='%s'"
-			params = [row[1]]
-			data = self.query(query, params)
-			t = data.fetchone()
-			trade_1 = mtrade.to_TradeData(t)
-			a = mtrade.Anomaly(row[0], trade_1, row[2])
+			t = mtrade.to_TradeData(row[3:])
+			a = mtrade.Anomaly(row[0], t, row[2])
 			anomalies.append(a)
 		return anomalies
 	
-	def getAnomalyById(self, id):
+	def getAnomalyById(self, id,state):
 		# Useful function for the drill down stuff
 		table1 = "anomalies_live"
 		table2 = "trans_live"
-		if(self.state != 1):
+		if(state != 1):
 			table1 = "anomalies_static"
-			tabel2 = "trans_static"
-		query = "SELECT * FROM " + table1 + " WHERE id='%s'"
-		print(id)
+			table2 = "trans_static"
+		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+".id=%s"
 		params = [id]
-		result = self.query(query, params)
-		#print("Row count: " + str(result.rowcount()))
-		row = result.fetchone()  # Only one result per id
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table2 + " WHERE id='%s'"
-		params = [row[1]]
+		print(query)
+		print("THE PARAMS FOR THIS ANOMALY ARE " + str(params))
 		data = self.query(query, params)
-		t = data.fetchone()
-		trade = mtrade.to_TradeData(t)
-		return mtrade.Anomaly(row[0], trade, row[2])
+		t = data[0]
+		category=t[0]
+		trade = mtrade.to_TradeData(t[1:]) #remove category
+		return mtrade.Anomaly(id, trade, category)
 
 	def addAnomaly(self, tradeid, category, state):
 		anomalyid = -1
 		table = "anomalies_live"
 		if(state != 1):
-			table = "anomalies_static"
+			return -1
 
-		query = "INSERT INTO " + table + " VALUES(NULL, '%s', '%s', 0)"
+		query = "insert INTO " + table + " VALUES(NULL, %s, %s, 0)"
 		params = [tradeid, category]
+		'''
+		if(state == 0):
+			params = [self.currentId + self.query("select * from trans_static limit 1", [])[0][0] - 1, category]
+			print("params are " + str(params))
+			'''
 		self.action(query, params)
 		anomalyid = self.c.lastrowid
 		return anomalyid
@@ -243,39 +245,64 @@ class Database:
 	def getAverageVolume(self, sym):
 		return self.getAverage(sym)[2]
 
-	def getTradesForDrillDown(self, sym, id):
+	def getTradesForDrillDown(self, sym, time,state):
 		# Return set of recent trades before and after anomaly
 		# Get trade id
-		table = "anomalies_live"
-		if(self.state != 1):
-			table = "anomalies_static"
-		query = "SELECT tradeid FROM " + table + " WHERE id='%s'"
-		params = [id]
-		tradeId = self.query(query, params).fetchone()[0]
-		table = "trans_live"
-		if(self.state != 1):
-			table = "trans_static"
+		ttable = "trans_live"
+		if(state != 1):
+			ttable = "trans_static"
+		try:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+		except ValueError:
+			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+		upper = time + timedelta(hours=12) #create an upper and lower boundary frame TODO change if necessary
+		lower = time - timedelta(hours=12)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol='%s' and id<='%s') ORDER BY datetime(time) DESC LIMIT 8"
-		params = [sym, tradeId]
+			ttable + " WHERE(symbol=%s AND unix_timestamp(time) BETWEEN unix_timestamp(%s) AND unix_timestamp(%s)) ORDER BY unix_timestamp(time) ASC"
+		params = [sym, lower, upper]
 		rows = self.query(query, params)
 		trades = []
-		for row in rows: 
+		for row in rows:
 			trade = mtrade.to_TradeData(row)
 			trades.append(trade)
-			#print(trades)
-
-		#print(trades)
-		trades = trades[::-1] # Reverses the order of the trades, as they are currently in descending, not ascending order
-		#print(trades)
-		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
-			table + " WHERE(symbol='%s' and id>'%s') ORDER BY datetime(time) ASC LIMIT 7"
-		params = [sym, tradeId]
-		results = self.query(query, params)
-		for res in results: 
-			trade = mtrade.to_TradeData(res)
-			trades.append(trade)
-			#print(trades)
 
 		return trades
+
+	def addAnomalyStatic(self, trade, category):
+		if(isinstance(trade, mtrade.TradeData)):
+			tradeid = self.query("select id from trans_static where(time=%s and buyer=%s and seller=%s)", [trade.time, trade.buyer, trade.seller])[0][0]
+			query = "insert into anomalies_static values(NULL, %s, %s, 0)"
+			params = [tradeid, category]
+			print(params)
+			self.action(query, params)
+			anomalyid = self.c.lastrowid
+			return anomalyid
+		return -1
+
+	def getTradesByPerson(self, person, sym, state):
+		trades = []
+		table = "trans_live"
+		if(state != 1):
+			table = "trans_static"
+		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table+ " WHERE(symbol=%s AND (buyer=%s OR seller=%s)) ORDER BY unix_timestamp(time) ASC"
+		params = [sym,person,person]
+		rows = self.query(query, params)
+		for row in rows:
+			trade = mtrade.to_TradeData(row)
+			trades.append(trade)
+		return trades
+
+	def dismissAnomaly(self,id,state):
+		table = "anomalies_live"
+		if(state != 1):
+			table = "anomalies_static"
+		query = "UPDATE "+table+ " SET actiontaken=1 WHERE id=%s"
+		params = [id]
+		self.action(query,params)
+		return 1
+
+	
+
+
+

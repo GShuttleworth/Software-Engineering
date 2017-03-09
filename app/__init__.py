@@ -107,14 +107,18 @@ def load_data(mode):
 	#loads data from db
 	global _tradevalue
 	global _tradecounter
-	global _anomalycounter 
+	global _anomalycounter
+	global dbm 
         
 	dbm.mode = mode
 	db = database.Database()
-
-	_tradecounter = int(db.tradecount())
-	_anomalycounter = int(db.anomalycount())
-	_tradevalue = float(db.tradevalue())
+	trades = db.tradedetails(mode)
+	_tradecounter = int(trades[1])
+	_anomalycounter = int(db.anomalycount(mode))
+	if(trades[0] is not None):
+		_tradevalue = float(trades[0])
+	else:
+		_tradevalue = float(0)
 
 	db.close()
 
@@ -239,14 +243,19 @@ class StaticFileThread(threading.Thread):
 			global _anomalycounter
 			global _tradevalue
 			global _mode
+			global _tradecounterlock
+			global dbm
 			
 			disconnect_stream()
 
 			#Resetting values
+			_tradecounterlock.acquire()
 			_mode = 0
+			dbm.mode = _mode
 			_tradevalue = 0
 			_tradecounter = 0
 			_anomalycounter = 0
+			_tradecounterlock.release()
 			print("Resetting Data")
 			self.databaseReset()
 
@@ -254,7 +263,7 @@ class StaticFileThread(threading.Thread):
 		global _mode
 		dbm.mode = _mode
 		db = database.Database()
-		db.clearall(_mode)
+		db.clearall(0)
 
 	def parsefile(self):
 			#read file
@@ -262,33 +271,64 @@ class StaticFileThread(threading.Thread):
 			global _staticq
 
 			print("Prepared File")
+			# Immediatly read straight to database
+			db = database.Database()
 
-			try:
-				with open('trades.csv', 'r') as csvfile:
-					
-					reader = csv.reader(csvfile, delimiter = ',')
-					for row in reader:
-						if row[1] == 'buyer':
-							continue
-						else:
+			print("Starting to read in the file")
+			db.action("load data local infile 'trades.csv' into table trans_static fields terminated by ',' lines terminated by '\n' ignore 1 lines (@col1, @col2, @col3, @col4, @col5, @col6, @col7, @col8, @col9, @col10) set id=NULL, time=@col1, buyer=@col2, seller=@col3, price=@col4, volume=@col5, currency=@col6, symbol=@col7, sector=@col8, bidPrice=@col9, askPrice=@col10", [])
+			print("Data read in")
 
-							row[0] = str(row[0])
-							row[1] = str(row[1]) #buyer
-							row[2] = str(row[2]) #seller
-							row[3] = str(row[3]) #price
-							row[4] = str(row[4])
-							row[5] = str(row[5])
-							row[6] = str(row[6]) #symbol
-							row[7] = str(row[7]) #sector
-							row[8] = str(row[8])
-							row[9] = str(row[9])
+			db.getFirstId()
+			
+			with open('trades.csv', 'r') as csvfile:
+				
+				reader = csv.reader(csvfile, delimiter = ',')
+		
+				for row in reader:
+					if row[1] == 'buyer':
+						continue
+					else:
 
-							_qlock.acquire()
-							_staticq.put(mtrade.to_TradeData(row))
-							_qlock.release()
-			except KeyboardInterrupt:
-				pass
-					
+						row[0] = str(row[0])
+						row[1] = str(row[1]) #buyer
+						row[2] = str(row[2]) #seller
+						row[3] = str(row[3]) #price
+						row[4] = str(row[4])
+						row[5] = str(row[5])
+						row[6] = str(row[6]) #symbol
+						row[7] = str(row[7]) #sector
+						row[8] = str(row[8])
+						row[9] = str(row[9])
+
+						#trade = mtrade.to_TradeData(row)
+						#trade.id = db.query("select id from trans_static where(time=%s and buyer=%s and seller=%s)", [trade.time, trade.buyer, trade.seller])[0][0]
+
+						_qlock.acquire()
+						_staticq.put(mtrade.to_TradeData(row))
+						_qlock.release()
+			'''
+			print("Trying to load data for processing")
+			firstId = db.query("select id from trans_static limit 1", [])[0][0]
+			count = db.query("select count(*) from trans_static", [])[0][0]
+			print("Beginning to process the data")
+			# Loads in 10,000 trade groups
+			step_increase = 10000
+			limit = (firstId + count)
+			currentStep = firstId
+			print("First id is " + str(firstId))
+			while(currentStep <= limit):
+				print("currentStep = " + str(currentStep))
+				rows = db.query("select * from trans_static where(id between %s and %s)", [currentStep, currentStep + step_increase])
+				print("Data is read in and ready to go")
+				for row in rows:
+					trade = mtrade.to_TradeData(row[1:])
+					trade.id = row[0]
+					_qlock.acquire()
+					_staticq.put(trade)
+					_qlock.release()
+				currentStep += step_increase
+			'''
+
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
@@ -388,7 +428,10 @@ class ProcessorThread(threading.Thread):
 		global _mode
 
 		anomalyid = -1
-		anomalyid = db.addAnomaly(tradeid, category, _mode)
+		if(_mode == 1):
+			anomalyid = db.addAnomaly(tradeid, category, _mode)
+		else:
+			anomalyid = db.addAnomalyStatic(t, category)
 		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
 		#doSomething with the anomaly
 		_anomalycounter+=1
@@ -418,8 +461,13 @@ class ProcessorThread(threading.Thread):
 
 		db = database.Database(_mode)
 		while(_running):
-			if(previousmode!=_mode):
-				#change in mode since last iteration
+			global _tradecounter
+			global _tradecounterlock
+			global _anomalycounter
+			global _tradevalue
+			
+			if(previousmode!=_mode or _tradecounter==0):
+				#change in mode since last iteration or if it got reset
 				#reset machine learning
 				detection.reset()
 				if(_mode==1):
@@ -436,16 +484,11 @@ class ProcessorThread(threading.Thread):
 					it_count = 0	
 					self.refreshVals()
 				trades = self.dequeue(_q,_qlock)
-
+			_tradecounterlock.acquire() #critical section big is fine because only '/reset' can change
 			for t in trades:
 				#Update counts
 				if (not isinstance(t, mtrade.TradeData)):
 					continue
-
-				global _tradecounter
-				global _tradecounterlock
-				global _anomalycounter
-				global _tradevalue
 				
 				_tradecounter+=1 #TODO move elsewhere and mutex lock
 				_tradevalue+=float(t.price)*float(t.size)
@@ -465,26 +508,31 @@ class ProcessorThread(threading.Thread):
 				#1 price spike/trough
 				#2 volume spike/trough
 				#3 suspicious trader activity
+				#4 potential pump and dump
 				#calculate category
 				if(len(trade_anomaly)>0):
 					#add anomaly to db
 					cat = -1
-					if((1 in trade_anomaly) & (2 in trade_anomaly)):
-						###possibly pump and dump?
-						a=1
-					if((2 in trade_anomaly) & (3 in trade_anomaly)):
-						###insider information/bear raids?
-						a=1
 					if(1 in trade_anomaly):
 						cat=1
+					if(2 in trade_anomaly):
+						cat=2
+					if((1 in trade_anomaly) & (2 in trade_anomaly)):
+						###possibly pump and dump?
+						cat=4
+					if((3 in trade_anomaly)) and ((1 in trade_anomaly) or (2 in trade_anomaly)):
+						###insider information/bear raids?
+						####TODO
+						cat=3
 					if(3 not in trade_anomaly):
 						#move this out, in here for sake of testing and trader is overly sensitive
 						a=1
-					if(_mode == 1):
-						self.new_anomaly(db,tradeid,t,cat)
-					else:
-						self.new_anomaly(db,tradeid,t,cat)
-		
+					if(cat>0):
+						if(_mode == 1):
+							self.new_anomaly(db,tradeid,t,cat)
+						else:
+							self.new_anomaly(db,tradeid,t,cat)
+			_tradecounterlock.release()
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
 		db.close()
@@ -600,6 +648,7 @@ def getdata():
 					anomaly['date'] = temp[0]
 					anomaly['time'] = temp[1]
 					anomaly['action'] = x.trade.symbol
+					anomaly['sector'] = x.trade.sector
 				anomalies.append(anomaly)
 		except KeyError:
 			# Key is not present, no sessions for user
@@ -636,16 +685,21 @@ def toggle():
 	mode = int(request.json['mode'])
 	global _mode
 	global _connected
+	global dbm
+
 	if (mode==0):
 		if(_connected==1):
 			disconnect_stream()
 		_mode=0
+		dbm.mode = _mode
+
 	if (mode==1):
 		if(_connected!=1):
 			connect_stream()
 		else:
 			return json.dumps({"change":False})
 		_mode=1
+		dbm.mode = _mode
 	return json.dumps({"change":True})
 
 #connect/disconnect
@@ -667,6 +721,7 @@ def toggleconnect():
 
 @app.route('/reset', methods=['POST'])
 def resetstats():
+	global _mode
 	#for resetting current stats and db?
 	global _mode
 	db = database.Database()
@@ -674,11 +729,16 @@ def resetstats():
 	global _tradevalue
 	global _tradecounter
 	global _anomalycounter
+	global _tradecounterlock
 	
 	if(success):
+		_tradecounterlock.acquire()
 		_tradevalue = 0
 		_tradecounter = 0
 		_anomalycounter = 0
+		_tradecounterlock.release()
+		#reset machine learning
+		print("reset")
 		return "ok"
 	return "fail"
 	
@@ -734,7 +794,7 @@ def init_data():
 	#get data in db
 	global _mode
 	db = database.Database(_mode)
-	a = db.getAnomalies(0)
+	a = db.getAnomalies(0,_mode)
 	#db.close()
 	data = {}
 	#TODO
@@ -747,11 +807,21 @@ def init_data():
 		anomaly['date'] = temp[0]
 		anomaly['time'] = temp[1]
 		anomaly['action'] = x.trade.symbol
+		anomaly['sector'] = x.trade.sector
 		anomalies.append(anomaly)
 	#make into json
 	if(len(anomalies)>0):
 		data["anomalies"] = anomalies
+	data["mode"] = _mode
 	return json.dumps(data)
+
+@app.route('/loadstatic',methods=['POST'])
+def loadstatic():
+	global _mode
+	_mode = 0
+	load_data(_mode)
+	#return init_data()
+	return "ok"
 
 @app.route('/static', methods=['POST'])
 def process_static():
@@ -764,6 +834,7 @@ def process_static():
 	exists=os.path.exists("trades.csv")
 	if(exists):
 		_mode = 0
+		dbm.mode = _mode
 		
 		print("Starting thread")
 		tstatic = StaticFileThread(_threadID)
@@ -781,6 +852,7 @@ def process_live():
 	#TODO improve sessions
 	if(_mode==0):
 		_mode=1
+		dbm.mode = _mode
 		load_data(_mode)
 		connect_stream()
 	return "ok"
