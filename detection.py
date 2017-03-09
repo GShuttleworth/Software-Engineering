@@ -310,8 +310,8 @@ class AvgOverTimeRegression:
 
 	# compare actual vs predicted value
 	def detectError(self, x, y):
-		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.linearError() or
-				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
+				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal)
 	
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
