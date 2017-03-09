@@ -298,8 +298,3 @@ class Database:
 		params = [id]
 		self.action(query,params)
 		return 1
-
-	
-
-
-

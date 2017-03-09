@@ -821,14 +821,19 @@ def upload_file():
 def delete_anomaly():
 	global _sessions
 	global _sessionslock
+	global _mode
 	anomalyid = int(request.data)
-	success = 0 #update state in db
-	_sessionslock.acquire
-	for key in _sessions:
-		if(_sessions[key]!=session['id']):
-			_sessions[key].put(mtrade.Anomaly(anomalyid, None, 0))
-	_sessionslock.release
-	return "ok"
+	db = database.Database()
+	success = db.dismissAnomaly(anomalyid,_mode)
+	db.close()
+	if(success==1):
+		_sessionslock.acquire
+		for key in _sessions:
+			if(_sessions[key]!=session['id']):
+				_sessions[key].put(mtrade.Anomaly(anomalyid, None, 0))
+		_sessionslock.release
+		return "ok"
+	return "fail"
 
 @app.route('/getanomalies', methods=['POST'])
 def init_data():

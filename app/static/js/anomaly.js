@@ -20,7 +20,7 @@ function refresh() {
 function init_session(){
 	refresh()
 }
-function dismiss(id){
+function dismiss_a(id){
 	var r = confirm("Dismiss anomaly?");
 	if (r == true) {
 		$.ajax({
@@ -29,7 +29,7 @@ function dismiss(id){
 			   data : JSON.stringify(id),
 			   contentType: 'application/json;charset=UTF-8',
 			   success: function(d) {
-			   window.location.replace("/index");
+				   window.location.replace("/index");
 			   },
 			   error: function(d) {
 			   
