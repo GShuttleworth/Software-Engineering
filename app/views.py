@@ -44,6 +44,7 @@ def anomaly(symbol, id):
 def static_anomaly(symbol,id):
 	db = database.Database()
 	state=0
+	print("THE ID FOR THIS ANOMALY IS " + str(id))
 	anomaly = db.getAnomalyById(id,state)
 	baseTrade = anomaly.trade
 	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)

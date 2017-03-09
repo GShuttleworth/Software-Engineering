@@ -1,7 +1,7 @@
 import inspect #validation TODO
 
 class TradeData:
-	def __init__(self, time, buyer, seller, p, s, currency, symbol, sector, bidP, askP):
+	def __init__(self, time, buyer, seller, p, s, currency, symbol, sector, bidP, askP, id=0):
 		self.time = time
 		self.buyer = buyer
 		self.seller = seller
@@ -12,6 +12,7 @@ class TradeData:
 		self.sector = sector
 		self.bidPrice = bidP
 		self.askPrice = askP
+		self.id = id
 
 #parse from whole string
 def parse(string):

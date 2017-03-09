@@ -11,9 +11,9 @@ def test(counter):
 
 class Detection:
 
-	stepLength = [60]	#each pair represents a pair of step length (in seconds)
+	stepNumOfStepsPairs = [[30, 4]]	#each pair represents a pair of step length (in seconds)
 	# and the number of steps between line fit update
-	currTime = [0]	# keeps track of the start time of the current step cycle
+	tickTimeCntPairs = [[0, 0]]	# keeps track of the start time of the current step cycle
 	# the number of steps that have already happened
 
 	# how many times more valuable a trade has to be than an average value of a trader to raise an error
@@ -27,15 +27,15 @@ class Detection:
 		self.companyList = {}
 		self.traderList = {}
 		self.sectorList = {}
-		self.numOfStepVariants = len(self.stepLength)
+		self.numOfStepVariants = len(self.stepNumOfStepsPairs)
 
 
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
-		print("setup")
+		#print("setup")
 		#some process to load data from db
-		self.numOfStepVariants = len(self.stepLength)
+		self.numOfStepVariants = len(self.stepNumOfStepsPairs)
 		#rolling average for all traders
 		#(exponential moving average should make it very computationally efficient)
 		self.traderList = {}
@@ -45,13 +45,12 @@ class Detection:
 		
 
 	def setupCompanyData(self, t):
-		self.companyList[t.symbol] = StockData(t.symbol, self.stepLength, self.numberOfRegressors)
-		#Set the time for the first trade
+		self.companyList[t.symbol] = StockData(t.symbol, self.stepNumOfStepsPairs, self.numberOfRegressors)
 		for x in range(self.numOfStepVariants):
-			self.companyList[t.symbol].currTime[x] = (int(timeToInt(t.time)/self.stepLength[x]))*self.stepLength[x] #rounds down to to the nearest step	
-		
+			self.tickTimeCntPairs[x][0] = (int(timeToInt(t.time)/self.stepNumOfStepsPairs[x][0]))*self.stepNumOfStepsPairs[x][0] #rounds down to to the nearest step	
 
 	def detect(self, t):
+
 		#######
 		#anomalies
 		trade_anomaly = []
@@ -83,38 +82,134 @@ class Detection:
 		#	FREQUENCY AND VOLUME REGRESSION
 		#
 
-		for x in range(len(self.stepLength)): #for every possible tick length/beginning time
-			if(timeToInt(t.time) >= self.stepLength[x]+self.companyList[symb].currTime[x]): #if the current tick has expired
+		for x in range(len(self.stepNumOfStepsPairs)): #for every possible tick length/beginning time
+			if(timeToInt(t.time) >= self.stepNumOfStepsPairs[x][0]+self.tickTimeCntPairs[x][0]): #if the tick has finished
+				if(self.tickTimeCntPairs[x][1] >= self.stepNumOfStepsPairs[x][1]):	#if the number of ticks exceeded maximum (i.e. it's time to upadte the line fit)
 
-				lastFreq = float(self.companyList[symb].frequencyRegression[x])
-				lastVol = float(self.companyList[symb].volumeRegression[x])
 
-				if(self.companyList[symb].currCnt[x]>0):
-					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, 9, 3)):
-						print("freq error for ", lastFreq, " expected ", self.companyList[symb].frequencyAvg)
-						trade_anomaly(4)
-					
-					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, 9, 3)):
-						print("vol error for ", lastVol, " expected ", self.companyList[symb].volumeAvg)
-						trdae_anomaly(2)
-				else:
-					self.companyList[symb].currCnt[x] += 1
-
-				self.companyList[symb].currTime[x] += self.stepLength[x]
-
-				if(self.companyList[symb].volumeAvg!=0):
-					self.companyList[symb].volumeAvg = self.companyList[symb].volumeAvg*0.9 + lastVol*0.1
-					self.companyList[symb].frequencyAvg = self.companyList[symb].frequencyAvg*0.9 + lastFreq*0.1
-				else:
-					self.companyList[symb].volumeAvg = lastVol
-					print(lastVol)
-					self.companyList[symb].frequencyAvg = lastFreq
-
-			self.companyList[symb].volumeRegression[x] += float(t.size)
-			self.companyList[symb].frequencyRegression[x] += 1.0
+					self.tickTimeCntPairs[x][1] = 0
 
 
 
+					for company in self.companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+
+						#
+						#	FREQUENCY
+						#
+
+						if (company.frequencyRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression[x].tempYVals)
+							and np.all(company.frequencyRegression[x].coeffList != [0.0, 0.0]) and np.all(company.frequencyRegression[x].coeffList != [-1.0, -1.0])):
+							print("frequency anomaly for x=", company.frequencyRegression[x].tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging[x]
+							print("expected x=", self.companyList[symb].frequencyRegression[x].coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal) #debugging
+							trade_anomaly.append(4)
+
+						if(np.all(company.frequencyRegression[x].coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
+							company.frequencyRegression[x].updateCoeffs()
+						else:
+							company.frequencyRegression[x].coeffList = [-1.0, -1.0]	#mark the beginning of a first complete pass
+
+
+						company.frequencyRegression[x].yVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression[x].tempYVals
+						company.frequencyRegression[x].xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+						company.frequencyRegression[x].tempYVals = 0
+
+
+						#
+						#	VOLUME
+						#
+
+						if (company.volumeRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression[x].tempYVals))
+							and np.all(company.volumeRegression[x].coeffList != [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
+
+							trade_anomaly.append(2)
+
+							print(str(t.time)+" volume anomaly")
+							print("volume anomaly for y=", sum(company.volumeRegression[x].tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							print("expected y=", company.volumeRegression[x].coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression[x].coeffList[1], " +/- ", company.volumeRegression[x].rangeVal) #debugging#
+							print("coeff is ", company.volumeRegression[x].coeffList)
+						# else:
+							# print(str(t.time)+" NO volume anomaly")
+							# print("NO anomaly for y=", sum(company.volumeRegression.tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							# print("expected y=", company.volumeRegression.coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression.coeffList[1], " +/- ", company.volumeRegression.rangeVal) #debugging
+							# print("coeff is ", company.volumeRegression.coeffList)
+						
+
+						
+						if(np.all(company.volumeRegression[x].coeffList != [0.0, 0.0])): #on second (first guaranteed completed) and subsequent passes
+							company.volumeRegression[x].updateCoeffs()
+						else:
+							company.volumeRegression[x].coeffList = [-1.0, -1.0]	#mark the beginning of a first complete pass
+
+
+						# print(self.tickTimeCntPairs[x][1])
+						company.volumeRegression[x].yVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression[x].tempYVals)
+						company.volumeRegression[x].xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+						company.volumeRegression[x].tempYVals = []
+
+					self.tickTimeCntPairs[x][1] += 1
+					self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+
+
+				else:				
+					for company in self.companyList.values():	#every tick, sum the value of voulmes in that step and store, update current step start time and step count
+
+
+						#
+						#	FREQUENCY
+						#
+
+						# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
+						if (company.frequencyRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression[x].tempYVals)
+							and np.all(company.frequencyRegression[x].coeffList != [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
+							# print("frequency anomaly for x=", company.frequencyRegression[x].tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							# print("expected x=", self.companyList[symb].frequencyRegression[x].coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal) #debugging
+							trade_anomaly.append(4)
+						# else:
+						# 	print("ratio:", self.companyList[symb].frequencyRegression[x].coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal)
+
+						company.frequencyRegression[x].yVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression[x].tempYVals #TODO what happens where no trade comes in during the whole tick
+						company.frequencyRegression[x].xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+						company.frequencyRegression[x].tempYVals = 0
+						# print(self.tickTimeCntPairs[x][1])
+						# print(self.tickTimeCntPairs[x][0])
+
+						#
+						#	VOLUME
+						#
+
+						# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
+						if (company.volumeRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression[x].tempYVals))
+							and np.all(company.volumeRegression[x].coeffList != [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
+
+							print("volume anomaly for y=", sum(company.volumeRegression[x].tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							print("expected y=", company.volumeRegression[x].coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression[x].coeffList[1], " +/- ", company.volumeRegression[x].rangeVal) #debugging
+							print("coeff is ", company.volumeRegression[x].coeffList)
+							trade_anomaly.append(2)
+						# else:
+							# print(str(t.time)+" NO anomaly")
+							# print("NO anomaly for y=", sum(company.volumeRegression.tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
+							# print("expected y=", company.volumeRegression.coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression.coeffList[1], " +/- ", company.volumeRegression.rangeVal) #debugging
+							# print("coeff is ", company.volumeRegression.coeffList)
+						
+
+
+						company.volumeRegression[x].yVals[self.tickTimeCntPairs[x][1]] = sum(company.volumeRegression[x].tempYVals)
+						company.volumeRegression[x].xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
+						company.volumeRegression[x].tempYVals = []
+						# print(self.tickTimeCntPairs[x][1])
+						# print(self.tickTimeCntPairs[x][0])
+
+
+
+					self.tickTimeCntPairs[x][1] += 1
+					#print(self.tickTimeCntPairs[x][1])
+					self.tickTimeCntPairs[x][0] += self.stepNumOfStepsPairs[x][0]
+
+
+
+		self.companyList[symb].volumeRegression[x].tempYVals.append(float(t.size))
+
+		self.companyList[symb].frequencyRegression[x].tempYVals += 1
 
 
 		#
@@ -149,7 +244,7 @@ class Detection:
 		# 	if (self.sectorList[t.sector][1] > 2):	#only start detecting anomalies per sector after 2 cycles
 		# 		self.sectorList[t.sector][0] += float(t.size)*float(t.price)
 
-		# for x in range(len(self.stepLength)): #after the finish of every tick series
+		# for x in range(len(self.stepNumOfStepsPairs)): #after the finish of every tick series
 		# 	if()
 		
 		# 		if((self.sectorList[t.sector] > float(t.size)*float(t.price)*self.senstivityPerSector or
@@ -159,27 +254,17 @@ class Detection:
 		
 		return trade_anomaly
 
-	def detectError(self, original, compareTo, sensitivity, linearError):
-		return (original>=compareTo*sensitivity+linearError+10 or original<=compareTo/sensitivity-linearError-10)
-
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
 
-	def __init__(self, symbol, stepLength, numberOfRegressors):
+	def __init__(self, symbol, stepNumOfStepsPairs, numberOfRegressors):
 		self.symbol = symbol
 		self.priceRegression = PriceRegression(numberOfRegressors) #to be changhed for better encapsulation
-		self.volumeRegression = []
-		self.frequencyRegression = []
-		# self.stepLength = stepLength
-		self.currTime = []
-		self.volumeAvg = 0
-		self.frequenceAvg = 0		
-		self.currCnt = []
-		for x in range(len(stepLength)):
-			self.volumeRegression.append(0)
-			self.frequencyRegression.append(0)
-			self.currTime.append(-3)
-			self.currCnt.append(0)
+		self.volumeRegression = {}
+		self.frequencyRegression = {}
+		for x in range(len(stepNumOfStepsPairs)):
+			self.volumeRegression[x] = VolumeRegression(0, stepNumOfStepsPairs[x][1])
+			self.frequencyRegression[x] = AvgOverTimeRegression(0, stepNumOfStepsPairs[x][1])
 
 #Should make it more expandable/less messy
 class PriceRegression:
@@ -207,38 +292,38 @@ class PriceRegression:
 
 	#compare actual vs predicted value
 	def detectError(self, x, y):
-		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal  or
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal or
 				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal)
 	
 	# def updateCoeffs(self):
 	# 	self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
-# #Should make it more expandable/less messy
-# class AvgOverTimeRegression:
-# 	def __init__(self, stepLengthIndex, numOfSteps):
-# 		# self.stepLengthIndex = stepLengthIndex #for better encapsulation in the future
-# 		self.xVals = np.zeros(numOfSteps)
-# 		self.yVals = np.zeros(numOfSteps)
-# 		self.tempYVals = 0
-# 		self.rangeVal = 3 #changed for testing
-# 		self.coeffList = [0.0, 0.0]
+#Should make it more expandable/less messy
+class AvgOverTimeRegression:
+	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
+		# self.stepNumOfStepsPairsIndex = stepNumOfStepsPairsIndex #for better encapsulation in the future
+		self.xVals = np.zeros(numOfSteps)
+		self.yVals = np.zeros(numOfSteps)
+		self.tempYVals = 0
+		self.rangeVal = 3 #changed for testing
+		self.coeffList = [0.0, 0.0]
 
-# 	# compare actual vs predicted value
-# 	def detectError(self, x, y):
-# 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
-# 				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
+	# compare actual vs predicted value
+	def detectError(self, x, y):
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
+				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
 	
-# 	def updateCoeffs(self):
-# 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
+	def updateCoeffs(self):
+		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 
-# 	def linearError(self):
-# 		return np.average(self.yVals)
+	def linearError(self):
+		return np.average(self.yVals)
 
-# class VolumeRegression(AvgOverTimeRegression):
-# 	def __init__(self, stepLengthIndex, numOfSteps):
-# 		super().__init__(stepLengthIndex, numOfSteps)
-# 		self.tempYVals = []
-# 		self.rangeVal = 5 #changed for testing
+class VolumeRegression(AvgOverTimeRegression):
+	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
+		super().__init__(stepNumOfStepsPairsIndex, numOfSteps)
+		self.tempYVals = []
+		self.rangeVal = 5 #changed for testing
 
 
 def timeToInt(time):
@@ -246,6 +331,5 @@ def timeToInt(time):
 	try:
 		val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f").timestamp()
 	except ValueError:
-
 		val = datetime.strptime(time, "%Y-%m-%d %H:%M:%S").timestamp()
 	return val
