@@ -92,11 +92,11 @@ class Detection:
 				if(self.companyList[symb].currCnt[x]>0):
 					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, 9, 3)):
 						print("freq error for ", lastFreq, " expected ", self.companyList[symb].frequencyAvg)
-						trade_anomaly(4)
+						trade_anomaly.append(4)
 					
 					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, 9, 3)):
 						print("vol error for ", lastVol, " expected ", self.companyList[symb].volumeAvg)
-						trade_anomaly(2)
+						trade_anomaly.append(2)
 				else:
 					self.companyList[symb].currCnt[x] += 1
 
