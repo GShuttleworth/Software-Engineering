@@ -11,17 +11,19 @@ def test(counter):
 
 class Detection:
 
-	stepLength = [60]	#each pair represents a pair of step length (in seconds)
+	stepLength = [60, 200]	#each pair represents a pair of step length (in seconds)
 	# and the number of steps between line fit update
 	currTime = [0]	# keeps track of the start time of the current step cycle
 	# the number of steps that have already happened
 
 	# how many times more valuable a trade has to be than an average value of a trader to raise an error
-	senstivityPerTrader = 9
+	senstivityPerTrader = 5
 	senstivityPerSector = 3
+	volumeSensitivity = 5
+	frequencySenseitivity = 3
 
 	# linear regression of price for this many trades per company
-	numberOfRegressors = 10
+	numberOfRegressors = 20
 
 	def __init__(self):	
 		self.companyList = {}
@@ -33,7 +35,7 @@ class Detection:
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
-		#print("setup")
+		print("setup")
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepLength)
 		#rolling average for all traders
@@ -86,15 +88,17 @@ class Detection:
 		for x in range(len(self.stepLength)): #for every possible tick length/beginning time
 			if(timeToInt(t.time) >= self.stepLength[x]+self.companyList[symb].currTime[x]): #if the current tick has expired
 
+				# get volume/frequency total for the lest unit of time
 				lastFreq = float(self.companyList[symb].frequencyRegression[x])
 				lastVol = float(self.companyList[symb].volumeRegression[x])
 
+				#if a minimum numbers of passes required to generate a prediction has passed return an anomlay if detected
 				if(self.companyList[symb].currCnt[x]>0):
-					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, 9, 3)):
+					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, frequencySensitivity, int(frequencySensitivity/3)):
 						print("freq error for ", lastFreq, " expected ", self.companyList[symb].frequencyAvg)
 						trade_anomaly.append(4)
 					
-					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, 9, 3)):
+					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, volumeSensitivity, int(volumeSensitivity))):
 						print("vol error for ", lastVol, " expected ", self.companyList[symb].volumeAvg)
 						trade_anomaly.append(2)
 				else:
@@ -102,14 +106,16 @@ class Detection:
 
 				self.companyList[symb].currTime[x] += self.stepLength[x]
 
+				#if the volume and frequency average already have been assigned a value
 				if(self.companyList[symb].volumeAvg!=0):
-					self.companyList[symb].volumeAvg = self.companyList[symb].volumeAvg*0.9 + lastVol*0.1
-					self.companyList[symb].frequencyAvg = self.companyList[symb].frequencyAvg*0.9 + lastFreq*0.1
+					#run exponential moving average
+					self.companyList[symb].volumeAvg = self.companyList[symb].volumeAvg*0.8 + lastVol*0.2
+					self.companyList[symb].frequencyAvg = self.companyList[symb].frequencyAvg*0.8 + lastFreq*0.2
 				else:
 					self.companyList[symb].volumeAvg = lastVol
-					print(lastVol)
 					self.companyList[symb].frequencyAvg = lastFreq
 
+			#update the buffer of values
 			self.companyList[symb].volumeRegression[x] += float(t.size)
 			self.companyList[symb].frequencyRegression[x] += 1.0
 
@@ -136,26 +142,6 @@ class Detection:
 					self.traderList[t.seller][0] < float(t.size)*float(t.price)/self.senstivityPerTrader)):
 					trade_anomaly.append(3)
 					print("trader anomaly")
-
-		#
-		#	SECTOR VALUE ANOMALY
-		#
-
-		# if(t.sector not in self.sectorList):
-		# 	self.sectorList[t.sector] = [float(t.size)*float(t.price), 0]
-		# else:
-		# 	self.sectorList[t.sector][0] = self.sectorList[t.sector][0]*0.9 + 0.1*float(t.size)*float(t.price)
-
-		# 	if (self.sectorList[t.sector][1] > 2):	#only start detecting anomalies per sector after 2 cycles
-		# 		self.sectorList[t.sector][0] += float(t.size)*float(t.price)
-
-		# for x in range(len(self.stepLength)): #after the finish of every tick series
-		# 	if()
-		
-		# 		if((self.sectorList[t.sector] > float(t.size)*float(t.price)*self.senstivityPerSector or
-		# 			self.sectorList[t.sector][0] < float(t.size)*float(t.price)/self.senstivityPerTrader)):
-		# 			trade_anomaly.append(5)
-		# 			print("sector anomaly")	
 		
 		return trade_anomaly
 
@@ -188,7 +174,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 3 #to be adjusted
+		self.rangeVal = 1.8 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	def addTrade(self, trade):
@@ -209,36 +195,6 @@ class PriceRegression:
 	def detectError(self, x, y):
 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal  or
 				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal)
-	
-	# def updateCoeffs(self):
-	# 	self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
-
-# #Should make it more expandable/less messy
-# class AvgOverTimeRegression:
-# 	def __init__(self, stepLengthIndex, numOfSteps):
-# 		# self.stepLengthIndex = stepLengthIndex #for better encapsulation in the future
-# 		self.xVals = np.zeros(numOfSteps)
-# 		self.yVals = np.zeros(numOfSteps)
-# 		self.tempYVals = 0
-# 		self.rangeVal = 3 #changed for testing
-# 		self.coeffList = [0.0, 0.0]
-
-# 	# compare actual vs predicted value
-# 	def detectError(self, x, y):
-# 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
-# 				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
-	
-# 	def updateCoeffs(self):
-# 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
-
-# 	def linearError(self):
-# 		return np.average(self.yVals)
-
-# class VolumeRegression(AvgOverTimeRegression):
-# 	def __init__(self, stepLengthIndex, numOfSteps):
-# 		super().__init__(stepLengthIndex, numOfSteps)
-# 		self.tempYVals = []
-# 		self.rangeVal = 5 #changed for testing
 
 
 def timeToInt(time):
