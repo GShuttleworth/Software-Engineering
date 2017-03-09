@@ -35,7 +35,7 @@ class Detection:
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
-		print("setup")
+		#print("setup")
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepLength)
 		#rolling average for all traders
