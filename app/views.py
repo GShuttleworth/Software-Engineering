@@ -35,8 +35,6 @@ def anomaly(symbol, id):
 
 	baseTrade = anomaly.trade
 	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)
-	#??for t in trades:
-	#    t.time = t.time[10:19]
 	db.close() # Close quickly to prevent any issues
 	return anomaly_template(trades,baseTrade,symbol,id)
 
@@ -53,7 +51,6 @@ def static_anomaly(symbol,id):
 	return anomaly_template(trades,baseTrade,symbol,id)
 
 def anomaly_template(trades,baseTrade,symbol,id):
-	trades=trades
 	pagename = "Anomaly Information for " + symbol
 	anomalyType = "TODO"
 	anomalyStartTimestamp = "TODO"
@@ -76,6 +73,17 @@ def anomaly_template(trades,baseTrade,symbol,id):
 	lower = max(first,rangetime - timedelta(minutes=15)) #create an upper and lower boundary frame TODO change if necessary
 	upper = min(last,rangetime + timedelta(minutes=15))
 	return render_template('anomaly.html', **locals())
+
+@app.template_filter('stringdate')
+def _jinja2_filter_datetime(date, fmt=None):
+	date = convert_date(date).strftime("%d %B %Y")
+	return date
+
+@app.template_filter('stringtime')
+def _jinja2_filter_datetime(date, fmt=None):
+	date = convert_date(date).strftime("%I:%M %p")
+	return date
+
 
 def convert_date(time):
 	try:
