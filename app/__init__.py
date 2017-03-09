@@ -317,18 +317,27 @@ class StaticFileThread(threading.Thread):
 			currentStep = firstId
 			print("First id is " + str(firstId))
 			startTime = time.time()
-			while(currentStep <= limit):
-				print("currentStep = " + str(currentStep))
-				rows = db.query("select * from trans_static where(id between %s and %s)", [currentStep, currentStep + step_increase])
-				print("Data is read in and ready to go")
-				for row in rows:
-					trade = mtrade.to_TradeData(row[1:])
-					trade.id = row[0]
-					_qlock.acquire()
-					_staticq.put(trade)
-					_qlock.release()
-				currentStep += step_increase
+			try:
+				while(currentStep <= limit):
+					print("currentStep = " + str(currentStep))
+					rows = db.query("select * from trans_static where(id between %s and %s)", [currentStep, currentStep + step_increase])
+					print("Data is read in and ready to go")
+					
+					if(len(rows) == 0): # No more data to be read in
+						break
+
+					for row in rows:
+						trade = mtrade.to_TradeData(row[1:])
+						trade.id = row[0]
+						_qlock.acquire()
+						_staticq.put(trade)
+						_qlock.release()
+					currentStep += step_increase
+			except  KeyboardInterrupt:
+				print("Exiting out")
+
 			print("Took " + str(time.time() - startTime) + " seconds to complete")
+
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
