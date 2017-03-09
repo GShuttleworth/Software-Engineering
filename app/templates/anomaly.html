@@ -38,7 +38,7 @@
 
   <div class="col-md-12">
     <div class="panel panel-default">
-      <div class="panel-heading a-panel-heading" data-id="3">Previous trades from buyer for this stock</div>
+      <div class="panel-heading a-panel-heading" data-id="3">Previous trades from buyer for this stock (last 12 hours)</div>
       <div class="panel-body" data-id="3">
 		  <div id="container" style="width:100%;">
 				<div class="table-responsive">
@@ -47,7 +47,7 @@
 							<tr>
 								<th>Date</th>
 								<th>Time</th>
-								<th>Buy price</th>
+								<th>Transaction</th>
 								<th>Sell price</th>
 								<th>Size</th>
 							</tr>
@@ -74,7 +74,7 @@
 
   <div class="col-md-12">
 	  <div class="panel panel-default">
-		<div class="panel-heading a-panel-heading" data-id="4">Previous trades from seller for this stock</div>
+		<div class="panel-heading a-panel-heading" data-id="4">Previous trades from seller for this stock (last 12 hours)</div>
 		<div class="panel-body" data-id="4">
 			
 			<div id="container" style="width:100%;">
@@ -259,12 +259,12 @@ $(function () {
 		{%- endfor %}]);
 
 	//draw price chart
-	var pchart = renderchart(pricedata,'price_chart','Price per trade in the past 24 hours proccessed','Stock price','price');
+	var pchart = renderchart(pricedata,'price_chart','Price per trade in the past 12 hours processed','Stock price','price');
 	
 	pchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
 	pchart.showResetZoom();
 	//draw volume chart
-	var vchart = renderchart(volumedata,'volume_chart','Volume per trade in the past 24 hours proccessed','Volume','size');
+	var vchart = renderchart(volumedata,'volume_chart','Volume per trade in the past 12 hours processed','Volume','size');
 
 	vchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
 	vchart.showResetZoom();

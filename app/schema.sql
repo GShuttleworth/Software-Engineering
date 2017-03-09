@@ -38,7 +38,7 @@ create table trans_static (
 	sector varchar(30),
 	bidPrice float,
 	askPrice float
-);
+) ENGINE = MyISAM;
 
 create table anomalies_live (
 	id integer not null auto_increment primary key,
@@ -54,7 +54,7 @@ create table anomalies_static (
 	category integer,
 	actiontaken integer DEFAULT 0, /* whether the anomaly has been dealt with */
 	FOREIGN KEY(tradeid) REFERENCES trans_static(id) ON DELETE CASCADE
-);
+) ENGINE = MyISAM;
 
 -- Tables for averages
 create table averages_live (

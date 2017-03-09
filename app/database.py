@@ -214,8 +214,6 @@ class Database:
 			table2 = "trans_static"
 		query = "SELECT category,time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + table1 + " JOIN "+table2+" ON "+table2+ ".id="+table1+".tradeid WHERE "+table1+".id=%s"
 		params = [id]
-		print(query)
-		print("THE PARAMS FOR THIS ANOMALY ARE " + str(params))
 		data = self.query(query, params)
 		t = data[0]
 		category=t[0]
@@ -227,7 +225,7 @@ class Database:
 		table = "anomalies_live"
 		if(state != 1):
 			table = "anomalies_static"
-
+		
 		query = "insert INTO " + table + " VALUES(NULL, %s, %s, 0)"
 		params = [tradeid, category]
 		'''
@@ -255,8 +253,8 @@ class Database:
 			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
 		except ValueError:
 			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-		upper = time + timedelta(hours=12) #create an upper and lower boundary frame TODO change if necessary
-		lower = time - timedelta(hours=12)
+		upper = time + timedelta(hours=6) #create an upper and lower boundary frame TODO change if necessary
+		lower = time - timedelta(hours=6)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
 			ttable + " WHERE(symbol=%s AND unix_timestamp(time) BETWEEN unix_timestamp(%s) AND unix_timestamp(%s)) ORDER BY unix_timestamp(time) ASC"
@@ -271,10 +269,8 @@ class Database:
 
 	def addAnomalyStatic(self, trade, category):
 		if(isinstance(trade, mtrade.TradeData)):
-			tradeid = self.query("select id from trans_static where(time=%s and buyer=%s and seller=%s)", [trade.time, trade.buyer, trade.seller])[0][0]
-			query = "insert into anomalies_static values(NULL, %s, %s, 0)"
-			params = [tradeid, category]
-			print(params)
+			query = "insert into anomalies_static values(NULL, (SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and price=%s and symbol=%s), %s, 0)"
+			params = [trade.time,trade.buyer,trade.seller,trade.price,trade.symbol,category]
 			self.action(query, params)
 			anomalyid = self.c.lastrowid
 			return anomalyid

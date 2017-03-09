@@ -58,6 +58,7 @@ _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
 #Stores for when parsing static data
+_loadedfile=0
 _anomalycounterstore = 0
 _tradecounterstore = 0
 _tradevaluestore = 0
@@ -233,8 +234,10 @@ class StaticFileThread(threading.Thread):
 		self.threadID = threadID
 		self.name = "File parser thread"
 	def run(self):
+		global _loadedfile
 		print("Starting file parsing thread")
 		self.prepare()
+		_loadedfile=0
 		self.parsefile()
 
 	def prepare(self):
@@ -269,14 +272,17 @@ class StaticFileThread(threading.Thread):
 			#read file
 			global _qlock
 			global _staticq
+			global _loadedfile
 
 			print("Prepared File")
 			# Immediatly read straight to database
 			db = database.Database()
 
 			print("Starting to read in the file")
+			startTime = time.time()
 			db.action("load data local infile 'trades.csv' into table trans_static fields terminated by ',' lines terminated by '\n' ignore 1 lines (@col1, @col2, @col3, @col4, @col5, @col6, @col7, @col8, @col9, @col10) set id=NULL, time=@col1, buyer=@col2, seller=@col3, price=@col4, volume=@col5, currency=@col6, symbol=@col7, sector=@col8, bidPrice=@col9, askPrice=@col10", [])
-			print("Data read in")
+			#print("Data read in")
+			print("Took " + str(time.time() - startTime) + " seconds to complete")
 			'''
 			db.getFirstId()
 			
@@ -306,13 +312,13 @@ class StaticFileThread(threading.Thread):
 						_qlock.acquire()
 						_staticq.put(mtrade.to_TradeData(row))
 						_qlock.release()
-			'''
+			
 			print("Trying to load data for processing")
 			firstId = db.query("select id from trans_static limit 1", [])[0][0]
 			count = db.query("select count(*) from trans_static", [])[0][0]
 			print("Beginning to process the data")
 			# Loads in 10,000 trade groups
-			step_increase = 10000
+			step_increase = 500
 			limit = (firstId + count)
 			currentStep = firstId
 			print("First id is " + str(firstId))
@@ -338,7 +344,27 @@ class StaticFileThread(threading.Thread):
 				currentStep += step_increase
 
 			print("Took " + str(time.time() - startTime) + " seconds to complete")
-
+			'''
+			with open('trades.csv', 'r') as csvfile:
+				reader = csv.reader(csvfile, delimiter = ',')
+				for row in reader:
+					if row[1] == 'buyer':
+						continue
+					else:
+						row[0] = str(row[0])
+						row[1] = str(row[1]) #buyer
+						row[2] = str(row[2]) #seller
+						row[3] = str(row[3]) #price
+						row[4] = str(row[4])
+						row[5] = str(row[5])
+						row[6] = str(row[6]) #symbol
+						row[7] = str(row[7]) #sector
+						row[8] = str(row[8])
+						row[9] = str(row[9])
+						
+						_qlock.acquire()
+						_staticq.put(mtrade.to_TradeData(row))
+						_qlock.release()
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -440,9 +466,10 @@ class ProcessorThread(threading.Thread):
 
 		anomalyid = -1
 		#if(_mode == 1):
-		anomalyid = db.addAnomaly(tradeid, category, _mode)
-		#else:
-			#anomalyid = db.addAnomalyStatic(t, category)
+		if(tradeid!=-2):
+			anomalyid = db.addAnomaly(tradeid, category, _mode)
+		else:
+			anomalyid = db.addAnomalyStatic(t, category)
 		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
 		#doSomething with the anomaly
 		_anomalycounter+=1
@@ -506,7 +533,10 @@ class ProcessorThread(threading.Thread):
 				#trade is in TradeData format (see trade.py)
 				
 				#dump to db
-				tradeid = db.addTransaction(t, _mode)
+				if(_mode == 1):
+					tradeid = db.addTransaction(t, _mode)
+				else:
+					tradeid = -2
 				if(tradeid==-1):
 					#error has occurred TODO insert better handler
 					print("Error adding trade")
@@ -866,4 +896,11 @@ def process_live():
 		dbm.mode = _mode
 		load_data(_mode)
 		connect_stream()
+	return "ok"
+
+@app.route('/checkfile',methods=['POST'])
+def check():
+	global _loadedfile
+	while(_loadedfile==0):
+		time.sleep(60)
 	return "ok"
