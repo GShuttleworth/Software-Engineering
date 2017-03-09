@@ -20,7 +20,7 @@ class Detection:
 	senstivityPerTrader = 5
 	senstivityPerSector = 3
 	volumeSensitivity = 5
-	frequencySenseitivity = 3
+	frequencySensitivity = 3
 
 	# linear regression of price for this many trades per company
 	numberOfRegressors = 20
