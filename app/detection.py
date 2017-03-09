@@ -11,7 +11,7 @@ def test(counter):
 
 class Detection:
 
-	stepNumOfStepsPairs = [[30, 10]]	#each pair represents a pair of step length (in seconds)
+	stepNumOfStepsPairs = [[30, 4]]	#each pair represents a pair of step length (in seconds)
 	# and the number of steps between line fit update
 	tickTimeCntPairs = [[0, 0]]	# keeps track of the start time of the current step cycle
 	# the number of steps that have already happened
@@ -24,13 +24,16 @@ class Detection:
 	numberOfRegressors = 10
 
 	def __init__(self):	
-		self.reset()
+		self.companyList = {}
+		self.traderList = {}
+		self.sectorList = {}
 		self.numOfStepVariants = len(self.stepNumOfStepsPairs)
 
 
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
+		print("setup")
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepNumOfStepsPairs)
 		#rolling average for all traders
@@ -60,13 +63,18 @@ class Detection:
 				
 		#	PRICE REGRESSION
 
+
 		self.companyList[symb].priceRegression.addTrade(t)
+
 		if(np.all(self.companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
 			# print(self.companyList[symb].priceCoeffList) #debugging
 			if(self.companyList[symb].priceRegression.detectError(timeToInt(t.time), float(t.price))):
 				print("price anomaly for x = ", timeToInt(t.time), " y = ", float(t.price)) #debugging
-				print("expected x = ", timeToInt(t.time), " y = ", company.priceRegression.coeffList[0]*timeToInt(t.time) + company.priceRegression.coeffList[1]) #debugging
+				print("expected x = ", timeToInt(t.time), " y = ", self.companyList[symb].priceRegression.coeffList[0]*timeToInt(t.time) + self.companyList[symb].priceRegression.coeffList[1]) #debugging
 				#add price anomaly to category
+			# else:
+			# 	print("no price anomaly for x = ", timeToInt(t.time), " y = ", float(t.price)) #debugging
+			# 	print("expected x = ", timeToInt(t.time), " y = ", self.companyList[symb].priceRegression.coeffList[0]*timeToInt(t.time) + self.companyList[symb].priceRegression.coeffList[1]) #debugging
 				trade_anomaly.append(1)
 
 
@@ -90,7 +98,7 @@ class Detection:
 						#
 
 						if (company.frequencyRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression[x].tempYVals)
-							and np.all(company.frequencyRegression[x].coeffList > [0.0, 0.0]) and np.all(company.frequencyRegression[x].coeffList != [-1.0, -1.0])):
+							and np.all(company.frequencyRegression[x].coeffList != [0.0, 0.0]) and np.all(company.frequencyRegression[x].coeffList != [-1.0, -1.0])):
 							print("frequency anomaly for x=", company.frequencyRegression[x].tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging[x]
 							print("expected x=", self.companyList[symb].frequencyRegression[x].coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal) #debugging
 							trade_anomaly.append(4)
@@ -152,10 +160,12 @@ class Detection:
 
 						# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
 						if (company.frequencyRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), company.frequencyRegression[x].tempYVals)
-							and np.all(company.frequencyRegression[x].coeffList > [0.0, 0.0]) and np.all(company.volumeRegression.coeffList != [-1.0, -1.0])):
+							and np.all(company.frequencyRegression[x].coeffList != [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
 							# print("frequency anomaly for x=", company.frequencyRegression[x].tempYVals, " y=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 							# print("expected x=", self.companyList[symb].frequencyRegression[x].coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal) #debugging
 							trade_anomaly.append(4)
+						# else:
+						# 	print("ratio:", self.companyList[symb].frequencyRegression[x].coeffList[0]*self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)+company.frequencyRegression[x].coeffList[1], " +/- ", self.companyList[symb].frequencyRegression[x].rangeVal)
 
 						company.frequencyRegression[x].yVals[self.tickTimeCntPairs[x][1]] = company.frequencyRegression[x].tempYVals #TODO what happens where no trade comes in during the whole tick
 						company.frequencyRegression[x].xVals[self.tickTimeCntPairs[x][1]] = self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)
@@ -169,7 +179,7 @@ class Detection:
 
 						# print(self.tickTimeCntPairs[x][1], self.stepNumOfStepsPairs[x][1])
 						if (company.volumeRegression[x].detectError(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2), sum(company.volumeRegression[x].tempYVals))
-							and np.all(company.volumeRegression[x].coeffList > [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
+							and np.all(company.volumeRegression[x].coeffList != [0.0, 0.0]) and np.all(company.volumeRegression[x].coeffList != [-1.0, -1.0])):
 
 							print("volume anomaly for y=", sum(company.volumeRegression[x].tempYVals), " x=", self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2)) #debugging
 							print("expected y=", company.volumeRegression[x].coeffList[0]*(self.tickTimeCntPairs[x][0]+(self.stepNumOfStepsPairs[x][0]/2))+company.volumeRegression[x].coeffList[1], " +/- ", company.volumeRegression[x].rangeVal) #debugging
@@ -244,11 +254,6 @@ class Detection:
 		
 		return trade_anomaly
 
-
-
-
-
-
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
 
@@ -268,7 +273,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 2 #to be adjusted
+		self.rangeVal = 3 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	def addTrade(self, trade):
@@ -305,11 +310,14 @@ class AvgOverTimeRegression:
 
 	# compare actual vs predicted value
 	def detectError(self, x, y):
-		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal or
-				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal)
+		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
+				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
 	
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
+
+	def linearError(self):
+		return np.average(self.yVals)
 
 class VolumeRegression(AvgOverTimeRegression):
 	def __init__(self, stepNumOfStepsPairsIndex, numOfSteps):
