@@ -26,8 +26,6 @@ pip3 install flask
 
 
 Installing numpy
-lol screw you
-ok if you really want
 download numpy.zip from github
 extract and move to same directory as python script
 cba to mess with python export path
@@ -61,4 +59,3 @@ tar -zxvf mysql-connector-python-2.1.5.tar.gz
 cd mysql-connector-python-2.1.5.tar.gz
 sudo python3.6 setup.py install
 --et voila--
-
