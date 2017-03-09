@@ -2,7 +2,7 @@
 {% block body %}
 <div class="row">
   <div class="col-md-12">
-    <button type='button' class='btn btn-success pull-right'>Dismiss Anomaly</button>
+    <button type='button' class='btn btn-success pull-right' onclick='dismiss({{ id }})'>Dismiss Anomaly</button>
   </div><br /><br />
 </div>
 <div class="row">
@@ -12,8 +12,6 @@
       <div class="panel-body" data-id="0">
 		  <strong>Date: </strong> {{ date }} <br />
         <strong>Sugested Anomaly Type:</strong> {{ anomalyType }}<br />
-        <strong>Range:</strong> {{ anomalyStartTimestamp }} - {{ anomalyEndTimestamp }} <br />
-        <strong>Anomaly Certainty</strong> {{ certantyPercentage }}% <br />
       </div>
     </div>
   </div>
@@ -40,42 +38,76 @@
 
   <div class="col-md-12">
     <div class="panel panel-default">
-      <div class="panel-heading a-panel-heading" data-id="3">Previous trades from buyer and seller</div>
+      <div class="panel-heading a-panel-heading" data-id="3">Previous trades from buyer for this stock</div>
       <div class="panel-body" data-id="3">
-
-        <div id="container" style="width:100%; height:400px;">
-			<div class="table-responsive">
-				<table class="table table-bordered table-hover table-striped" id="table-buyer">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Time</th>
-							<th>Buy price</th>
-							<th>Size</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-			<div class="table-responsive">
-				<table class="table table-bordered table-hover table-striped" id="table-seller">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Time</th>
-							<th>Sell price</th>
-							<th>Size</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
+		  <div id="container" style="width:100%;">
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover table-striped" id="table-buyer">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Buy price</th>
+								<th>Sell price</th>
+								<th>Size</th>
+							</tr>
+						</thead>
+						<tbody>
+						{%- for trade in trades %}
+						{%- if buyer == trade.buyer or buyer == trade.seller %}
+							<tr {%- if trade.time==baseTrade.time and trade.size==baseTrade.size and trade.price==baseTrade.price %} id="buyer-trade" style="background-color:#ADD8E6"{%- endif %}>
+									<td>{{ trade.time|stringdate }}</td>
+									<td>{{ trade.time|stringtime }}</td>
+									<td>{%- if buyer == trade.buyer  %} BUY {%- else %} SELL {%- endif %}</td>
+									<td>{{ trade.price }}</td>
+									<td>{{ trade.size }}</td>
+							</tr>
+						{%- endif %}
+						{%- endfor %}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
     </div>
   </div>
 
+  <div class="col-md-12">
+	  <div class="panel panel-default">
+		<div class="panel-heading a-panel-heading" data-id="4">Previous trades from seller for this stock</div>
+		<div class="panel-body" data-id="4">
+			
+			<div id="container" style="width:100%;">
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover table-striped" id="table-seller">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Transaction</th>
+								<th>Price</th>
+								<th>Size</th>
+							</tr>
+						</thead>
+						<tbody>
+							{%- for trade in trades %}
+							{%- if seller == trade.buyer or seller == trade.seller %}
+							<tr {%- if trade.time==baseTrade.time and trade.size==baseTrade.size and trade.price==baseTrade.price %} id="seller-trade" style="background-color:#ADD8E6"{%- endif %}>
+								<td>{{ trade.time|stringdate }}</td>
+								<td>{{ trade.time|stringtime }}</td>
+								<td>{%- if seller == trade.buyer  %} BUY {%- else %} SELL {%- endif %}</td>
+								<td>{{ trade.price }}</td>
+								<td>{{ trade.size }}</td>
+							</tr>
+							{%- endif %}
+							{%- endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	  </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-lg-12">
