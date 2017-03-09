@@ -70,7 +70,7 @@ $(document).ready(function() {
 		var buyer = $("#table-buyer").DataTable({"deferRender": true, "searching": false,columnDefs: [ {
 											targets: [ 2 ],
 											 orderData: [ 2, 3 ]
-											 }]);
+											 }]});
 
 				  var seller = $("#table-seller").DataTable();
 				  var buyerrow = buyer.row("#buyer-trade");
