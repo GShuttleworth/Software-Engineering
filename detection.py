@@ -21,7 +21,7 @@ class Detection:
 	senstivityPerSector = 3
 
 	# linear regression of price for this many trades per company
-	numberOfRegressors = 5
+	numberOfRegressors = 10
 
 	def __init__(self):	
 		self.companyList = {}
@@ -311,7 +311,7 @@ class AvgOverTimeRegression:
 	# compare actual vs predicted value
 	def detectError(self, x, y):
 		return (y>=(x*self.coeffList[0]+self.coeffList[1])*self.rangeVal + self.rangeVal*self.linearError() or
-				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal)
+				y<=(x*self.coeffList[0]+self.coeffList[1])/self.rangeVal - self.linearError())
 	
 	def updateCoeffs(self):
 		self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
