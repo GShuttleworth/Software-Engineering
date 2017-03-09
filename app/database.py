@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, csv
 from app import mtrade
 from os.path import isfile, getsize
 import os
@@ -70,6 +70,32 @@ class Database:
 			params = [sym, price, vol, 0]
 			updated = self.action(query, params)
 
+	def readfile(self):
+		with open('trades.csv','r') as csvfile:
+			data_csv = csv.reader(csvfile, delimiter = ',')
+			to_db = [(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7],i[8],i[9]) for i in data_csv]
+			print(to_db[0])
+			self.c.executemany("INSERT INTO trans_static VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", to_db)
+		self.conn.commit()
+		print("done")
+
+	def addTransactions(self,trades,state):
+		#bulk add, only add when an anomaly is detected
+		ttable = "trans_live"
+		if(state!=1):
+			ttable = "trans_static"
+		tradeid=-1
+		query = "INSERT INTO " + ttable + " VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		for data in trades:
+			params = (data.time, data.buyer, data.seller, data.price, data.size,
+					  data.currency, data.symbol, data.sector, data.bidPrice, data.askPrice)
+			self.c.execute(query, params)
+			tradeid=self.c.lastrowid
+	
+		if(len(trades)>0):
+			self.conn.commit()
+		return tradeid
+	
 	def addTransaction(self,data, state):
 		if(isinstance(data, mtrade.TradeData)):
 			query = ""
@@ -84,22 +110,22 @@ class Database:
 
 			tradeid=self.c.lastrowid
 			# Update the averages tables
-			avgData = self.getAverage(data.symbol)
-			if(avgData == -1):
+			#avgData = self.getAverage(data.symbol)
+			#if(avgData == -1):
 				# No averages present
-				self.updateAverage(data.symbol, data.price, data.size, 0)
-				return tradeid
+				#self.updateAverage(data.symbol, data.price, data.size, 0)
+				#return tradeid
 
-			avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
+			#avgPrice, avgVolume, numTrades = avgData[1], avgData[2], avgData[3]
 			# Recalculate the averages
-			avgPrice *= numTrades
-			avgVolume *= numTrades
-			avgPrice += float(data.price)
-			avgVolume += int(data.size)
-			numTrades += 1
-			avgPrice /= numTrades
-			avgVolume /= numTrades
-			self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
+			#avgPrice *= numTrades
+			#avgVolume *= numTrades
+			#avgPrice += float(data.price)
+			#avgVolume += int(data.size)
+			#numTrades += 1
+			#avgPrice /= numTrades
+			##avgVolume /= numTrades
+			#self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
 			return tradeid
 		else:
 			return -1
@@ -165,18 +191,16 @@ class Database:
 	def clearall(self,state):
 		#delete all entries from trades and anomalies
 		try:
-			table = "trans_live"
-			if(state==0):
-				table = "static_live"
-			query = "DELETE FROM " + table
-			params = []
-			self.action(query, params)
-			table = "anomalies_live"
-			if(state==0):
-				table = "anomalies_static"
-			query = "DELETE FROM " + table
-			params = []
-			self.action(query, params)
+			ttable = "trans_live"
+			atable = "anomalies_live"
+			if(state!=1):
+				ttable = "trans_static"
+				atable = "anomalies_static"
+			query = "DELETE FROM " + ttable
+			self.c.execute(query)
+			query = "DELETE FROM " + atable
+			self.c.execute(query)
+			self.conn.commit()
 		except:
 			return False
 		return True
@@ -255,3 +279,25 @@ class Database:
 			trades.append(trade)
 
 		return trades
+#this is not needed, + so stupid slow
+	def getTradesByPerson(self,person,sym,state):
+		trades = []
+		table = "trans_live"
+		if(state != 1):
+			table = "trans_static"
+		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM "+ table+ " WHERE(symbol=? AND (buyer=? OR seller=?)) ORDER BY datetime(time) ASC"
+		params = [sym,person,person]
+		rows = self.query(query, params)
+		for row in rows:
+			trade = mtrade.to_TradeData(row)
+			trades.append(trade)
+		return trades
+
+	def dismissAnomaly(self,id,state):
+		table = "anomalies_live"
+		if(state != 1):
+			table = "anomalies_static"
+		query = "UPDATE "+table+ " SET actiontaken=1 WHERE id=?"
+		params = [id]
+		self.action(query,params)
+		return 1
