@@ -277,7 +277,7 @@ class StaticFileThread(threading.Thread):
 			print("Starting to read in the file")
 			db.action("load data local infile 'trades.csv' into table trans_static fields terminated by ',' lines terminated by '\n' ignore 1 lines (@col1, @col2, @col3, @col4, @col5, @col6, @col7, @col8, @col9, @col10) set id=NULL, time=@col1, buyer=@col2, seller=@col3, price=@col4, volume=@col5, currency=@col6, symbol=@col7, sector=@col8, bidPrice=@col9, askPrice=@col10", [])
 			print("Data read in")
-
+			'''
 			db.getFirstId()
 			
 			with open('trades.csv', 'r') as csvfile:
@@ -316,6 +316,7 @@ class StaticFileThread(threading.Thread):
 			limit = (firstId + count)
 			currentStep = firstId
 			print("First id is " + str(firstId))
+			startTime = time.time()
 			while(currentStep <= limit):
 				print("currentStep = " + str(currentStep))
 				rows = db.query("select * from trans_static where(id between %s and %s)", [currentStep, currentStep + step_increase])
@@ -327,7 +328,7 @@ class StaticFileThread(threading.Thread):
 					_staticq.put(trade)
 					_qlock.release()
 				currentStep += step_increase
-			'''
+			print("Took " + str(time.time() - startTime) + " seconds to complete")
 
 class HandlerThread (threading.Thread):
 	def __init__(self, threadID):
@@ -428,10 +429,10 @@ class ProcessorThread(threading.Thread):
 		global _mode
 
 		anomalyid = -1
-		if(_mode == 1):
-			anomalyid = db.addAnomaly(tradeid, category, _mode)
-		else:
-			anomalyid = db.addAnomalyStatic(t, category)
+		#if(_mode == 1):
+		anomalyid = db.addAnomaly(tradeid, category, _mode)
+		#else:
+			#anomalyid = db.addAnomalyStatic(t, category)
 		newAnomaly = mtrade.Anomaly(anomalyid, t, category) #todo change 3
 		#doSomething with the anomaly
 		_anomalycounter+=1

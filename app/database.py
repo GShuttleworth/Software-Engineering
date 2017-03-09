@@ -226,7 +226,7 @@ class Database:
 		anomalyid = -1
 		table = "anomalies_live"
 		if(state != 1):
-			return -1
+			table = "anomalies_static"
 
 		query = "insert INTO " + table + " VALUES(NULL, %s, %s, 0)"
 		params = [tradeid, category]
