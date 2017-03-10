@@ -7,8 +7,10 @@ function refresh() {
 		success: function(d) {
 			var data = JSON.parse(d);
 			//console.log(data);
-		   if(data.loading==1){
+		   if(data.loaded==0){
 				$('#loading').show();
+		   }else{
+				$('#loading').hide();
 		   }
 			mode(data.mode);
 			live(data.live);
@@ -123,6 +125,9 @@ function convert_type(t){
 			break;
 		case 4:
 			type="Potential pump and dump"
+			break;
+		case 5:
+			type="Frequency anomaly"
 			break;
 	}
 	return type;

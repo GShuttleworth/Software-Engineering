@@ -58,7 +58,7 @@ _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
 #Stores for when parsing static data
-_loadedfile=0
+_loadedfile=1
 _anomalycounterstore = 0
 _tradecounterstore = 0
 _tradevaluestore = 0
@@ -279,9 +279,11 @@ class StaticFileThread(threading.Thread):
 			db = database.Database()
 
 			print("Starting to read in the file")
+			_loadedfile=0
 			startTime = time.time()
 			db.action("load data local infile 'trades.csv' into table trans_static fields terminated by ',' lines terminated by '\n' ignore 1 lines (@col1, @col2, @col3, @col4, @col5, @col6, @col7, @col8, @col9, @col10) set id=NULL, time=@col1, buyer=@col2, seller=@col3, price=@col4, volume=@col5, currency=@col6, symbol=@col7, sector=@col8, bidPrice=@col9, askPrice=@col10", [])
 			#print("Data read in")
+			_loadedfile=1
 			print("Took " + str(time.time() - startTime) + " seconds to complete")
 			'''
 			db.getFirstId()
@@ -659,6 +661,7 @@ def getdata():
 	global _tradecounter
 	global _tradevalue
 	global _mode
+	global _loadedfile
 	
 	connected = False
 	if(_connected==1):
@@ -671,7 +674,7 @@ def getdata():
 	data["anomaly"] = _anomalycounter
 	data["trades"] = _tradecounter
 	data["tradevalue"] = format(_tradevalue, '.2f')
-
+	data["loaded"] = _loadedfile
 	#empty anomaly queue
 	anomalies = []
 	if(session.get('id') is not None):

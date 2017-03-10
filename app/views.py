@@ -32,11 +32,10 @@ def anomaly(symbol, id):
 	db = database.Database()
 	state=1
 	anomaly = db.getAnomalyById(id,state)
-
 	baseTrade = anomaly.trade
 	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)
 	db.close() # Close quickly to prevent any issues
-	return anomaly_template(trades,baseTrade,symbol,id)
+	return anomaly_template(trades,baseTrade,symbol,id,anomaly)
 
 @app.route('/static/stock', methods=['GET', 'POST'])
 @app.route('/static/stock/<symbol>/anomaly/<id>', methods=['GET', 'POST'])
@@ -48,14 +47,15 @@ def static_anomaly(symbol,id):
 	baseTrade = anomaly.trade
 	trades = db.getTradesForDrillDown(baseTrade.symbol, baseTrade.time,state)
 	db.close() # Close quickly to prevent any issues
-	return anomaly_template(trades,baseTrade,symbol,id)
+	return anomaly_template(trades,baseTrade,symbol,id,anomaly)
 
-def anomaly_template(trades,baseTrade,symbol,id):
+def category(type):
+	options = { 1: "Price spike", 2: "Volume spike", 3: "Suspicious trader activity", 4: "Potential pump and dump", 5: "Frequency anomaly", -1: "Unknown"}
+	return options[type]
+
+def anomaly_template(trades,baseTrade,symbol,id,anomaly):
 	pagename = "Anomaly Information for " + symbol
-	anomalyType = "TODO"
-	anomalyStartTimestamp = "TODO"
-	anomalyEndTimestamp = "TODO"
-	certantyPercentage = "TODO"
+	anomalyType = category(anomaly.category)
 	time = baseTrade.time
 	buyer = baseTrade.buyer
 	seller = baseTrade.seller
