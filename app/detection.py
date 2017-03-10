@@ -26,13 +26,13 @@ class Detection:
 	# the number of steps that have already happened
 
 	# how many times more valuable a trade has to be than an average value of a trader to raise an error
-	senstivityPerTrader = 8
-	volumeSensitivity = 4
-	frequencySensitivity = 3
+	senstivityPerTrader = 7.3
+	volumeSensitivity = 6
+	frequencySensitivity = 5.5
 	minTraderTrades = 5
 
 	# linear regression of price for this many trades per company
-	numberOfRegressors = 25
+	numberOfRegressors = 20
 
 	def __init__(self):	
 		self.companyList = {}
@@ -59,6 +59,8 @@ class Detection:
 		#Set the time for the first trade
 		for x in range(self.numOfStepVariants):
 			self.companyList[t.symbol].currTime[x] = (int(timeToInt(t.time)/self.stepLength[x]))*self.stepLength[x] #rounds down to to the nearest step	
+
+					
 		
 
 	def detect(self, t):
@@ -71,6 +73,7 @@ class Detection:
 		# create a StockData object for every company
 		if (symb not in self.companyList):
 			self.setupCompanyData(t)
+			# trade_anomaly.append(1)
 				
 		#	PRICE REGRESSION
 
@@ -103,12 +106,12 @@ class Detection:
 				lastVol = float(self.companyList[symb].volumeRegression[x])
 
 				#if a minimum numbers of passes required to generate a prediction has passed return an anomlay if detected
-				if(self.companyList[symb].currCnt[x]>0):
-					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, self.frequencySensitivity, int(self.frequencySensitivity/3))):
+				if(self.companyList[symb].currCnt[x]>10):
+					if(self.detectError(lastFreq, self.companyList[symb].frequencyAvg, self.frequencySensitivity, self.frequencySensitivity/3)):
 						print("freq error for ", lastFreq, " expected ", self.companyList[symb].frequencyAvg)
 						trade_anomaly.append(4)
 					
-					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, self.volumeSensitivity, int(self.volumeSensitivity))):
+					if(self.detectError(lastVol, self.companyList[symb].volumeAvg, self.volumeSensitivity, self.volumeSensitivity/3)):
 						print("vol error for ", lastVol, " expected ", self.companyList[symb].volumeAvg)
 						trade_anomaly.append(2)
 				else:
@@ -124,6 +127,10 @@ class Detection:
 				else:
 					self.companyList[symb].volumeAvg = lastVol
 					self.companyList[symb].frequencyAvg = lastFreq
+
+				self.companyList[symb].volumeRegression[x] = 0
+				self.companyList[symb].frequencyRegression[x] = 0
+
 
 			#update the buffer of values
 			self.companyList[symb].volumeRegression[x] += float(t.size)
@@ -149,11 +156,17 @@ class Detection:
 					self.traderList[t.seller][0] < float(t.size)*float(t.price)/self.senstivityPerTrader)):
 					trade_anomaly.append(3)
 					print("trader anomaly")
-		
+
+
+		trade_anomaly = []####################################################
+
+
+
+
 		return trade_anomaly
 
 	def detectError(self, original, compareTo, sensitivity, linearError):
-		return (original>=compareTo*sensitivity+linearError+3 or original<=compareTo/sensitivity-linearError-3)
+		return (original>=compareTo*sensitivity+linearError*compareTo or original<=compareTo/sensitivity-linearError*compareTo)
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
@@ -181,7 +194,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 1.4 #to be adjusted
+		self.rangeVal = 1.6 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 		self.notdetected = True
 	

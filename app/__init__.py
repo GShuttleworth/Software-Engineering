@@ -58,7 +58,7 @@ _tradecounterlock = threading.Lock()
 _tradevalue = 0
 
 #Stores for when parsing static data
-_loadedfile=1
+_loadedfile=0
 _anomalycounterstore = 0
 _tradecounterstore = 0
 _tradevaluestore = 0
@@ -279,11 +279,9 @@ class StaticFileThread(threading.Thread):
 			db = database.Database()
 
 			print("Starting to read in the file")
-			_loadedfile=0
 			startTime = time.time()
 			db.action("load data local infile 'trades.csv' into table trans_static fields terminated by ',' lines terminated by '\n' ignore 1 lines (@col1, @col2, @col3, @col4, @col5, @col6, @col7, @col8, @col9, @col10) set id=NULL, time=@col1, buyer=@col2, seller=@col3, price=@col4, volume=@col5, currency=@col6, symbol=@col7, sector=@col8, bidPrice=@col9, askPrice=@col10", [])
 			#print("Data read in")
-			_loadedfile=1
 			print("Took " + str(time.time() - startTime) + " seconds to complete")
 			'''
 			db.getFirstId()
@@ -435,7 +433,7 @@ class ProcessorThread(threading.Thread):
 
 	###############################
 	global _sensitivity
-    	###############################
+    ###############################
 
 	def __init__(self, threadID):
 		threading.Thread.__init__(self)
@@ -510,6 +508,7 @@ class ProcessorThread(threading.Thread):
 				#change in mode since last iteration or if it got reset
 				#reset machine learning
 				detection.reset()
+				time.sleep(1)
 				if(_mode==1):
 					#load from config
 					#TODO
@@ -563,21 +562,18 @@ class ProcessorThread(threading.Thread):
 					if((1 in trade_anomaly) & (2 in trade_anomaly)):
 						###possibly pump and dump?
 						cat=4
-					if((3 in trade_anomaly)) and ((1 in trade_anomaly) or (2 in trade_anomaly)):
-						###insider information/bear raids?
-						####TODO
-						cat=3
 					if(3 in trade_anomaly): #trader anomaly
 						#move this out, in here for sake of testing and trader is overly sensitive
-						cat = 5
+						cat = 3
 					if(4 in trade_anomaly):	#frequency anomlay
 						#move this out, in here for sake of testing and trader is overly sensitive
-						cat = 6
+						cat = 5
 					if(cat>0):
 						if(_mode == 1):
 							self.new_anomaly(db,tradeid,t,cat)
 						else:
 							self.new_anomaly(db,tradeid,t,cat)
+							
 			_tradecounterlock.release()
 		#time.sleep(2) #REMOVE AFTER TESTING, to slow down processing
 		#time.sleep(0.01) #good for cpu
@@ -664,7 +660,6 @@ def getdata():
 	global _tradecounter
 	global _tradevalue
 	global _mode
-	global _loadedfile
 	
 	connected = False
 	if(_connected==1):
@@ -677,7 +672,7 @@ def getdata():
 	data["anomaly"] = _anomalycounter
 	data["trades"] = _tradecounter
 	data["tradevalue"] = format(_tradevalue, '.2f')
-	data["loaded"] = _loadedfile
+
 	#empty anomaly queue
 	anomalies = []
 	if(session.get('id') is not None):
@@ -827,19 +822,14 @@ def upload_file():
 def delete_anomaly():
 	global _sessions
 	global _sessionslock
-	global _mode
 	anomalyid = int(request.data)
-	db = database.Database()
-	success = db.dismissAnomaly(anomalyid,_mode)
-	db.close()
-	if(success==1):
-		_sessionslock.acquire
-		for key in _sessions:
-			if(_sessions[key]!=session['id']):
-				_sessions[key].put(mtrade.Anomaly(anomalyid, None, 0))
-		_sessionslock.release
-		return "ok"
-	return "fail"
+	success = 0 #update state in db
+	_sessionslock.acquire
+	for key in _sessions:
+		if(_sessions[key]!=session['id']):
+			_sessions[key].put(mtrade.Anomaly(anomalyid, None, 0))
+	_sessionslock.release
+	return "ok"
 
 @app.route('/getanomalies', methods=['POST'])
 def init_data():
