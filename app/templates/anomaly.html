@@ -261,11 +261,15 @@ $(function () {
 	//draw price chart
 	var pchart = renderchart(pricedata,'price_chart','Price per trade in the past 6 hours processed','Stock price','price');
 	
+	//set plotbands, colour in region and zoom in
+  pchart.xAxis[0].addPlotBand({color: '#FCFFC5',from:Date.parse('{{ startband }}'), to: Date.parse('{{ endband }}')});
+	
 	pchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
 	pchart.showResetZoom();
 	//draw volume chart
 	var vchart = renderchart(volumedata,'volume_chart','Volume per trade in the past 6 hours processed','Volume','size');
-
+	
+	vchart.xAxis[0].addPlotBand({color: '#FCFFC5',from:Date.parse('{{ startband }}'), to: Date.parse('{{ endband }}')});
 	vchart.xAxis[0].setExtremes(Date.parse('{{ lower }}'),Date.parse('{{ upper }}'));
 	vchart.showResetZoom();
 

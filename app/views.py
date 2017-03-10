@@ -72,6 +72,8 @@ def anomaly_template(trades,baseTrade,symbol,id,anomaly):
 	last = convert_date(trades[len(trades)-1].time)
 	lower = max(first,rangetime - timedelta(minutes=15)) #create an upper and lower boundary frame TODO change if necessary
 	upper = min(last,rangetime + timedelta(minutes=15))
+	startband = max(first,rangetime - timedelta(minutes=5)) #create an upper and lower boundary frame TODO change if necessary
+	endband = min(last,rangetime + timedelta(minutes=5))
 	return render_template('anomaly.html', **locals())
 
 @app.template_filter('stringdate')
