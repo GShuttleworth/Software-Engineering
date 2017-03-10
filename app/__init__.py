@@ -567,9 +567,12 @@ class ProcessorThread(threading.Thread):
 						###insider information/bear raids?
 						####TODO
 						cat=3
-					if(3 not in trade_anomaly):
+					if(3 in trade_anomaly): #trader anomaly
 						#move this out, in here for sake of testing and trader is overly sensitive
-						a=1
+						cat = 5
+					if(4 in trade_anomaly):	#frequency anomlay
+						#move this out, in here for sake of testing and trader is overly sensitive
+						cat = 6
 					if(cat>0):
 						if(_mode == 1):
 							self.new_anomaly(db,tradeid,t,cat)
