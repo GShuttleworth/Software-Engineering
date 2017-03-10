@@ -11,31 +11,39 @@ def test(counter):
 
 class Detection:
 
-	stepLength = [60, 200]	#each pair represents a pair of step length (in seconds)
+	def returnJson(self):
+		return json.dumps( (companyList, traderList) )
+
+	def restoreFromJson(self, json):
+		dump = json.dumps(json)
+		self.companyList = dump[0]
+		self.traderList = dump[1]
+		self.numOfStepVariants = len(self.stepLength)
+
+	stepLength = [120, 400]	#each pair represents a pair of step length (in seconds)
 	# and the number of steps between line fit update
 	currTime = [0]	# keeps track of the start time of the current step cycle
 	# the number of steps that have already happened
 
 	# how many times more valuable a trade has to be than an average value of a trader to raise an error
-	senstivityPerTrader = 5
-	senstivityPerSector = 3
-	volumeSensitivity = 5
+	senstivityPerTrader = 8
+	volumeSensitivity = 4
 	frequencySensitivity = 3
+	minTraderTrades = 5
 
 	# linear regression of price for this many trades per company
-	numberOfRegressors = 20
+	numberOfRegressors = 15
 
 	def __init__(self):	
 		self.companyList = {}
 		self.traderList = {}
-		self.sectorList = {}
+		# self.sectorList = {}
 		self.numOfStepVariants = len(self.stepLength)
 
 
 	def reset(self):		
 		#setup company data, one-off at the beginning
 		self.companyList = {}
-		#print("setup")
 		#some process to load data from db
 		self.numOfStepVariants = len(self.stepLength)
 		#rolling average for all traders
@@ -107,7 +115,7 @@ class Detection:
 				self.companyList[symb].currTime[x] += self.stepLength[x]
 
 				#if the volume and frequency average already have been assigned a value
-				if(self.companyList[symb].volumeAvg!=0):
+				if(self.companyList[symb].volumeAvg>0):
 					#run exponential moving average
 					self.companyList[symb].volumeAvg = self.companyList[symb].volumeAvg*0.8 + lastVol*0.2
 					self.companyList[symb].frequencyAvg = self.companyList[symb].frequencyAvg*0.8 + lastFreq*0.2
@@ -120,9 +128,6 @@ class Detection:
 			self.companyList[symb].frequencyRegression[x] += 1.0
 
 
-
-
-
 		#
 		#	ANOMALY BY TRADER
 		#
@@ -133,7 +138,7 @@ class Detection:
 		else:
 			self.traderList[t.seller][0] = self.traderList[t.seller][0]*0.9 + 0.1*float(t.size)*float(t.price)
 
-			if (self.traderList[t.seller][1] < 5):	#only start detecting anomalies per trader after 5
+			if (self.traderList[t.seller][1] < self.minTraderTrades):	#only start detecting anomalies per trader after 5
 			# trades already recieved
 				self.traderList[t.seller][1] += 1
 			else:
@@ -141,12 +146,12 @@ class Detection:
 				if((#self.traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
 					self.traderList[t.seller][0] < float(t.size)*float(t.price)/self.senstivityPerTrader)):
 					trade_anomaly.append(3)
-					#print("trader anomaly")
+					print("trader anomaly")
 		
 		return trade_anomaly
 
 	def detectError(self, original, compareTo, sensitivity, linearError):
-		return (original>=compareTo*sensitivity+linearError+10 or original<=compareTo/sensitivity-linearError-10)
+		return (original>=compareTo*sensitivity+linearError+5 or original<=compareTo/sensitivity-linearError-5)
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
@@ -164,7 +169,7 @@ class StockData:
 		for x in range(len(stepLength)):
 			self.volumeRegression.append(0)
 			self.frequencyRegression.append(0)
-			self.currTime.append(-3)
+			self.currTime.append(-5)
 			self.currCnt.append(0)
 
 #Should make it more expandable/less messy
@@ -174,7 +179,7 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 1.8 #to be adjusted
+		self.rangeVal = 1.4 #to be adjusted
 		self.coeffList = [0.0, 0.0]
 	
 	def addTrade(self, trade):
