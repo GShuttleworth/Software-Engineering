@@ -273,16 +273,6 @@ class Database:
 
 	def addAnomalyStatic(self, trade, category):
 		if(isinstance(trade, mtrade.TradeData)):
-		'''
-			#testing
-			query = "SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and symbol=%s"
-			params=[trade.time,trade.buyer,trade.seller,trade.symbol]
-			results=self.query(query, params)
-			print(results)
-			print(trade.time)
-			print(trade.buyer)
-			print(trade.symbol)
-		'''
 			query = "insert into anomalies_static values(NULL, (SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and symbol=%s), %s, 0)"
 			params = [trade.time,trade.buyer,trade.seller,trade.symbol,category]
 			self.action(query, params)
