@@ -20,7 +20,7 @@ class Detection:
 		self.traderList = dump[1]
 		self.numOfStepVariants = len(self.stepLength)
 
-	stepLength = [100, 400]	#each pair represents a pair of step length (in seconds)
+	stepLength = [120, 400]	#each pair represents a pair of step length (in seconds)
 	# and the number of steps between line fit update
 	currTime = [0]	# keeps track of the start time of the current step cycle
 	# the number of steps that have already happened
@@ -32,7 +32,7 @@ class Detection:
 	minTraderTrades = 5
 
 	# linear regression of price for this many trades per company
-	numberOfRegressors = 20
+	numberOfRegressors = 25
 
 	def __init__(self):	
 		self.companyList = {}
@@ -51,7 +51,7 @@ class Detection:
 		self.traderList = {}
 		#rolling average for all sectors
 		#(exponential moving average should make it very computationally efficient)
-		self.sectorList = {}
+		# self.sectorList = {}
 		
 
 	def setupCompanyData(self, t):
@@ -79,7 +79,8 @@ class Detection:
 
 		if(np.all(self.companyList[symb].priceRegression.coeffList != [0.0, 0.0])):
 			# print(self.companyList[symb].priceCoeffList) #debugging
-			if(self.companyList[symb].priceRegression.detectError(timeToInt(t.time), float(t.price))):
+			if(self.companyList[symb].priceRegression.detectError(timeToInt(t.time), float(t.price)) and
+				self.companyList[symb].priceRegression.detected):
 				print("price anomaly for x = ", timeToInt(t.time), " y = ", float(t.price)) #debugging
 				print("expected x = ", timeToInt(t.time), " y = ", self.companyList[symb].priceRegression.coeffList[0]*timeToInt(t.time) + self.companyList[symb].priceRegression.coeffList[1]) #debugging
 				#add price anomaly to category
@@ -87,6 +88,7 @@ class Detection:
 			# 	print("no price anomaly for x = ", timeToInt(t.time), " y = ", float(t.price)) #debugging
 			# 	print("expected x = ", timeToInt(t.time), " y = ", self.companyList[symb].priceRegression.coeffList[0]*timeToInt(t.time) + self.companyList[symb].priceRegression.coeffList[1]) #debugging
 				trade_anomaly.append(1)
+				self.companyList[symb].priceRegression.notdetected = False
 
 
 		#
@@ -151,7 +153,7 @@ class Detection:
 		return trade_anomaly
 
 	def detectError(self, original, compareTo, sensitivity, linearError):
-		return (original>=compareTo*sensitivity+linearError+10 or original<=compareTo/sensitivity-linearError-10)
+		return (original>=compareTo*sensitivity+linearError+3 or original<=compareTo/sensitivity-linearError-3)
 
 class StockData:
 	#contains company symbol, polynomial coefficients for best fit line and range within it's considered not anomolalous
@@ -179,8 +181,9 @@ class PriceRegression:
 		self.xVals = np.empty(numOfRegressors)
 		self.yVals = np.empty(numOfRegressors)
 		self.currCnt = 0
-		self.rangeVal = 2 #to be adjusted
+		self.rangeVal = 1.4 #to be adjusted
 		self.coeffList = [0.0, 0.0]
+		self.notdetected = True
 	
 	def addTrade(self, trade):
 		#update the buffer of x and y values for linear regression
@@ -194,6 +197,7 @@ class PriceRegression:
 			self.coeffList = np.polyfit(self.xVals, self.yVals, 1)
 			# print (self.companyList[symb].priceCoeffList) #debugging
 			self.currCnt = 0
+			self.notdetected = True
 		
 
 	#compare actual vs predicted value
