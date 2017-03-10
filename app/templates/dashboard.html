@@ -64,8 +64,8 @@
                     <th>ID</th>
                     <th>Date</th>
                     <th>Time</th>
-					<th>Symbol</th>
-					<th>Sector</th>
+                    <th>Symbol</th>
+                    <th>Sector</th>
                     <th>Anomaly Type</th>
                     <th>Action</th>
                   </tr>
@@ -80,8 +80,14 @@
     </div>
   </div>
 </div>
+<div class="row" id="loading-gif">
+  <div class="col-sm-12">
+    <img src="{{ url_for('static', filename='images/gps.gif') }}">
+    <h3>Loading Data...</h3>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
- <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}
