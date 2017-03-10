@@ -10,9 +10,9 @@ class Database:
 	def __init__(self, state=1):
 		# check to see if db exists
 		# if it doesn't then create it using schema
-		self.conn = mysql.connector.connect(user='root', password='andypandy', host='cs261.cusboobrddrr.eu-west-2.rds.amazonaws.com',port=3306, database='cs261')
+		#self.conn = mysql.connector.connect(user='root', password='andypandy', host='cs261.cusboobrddrr.eu-west-2.rds.amazonaws.com',port=3306, database='cs261')
 		#self.conn = mysql.connector.connect(user='deepscan', password='andypandy', host='160.153.129.203', database='cs261') ###for chris, then comment out below
-		#self.conn = mysql.connector.connect(user='root', password='andypandy', host='127.0.0.1', database='cs261')
+		self.conn = mysql.connector.connect(user='root', password='andypandy', host='127.0.0.1', database='cs261')
 		self.c = self.conn.cursor()
 		self.state = state  # Default is 1 (live)
 		self.currentId = 0
