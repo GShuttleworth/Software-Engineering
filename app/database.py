@@ -92,6 +92,7 @@ class Database:
 			self.action(query, params)
 
 			tradeid=self.c.lastrowid
+			'''
 			# Update the averages tables
 			avgData = self.getAverage(data.symbol)
 			if(avgData == -1):
@@ -109,6 +110,7 @@ class Database:
 			avgPrice /= numTrades
 			avgVolume /= numTrades
 			self.updateAverage(data.symbol, avgPrice, avgVolume, numTrades)
+			'''
 			return tradeid
 		else:
 			return -1
@@ -255,8 +257,8 @@ class Database:
 			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
 		except ValueError:
 			time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-		upper = time + timedelta(hours=6) #create an upper and lower boundary frame TODO change if necessary
-		lower = time - timedelta(hours=6)
+		upper = time + timedelta(hours=3) #create an upper and lower boundary frame TODO change if necessary
+		lower = time - timedelta(hours=3)
 		# Get trades beforehand
 		query = "SELECT time,buyer,seller,price,volume,currency,symbol,sector,bidPrice,askPrice FROM " + \
 			ttable + " WHERE(symbol=%s AND unix_timestamp(time) BETWEEN unix_timestamp(%s) AND unix_timestamp(%s)) ORDER BY unix_timestamp(time) ASC"
@@ -271,8 +273,18 @@ class Database:
 
 	def addAnomalyStatic(self, trade, category):
 		if(isinstance(trade, mtrade.TradeData)):
-			query = "insert into anomalies_static values(NULL, (SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and price=%s and symbol=%s), %s, 0)"
-			params = [trade.time,trade.buyer,trade.seller,trade.price,trade.symbol,category]
+		'''
+			#testing
+			query = "SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and symbol=%s"
+			params=[trade.time,trade.buyer,trade.seller,trade.symbol]
+			results=self.query(query, params)
+			print(results)
+			print(trade.time)
+			print(trade.buyer)
+			print(trade.symbol)
+			'''
+			query = "insert into anomalies_static values(NULL, (SELECT id FROM trans_static WHERE time=%s and buyer=%s and seller=%s and symbol=%s), %s, 0)"
+			params = [trade.time,trade.buyer,trade.seller,trade.symbol,category]
 			self.action(query, params)
 			anomalyid = self.c.lastrowid
 			return anomalyid

@@ -141,7 +141,7 @@ class Detection:
 				if((#self.traderList[t.seller] > float(t.size)*float(t.price)*self.senstivityPerTrader or
 					self.traderList[t.seller][0] < float(t.size)*float(t.price)/self.senstivityPerTrader)):
 					trade_anomaly.append(3)
-					print("trader anomaly")
+					#print("trader anomaly")
 		
 		return trade_anomaly
 
