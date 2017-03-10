@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
+<div class="row" id="loading">
+	<div class="col-sm-12">
+		<img src="{{ url_for('static', filename='images/loading.gif') }}">
+			<h3>Loading static file into system...</h3>
+	</div>
+</div>
 <div class="row">
   <div class="col-lg-4 col-md-4">
     <div class="panel panel-danger">
@@ -78,12 +84,6 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="row" id="loading-gif">
-  <div class="col-sm-12">
-    <img src="{{ url_for('static', filename='images/gps.gif') }}">
-    <h3>Loading Data...</h3>
   </div>
 </div>
 {% endblock %}

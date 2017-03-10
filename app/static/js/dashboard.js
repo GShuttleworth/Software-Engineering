@@ -1,4 +1,5 @@
 //global?
+var loading=0;
 function refresh() {
 	$.ajax({
 		type : 'POST',
@@ -6,6 +7,9 @@ function refresh() {
 		success: function(d) {
 			var data = JSON.parse(d);
 			//console.log(data);
+		   if(data.loading==1){
+				$('#loading').show();
+		   }
 			mode(data.mode);
 			live(data.live);
 			updatedash(data.anomaly,data.trades,data.tradevalue);
@@ -144,6 +148,7 @@ function beep() {
 }
 
 $(document).ready(function() {
+	$('#loading').hide();
 	//load anomalies
 	$('#table-anomaly').DataTable( {
 		"columnDefs": [
