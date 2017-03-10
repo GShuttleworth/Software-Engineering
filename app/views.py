@@ -50,7 +50,7 @@ def static_anomaly(symbol,id):
 	return anomaly_template(trades,baseTrade,symbol,id,anomaly)
 
 def category(type):
-	options = { 1: "Price spike", 2: "Volume spike", 3: "Suspicious trader activity", 4: "Potential pump and dump", 5: "Frequency anomaly", -1: "Unknown"}
+	options = { 1: "Price spike/drop", 2: "Volume spike/drop", 3: "Possible bear raids", 4: "Potential pump and dump", 5: "Suspicious trader activity", 6: "Frequency anomaly", -1: "Unknown"}
 	return options[type]
 
 def anomaly_template(trades,baseTrade,symbol,id,anomaly):

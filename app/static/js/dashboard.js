@@ -115,18 +115,20 @@ function convert_type(t){
 	var type="Unknown";
 	switch(t){
 		case 1:
-			type="Price spike"
+			type="Price spike/drop"
 			break;
 		case 2:
-			type="Volume spike"
+			type="Volume spike/drop"
 			break;
 		case 3:
-			type="Suspicious trader activity"
+			type="Possible bear raids"
 			break;
 		case 4:
 			type="Potential pump and dump"
 			break;
 		case 5:
+			type="Suspicious trader activity"
+		case 6:
 			type="Frequency anomaly"
 			break;
 	}
